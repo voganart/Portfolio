@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
-    base: '/Portfolio/', // либо '/Portfolio/' если хочешь абсолютный путь в ветке gh-pages
+    base: '/Portfolio/',  // This ensures assets are loaded from the correct path
     plugins: [react()],
     resolve: {
       alias: {
@@ -17,3 +17,8 @@ export default defineConfig(({ mode }) => {
     }
   };
 });
+
+export const getAssetPath = (path: string) => {
+  const base = import.meta.env.BASE_URL;
+  return `${base}${path.startsWith('/') ? path.slice(1) : path}`;
+};
