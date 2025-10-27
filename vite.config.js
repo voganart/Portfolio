@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
-    base: './', // либо '/Portfolio/' если хочешь абсолютный путь в ветке gh-pages
+    base: '/Portfolio/', // либо '/Portfolio/' если хочешь абсолютный путь в ветке gh-pages
     plugins: [react()],
     resolve: {
       alias: {
