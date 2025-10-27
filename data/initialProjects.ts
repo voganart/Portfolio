@@ -6,14 +6,14 @@ export const initialProjects: Project[] = [
   {
     id: 1,
     title: {
-      ru: '3D Персонаж "Кот-студент"',
+      ru: 'БАБА ЛИДА СПЭЛЛ',
       en: '3D Character "Cat Student"',
     },
     description: {
       ru: 'Стилизованная 3D модель персонажа-кота, готового к учебе с рюкзаком.',
       en: 'A stylized 3D model of a cat character ready for school with a backpack.',
     },
-    mediaFile: 'cat-student-1.png', // Пример: файл лежит в /content/cat-student-1.png
+    mediaFile: '/content/25.png', // Пример: файл лежит в /content/cat-student-1.png
     tags: ['3D Modeling', 'Character Art', 'Blender'],
   },
   {
@@ -26,7 +26,7 @@ export const initialProjects: Project[] = [
       ru: 'Бюст дружелюбного стилизованного мужского персонажа.',
       en: 'A friendly-looking stylized male character bust.',
     },
-    mediaFile: 'stylized-bust.png',
+    mediaFile: '/content/icon_cat_match3-win_1.mp4',
     tags: ['3D Modeling', 'Character Art', 'ZBrush'],
   },
   {
