@@ -1,13 +1,12 @@
 {
-  "name": "vladimir-grigorov---2d/3d-animator-portfolio",
+  "name": "portfolio",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist -b gh-pages"
+    "start": "vite"
   },
   "dependencies": {
     "react": "^19.2.0",

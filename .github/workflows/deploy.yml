@@ -1,6 +1,4 @@
-name: Deploy
-permissions:
-  contents: write
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -8,27 +6,26 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run build
-        env:
-          VITE_BASE_URL: /Portfolio/
 
       - name: Add 404 for SPA fallback
-        run: cp dist/index.html dist/404.html
+        run: |
+          cp -f dist/index.html dist/404.html || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

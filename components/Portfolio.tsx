@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import type { Project } from '../types';
 import { useTranslations } from '../hooks/useTranslations';
 import ProjectModal from './ProjectModal';
-import { getAssetPath } from '../utils/assetPath';
 
 interface ProjectCardProps {
   project: Project;
@@ -13,7 +12,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   const { language } = useTranslations();
   const title = project.title[language];
   const description = project.description[language];
-  const mediaPath = getAssetPath(`content/${project.mediaFile}`);
+  const mediaPath = `/content/${project.mediaFile}`;
 
   return (
     <div 

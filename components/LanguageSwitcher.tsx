@@ -1,35 +1,38 @@
-import React, { useContext } from 'react';
-import { LanguageContext } from '../context/LanguageContext';
 
-const LanguageSwitcher: React.FC = () => {
-  const context = useContext(LanguageContext);
+import React from 'react';
+import { useTranslations } from '../hooks/useTranslations';
 
-  if (!context) {
-    return null;
-  }
+const Header: React.FC = () => {
+  // FIX: Destructure `t` from the hook's return value.
+  const { t } = useTranslations();
 
-  const { language, setLanguage } = context;
-
-  const buttonStyle = "px-3 py-1 text-sm font-bold rounded-md transition-colors";
-  const activeStyle = "bg-teal-600 text-white";
-  const inactiveStyle = "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50";
+  const handleScrollToPortfolio = () => {
+    document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
-    <div className="fixed top-6 right-6 z-50 flex items-center space-x-2 p-1 bg-gray-800/80 rounded-lg backdrop-blur-sm">
-      <button
-        onClick={() => setLanguage('ru')}
-        className={`${buttonStyle} ${language === 'ru' ? activeStyle : inactiveStyle}`}
-      >
-        RU
-      </button>
-      <button
-        onClick={() => setLanguage('en')}
-        className={`${buttonStyle} ${language === 'en' ? activeStyle : inactiveStyle}`}
-      >
-        EN
-      </button>
-    </div>
+    <header className="min-h-screen flex items-center justify-center relative">
+      <div className="text-center p-8 max-w-4xl mx-auto">
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-wider text-white drop-shadow-lg">
+          {t.header.name}
+        </h1>
+        <p className="mt-4 text-xl md:text-2xl font-medium text-teal-400">
+          {t.header.title}
+        </p>
+        <p className="mt-6 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+          {t.header.intro}
+        </p>
+        <div className="mt-10">
+          <button
+            onClick={handleScrollToPortfolio}
+            className="bg-teal-600 text-white font-bold py-3 px-8 rounded-full hover:bg-teal-700 transition-transform transform hover:scale-105 duration-300 ease-in-out"
+          >
+            {t.header.button}
+          </button>
+        </div>
+      </div>
+    </header>
   );
 };
 
-export default LanguageSwitcher;
+export default Header;
