@@ -1,5 +1,15 @@
 import type { Project } from '../types';
 
+// Add Vite environment variable types for TypeScript
+interface ImportMetaEnv {
+  readonly BASE_URL: string;
+  // add other env variables if needed
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 // Совет: Замените эти данные на свои реальные проекты.
 // Файлы (картинки/видео) должны лежать в папке /content/
 export const initialProjects: Project[] = [
@@ -13,7 +23,7 @@ export const initialProjects: Project[] = [
       ru: 'Стилизованная 3D модель персонажа-кота, готового к учебе с рюкзаком.',
       en: 'A stylized 3D model of a cat character ready for school with a backpack.',
     },
-    mediaFile: '25.png', // Пример: файл лежит в /content/cat-student-1.png
+    mediaFile: '/content/25.jpg',
     tags: ['3D Modeling', 'Character Art', 'Blender'],
   },
   {
@@ -26,7 +36,7 @@ export const initialProjects: Project[] = [
       ru: 'Бюст дружелюбного стилизованного мужского персонажа.',
       en: 'A friendly-looking stylized male character bust.',
     },
-    mediaFile: 'icon_cat_match3-win_1.mp4',
+    mediaFile: '/content/icon_cat_match3-win_1.mp4',
     tags: ['3D Modeling', 'Character Art', 'ZBrush'],
   },
   {
