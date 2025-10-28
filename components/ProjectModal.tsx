@@ -59,24 +59,27 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         </button>
 
         {/* Prev */}
+        {/*         
         {index > 0 && (
           <button
             onClick={() => onSelectProject(projects[index - 1])}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-teal-600/70 transition"
+            className="absolute left-6 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full w-14 h-14 flex items-center justify-center hover:bg-teal-600/70 transition"
           >
             &#8249;
           </button>
-        )}
+        )} */}
 
         {/* Next */}
+        {/*         
         {index < projects.length - 1 && (
           <button
             onClick={() => onSelectProject(projects[index + 1])}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-teal-600/70 transition"
+            className="absolute right-6 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full w-14 h-14 flex items-center justify-center hover:bg-teal-600/70 transition"
           >
             &#8250;
           </button>
-        )}
+        )} */}
+
 
         {/* Media */}
         <div className="w-full h-full flex items-center justify-center">

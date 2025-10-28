@@ -2,6 +2,7 @@ import React from 'react';
 import LinkedInIcon from './icons/LinkedInIcon';
 import TelegramIcon from './icons/TelegramIcon';
 import EmailIcon from './icons/EmailIcon';
+import GitHubIcon from './icons/GitHubIcon'; // нужно создать этот компонент
 import { useTranslations } from '../hooks/useTranslations';
 
 const Contact: React.FC = () => {
@@ -12,11 +13,13 @@ const Contact: React.FC = () => {
       linkedin: 'Открыть LinkedIn',
       telegram: 'Написать в Telegram',
       email: 'Отправить email',
+      github: 'Открыть GitHub',
     },
     en: {
       linkedin: 'Open LinkedIn',
       telegram: 'Message on Telegram',
       email: 'Send email',
+      github: 'Open GitHub',
     },
   };
 
@@ -68,6 +71,19 @@ const Contact: React.FC = () => {
             <EmailIcon className="w-8 h-8" />
             <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
               {tt.email}
+            </span>
+          </a>
+
+          {/* GitHub */}
+          <a
+            href="https://github.com/voganart"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative group text-gray-400 hover:text-teal-400 transition-colors duration-300"
+          >
+            <GitHubIcon className="w-8 h-8" />
+            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+              {tt.github}
             </span>
           </a>
         </div>

@@ -13,23 +13,41 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   const title = project.title[language];
   const description = project.description[language];
 
-  // 🔹 проверяем, видео это или нет
-  const isVideo = ['.mp4', '.webm', '.ogg'].some(ext => project.mediaFile.toLowerCase().endsWith(ext));
+  const isVideo = ['.mp4', '.webm', '.ogg'].some(ext =>
+    project.mediaFile.toLowerCase().endsWith(ext)
+  );
   const mediaPath = `${import.meta.env.BASE_URL}content/${project.mediaFile}`;
+
+  const [isHovered, setIsHovered] = React.useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  // Эффект для управления воспроизведением видео
+  React.useEffect(() => {
+    if (!videoRef.current) return;
+    if (isHovered) {
+      videoRef.current.play().catch(() => {}); // предотвращает ошибку autoplay
+    } else {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0; // сброс к началу
+    }
+  }, [isHovered]);
 
   return (
     <div
       className="group relative overflow-hidden rounded-lg bg-black/30 backdrop-blur-lg border border-white/10 shadow-xl transition-all duration-300 hover:border-teal-300/30 hover:shadow-teal-400/10 hover:scale-[1.02] cursor-pointer"
       onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {isVideo ? (
         <video
+          ref={videoRef}
           src={mediaPath}
           className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
           muted
           loop
-          autoPlay
           playsInline
+          preload="metadata"
         />
       ) : (
         <img
@@ -38,6 +56,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
           className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
         />
       )}
+
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
       <div className="absolute bottom-0 left-0 p-6 text-white w-full">
         <h3 className="text-xl font-bold">{title}</h3>
