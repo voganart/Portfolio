@@ -8,7 +8,7 @@ export default {
   },
   "about": {
     "title": "About Me",
-    "text": "Over 10 years in mobile gamedev. I do 2D and 3D animation, prototype gameplay, model low-poly assets, and help bring ideas to life fast. I work closely with devs, artists, and game designers for a smooth and creative process. Currently based in Argentina. In my free time, I love 3D printing custom miniatures for D&D, experimenting with new tools (recently C# and a bit of Spanish!), and integrating AI into my workflows.",
+    "text": "I’ve been in mobile games for 10+ years: animations, prototypes, low-poly models. I love seeing ideas come to life fast. Currently in Argentina. In my free time — 3D printing, coding, learning Spanish, and playing games.",
     "skillsTitle": "Key Skills",
     "skills": [ "2D Animation", "3D Animation", "Blender", "Spine", "Unity", "Godot", "Prototyping", "Low-poly Modeling", "Texturing", "Rigging", "Maya", "3D Printing" ]
   },

@@ -26,7 +26,7 @@ export const initialProjects: Project[] = [
       ru: 'Бюст дружелюбного стилизованного мужского персонажа.',
       en: 'A friendly-looking stylized male character bust.',
     },
-    mediaFile: 'icon_cat_match3-win_1.mp4',
+    mediaFile: 'icon_cat_match3-win_1.webm',
     tags: ['3D Modeling', 'Character Art', 'ZBrush'],
   },
   {
@@ -39,7 +39,7 @@ export const initialProjects: Project[] = [
       ru: 'Рендер персонажа-кота в полный рост на отражающей поверхности.',
       en: 'A full-body render of the cat student character on a reflective surface.',
     },
-    mediaFile: 'cat-student-2.png',
+    mediaFile: 'Alpaca_whole.webm',
     tags: ['3D Modeling', 'Rendering', 'Blender'],
   },
   {
@@ -52,7 +52,7 @@ export const initialProjects: Project[] = [
       ru: 'Анимации полета, атаки и idle-циклы для мифического существа в Unity.',
       en: 'Flight, attack, and idle loop animations for a mythical creature in Unity.',
     },
-    mediaFile: 'griffon.jpg',
+    mediaFile: 'Amanitore_intro.webm',
     tags: ['Animation', 'Unity', 'Creature'],
   },
   {
@@ -65,7 +65,7 @@ export const initialProjects: Project[] = [
       ru: 'Создание рига для сложного гуманоидного персонажа с механическими частями.',
       en: 'Creating a rig for a complex humanoid character with mechanical parts.',
     },
-    mediaFile: 'cybersoldier.jpg',
+    mediaFile: 'Brann_intro.webm',
     tags: ['Rigging', 'Skinning', 'Maya'],
   },
   {
