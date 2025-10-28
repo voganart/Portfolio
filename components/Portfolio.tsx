@@ -12,14 +12,32 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   const { language } = useTranslations();
   const title = project.title[language];
   const description = project.description[language];
-  const mediaPath = `/content/${project.mediaFile}`;
+
+  // 🔹 проверяем, видео это или нет
+  const isVideo = ['.mp4', '.webm', '.ogg'].some(ext => project.mediaFile.toLowerCase().endsWith(ext));
+  const mediaPath = `${import.meta.env.BASE_URL}content/${project.mediaFile}`;
 
   return (
-    <div 
+    <div
       className="group relative overflow-hidden rounded-lg bg-black/30 backdrop-blur-lg border border-white/10 shadow-xl transition-all duration-300 hover:border-teal-300/30 hover:shadow-teal-400/10 hover:scale-[1.02] cursor-pointer"
       onClick={onClick}
     >
-      <img src={mediaPath} alt={title} className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110" />
+      {isVideo ? (
+        <video
+          src={mediaPath}
+          className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+          muted
+          loop
+          autoPlay
+          playsInline
+        />
+      ) : (
+        <img
+          src={mediaPath}
+          alt={title}
+          className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
       <div className="absolute bottom-0 left-0 p-6 text-white w-full">
         <h3 className="text-xl font-bold">{title}</h3>
@@ -35,6 +53,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
     </div>
   );
 };
+
 
 interface PortfolioProps {
   projects: Project[];
@@ -53,15 +72,15 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">{t.portfolio.title}</h2>
-            <p className="mt-4 text-lg leading-8 text-gray-400">
-              {t.portfolio.subtitle}
-            </p>
+            <p className="mt-4 text-lg leading-8 text-gray-400">{t.portfolio.subtitle}</p>
           </div>
+
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {displayedProjects.map((project) => (
               <ProjectCard key={project.id} project={project} onClick={() => setSelectedProject(project)} />
             ))}
           </div>
+
           {projects.length > 9 && !showAll && (
             <div className="mt-16 text-center">
               <button
@@ -74,10 +93,11 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
           )}
         </div>
       </section>
+
       {selectedProject && (
-        <ProjectModal 
-          project={selectedProject} 
-          onClose={() => setSelectedProject(null)} 
+        <ProjectModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
         />
       )}
     </>
