@@ -21,19 +21,4 @@ export default {
     "title": "Свяжитесь со мной",
     "subtitle": "Открыт для новых проектов и интересных предложений."
   },
-  // FIX: Add missing admin translations.
-  "admin": {
-    "title": "Панель администратора",
-    "edit": "Редактировать проект",
-    "add": "Добавить новый проект",
-    "formTitle": "Название",
-    "formDescription": "Описание",
-    "formTags": "Теги (через запятую)",
-    "formMedia": "Медиафайл",
-    "formSave": "Сохранить",
-    "formCancel": "Отмена",
-    "projects": "Проекты",
-    "noProjects": "Проектов пока нет.",
-    "deleteConfirm": "Вы уверены, что хотите удалить этот проект?"
-  }
 }

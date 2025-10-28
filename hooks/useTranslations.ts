@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { LanguageContext } from '../context/LanguageContext';
-import ru from '../locales/ru.ts';
-import en from '../locales/en.ts';
+import ru from '../locales/ru';
+import en from '../locales/en';
 
 export const useTranslations = () => {
   const context = useContext(LanguageContext);

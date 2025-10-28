@@ -75,7 +75,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
             <p className="mt-4 text-lg leading-8 text-gray-400">{t.portfolio.subtitle}</p>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {displayedProjects.map((project) => (
               <ProjectCard key={project.id} project={project} onClick={() => setSelectedProject(project)} />
             ))}

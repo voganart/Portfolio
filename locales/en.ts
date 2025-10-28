@@ -21,19 +21,4 @@ export default {
     "title": "Get In Touch",
     "subtitle": "Open to new projects and exciting opportunities."
   },
-  // FIX: Add missing admin translations.
-  "admin": {
-    "title": "Admin Panel",
-    "edit": "Edit Project",
-    "add": "Add New Project",
-    "formTitle": "Title",
-    "formDescription": "Description",
-    "formTags": "Tags (comma-separated)",
-    "formMedia": "Media File",
-    "formSave": "Save",
-    "formCancel": "Cancel",
-    "projects": "Projects",
-    "noProjects": "No projects yet.",
-    "deleteConfirm": "Are you sure you want to delete this project?"
-  }
 }

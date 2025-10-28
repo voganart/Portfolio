@@ -24,12 +24,11 @@ jobs:
         run: npm run build
 
       - name: Add 404 for SPA fallback
-        run: |
-          cp -f dist/index.html dist/404.html || true
+        run: cp -f dist/index.html dist/404.html || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: ./dist
-          cname: # Remove this line if you don't have a custom domain
