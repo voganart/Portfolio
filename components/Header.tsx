@@ -13,7 +13,7 @@ const Header: React.FC = () => {
   return (
     <header className="min-h-screen flex items-center justify-center relative">
       <div className="text-center p-8 max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-wider text-white drop-shadow-lg">
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-wider text-white drop-shadow-lg md:whitespace-nowrap">
           {t.header.name}
         </h1>
         <p className="mt-4 text-xl md:text-2xl font-medium text-teal-400">
