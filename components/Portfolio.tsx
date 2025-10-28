@@ -95,10 +95,13 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
       </section>
 
       {selectedProject && (
-        <ProjectModal
-          project={selectedProject}
-          onClose={() => setSelectedProject(null)}
-        />
+          <ProjectModal
+            project={selectedProject}
+            index={projects.findIndex(p => p.id === selectedProject.id)}
+            projects={projects}
+            onClose={() => setSelectedProject(null)}
+            onSelectProject={setSelectedProject}
+          />
       )}
     </>
   );

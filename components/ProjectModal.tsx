@@ -5,13 +5,21 @@ import { useTranslations } from '../hooks/useTranslations';
 interface ProjectModalProps {
   project: Project;
   onClose: () => void;
+  index: number;
+  projects: Project[];
+  onSelectProject: (project: Project) => void;
 }
 
-const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
+const ProjectModal: React.FC<ProjectModalProps> = ({
+  project,
+  onClose,
+  index,
+  projects,
+  onSelectProject,
+}) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const { language } = useTranslations();
 
-  // закрытие по ESC
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
@@ -20,18 +28,14 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  // закрытие по клику на фон
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && event.target === modalRef.current) onClose();
   };
 
   const title = project.title[language];
   const description = project.description[language];
-
-  // 🔧 корректный путь для GitHub Pages
   const basePath = import.meta.env.BASE_URL || '/';
   const mediaPath = `${basePath}content/${project.mediaFile}`;
-
   const isVideo = ['.mp4', '.webm', '.ogg'].some(ext =>
     project.mediaFile.toLowerCase().endsWith(ext)
   );
@@ -44,6 +48,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
       style={{ animationDuration: '0.3s' }}
     >
       <div className="relative bg-gray-900/70 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col items-center p-4">
+
+        {/* Close */}
         <button
           onClick={onClose}
           className="absolute -top-3 -right-3 bg-white text-black rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold z-10 hover:scale-110 transition-transform"
@@ -52,6 +58,27 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
           &times;
         </button>
 
+        {/* Prev */}
+        {index > 0 && (
+          <button
+            onClick={() => onSelectProject(projects[index - 1])}
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-teal-600/70 transition"
+          >
+            &#8249;
+          </button>
+        )}
+
+        {/* Next */}
+        {index < projects.length - 1 && (
+          <button
+            onClick={() => onSelectProject(projects[index + 1])}
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-teal-600/70 transition"
+          >
+            &#8250;
+          </button>
+        )}
+
+        {/* Media */}
         <div className="w-full h-full flex items-center justify-center">
           {isVideo ? (
             <video
@@ -74,6 +101,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
           )}
         </div>
 
+        {/* Info */}
         <div className="w-full text-center mt-4 text-white p-2 bg-black/30 rounded-b-lg">
           <h3 className="text-xl font-bold">{title}</h3>
           <p className="mt-1 text-sm text-gray-300">{description}</p>
