@@ -7,7 +7,7 @@ export default {
   },
   "about": {
     "title": "About Me",
-    "text": "I've been creating mobile games for over 10 years — doing 2D/3D animation, gameplay prototypes, and low-poly models. I like experimenting with different tools like Blender, Photoshop, Unity, and Godot to find the best way to bring ideas to life. I work closely with developers, artists, and designers to keep projects creative and efficient. Now based in Argentina, I mix gamedev with 3D printing, coding, and web design as a hobby. I also play games, learn Spanish, and explore how AI can boost creativity and simplify workflows.",
+    "text": "With over 10 years in mobile game development, I am a versatile specialist: from 2D/3D character, environment, and UI animation to VFX, modeling, and texturing. My experience with Blender, Photoshop, Unity, Godot, and other tools allows me to find efficient solutions for a wide range of tasks. I collaborate closely with programmers, artists, and game designers to keep the process both productive and creative. Currently based in Argentina, I spend my free time 3D printing, coding, building hobby websites, gaming, learning Spanish, and integrating AI tools to streamline workflows.",
     "skillsTitle": "Key Skills",
     "skills": [ "2D Animation", "3D Animation", "Blender", "Spine", "Photoshop", "Unity", "Godot", "Prototyping", "Low-poly Modeling", "Texturing", "Rigging", "Game Development", "VFX" ]
   },
