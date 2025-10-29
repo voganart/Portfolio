@@ -1,16 +1,15 @@
-
 export default {
   "header": {
     "name": "Vladimir Grigorov",
-    "title": "2D/3D Animation | Blender | Spine | Photoshop | Unity | Godot",
+    "title": "2D/3D Анимация • Blender • Spine • Photoshop • Unity • Godot",
     "intro": "Hi, I'm Vladimir! I create captivating worlds and bring characters to life for games.",
     "button": "View My Work"
   },
   "about": {
     "title": "About Me",
-    "text": "I’ve been in mobile games for 10+ years: animations, prototypes, low-poly models. I love seeing ideas come to life fast. Currently in Argentina. In my free time — 3D printing, coding, learning Spanish, and playing games.",
+    "text": "I've been creating mobile games for over 10 years — doing 2D/3D animation, gameplay prototypes, and low-poly models. I like experimenting with different tools like Blender, Photoshop, Unity, and Godot to find the best way to bring ideas to life. I work closely with developers, artists, and designers to keep projects creative and efficient. Now based in Argentina, I mix gamedev with 3D printing, coding, and web design as a hobby. I also play games, learn Spanish, and explore how AI can boost creativity and simplify workflows.",
     "skillsTitle": "Key Skills",
-    "skills": [ "2D Animation", "3D Animation", "Blender", "Spine", "Photoshop", "Unity", "Godot", "Prototyping", "Low-poly Modeling", "Texturing", "Rigging", "Maya", "3D Printing" ]
+    "skills": [ "2D Animation", "3D Animation", "Blender", "Spine", "Photoshop", "Unity", "Godot", "Prototyping", "Low-poly Modeling", "Texturing", "Rigging", "Game Development", "VFX" ]
   },
   "portfolio": {
     "title": "Portfolio",

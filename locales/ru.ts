@@ -1,16 +1,15 @@
-
 export default {
   "header": {
     "name": "Владимир Григоров",
-    "title": "2D/3D Анимация | Blender | Spine | Photoshop | Unity | Godot",
+    "title": "2D/3D Анимация • Blender • Spine • Photoshop • Unity • Godot",
     "intro": "Привет, я Владимир! Создаю захватывающие миры и оживляю персонажей для игр.",
     "button": "Посмотреть работы"
   },
   "about": {
     "title": "Обо мне",
-    "text": "Работаю в мобильных играх уже 10+ лет: анимация, прототипы, low-poly модели. Люблю, когда идеи быстро оживают. Сейчас в Аргентине. В свободное время — 3D-печать, код, учу испанский, играю в игры.",
+    "text": "Уже больше 10 лет я делаю мобильные игры — занимаюсь 2D/3D-анимацией, прототипами и low-poly моделями. Люблю экспериментировать с разными программами — Blender, Photoshop, Unity, Godot и другими, подбирая лучший способ воплотить идею. Работаю в тесной связке с программистами, художниками и гейм-дизайнерами, чтобы процесс был творческим и эффективным. Сейчас живу в Аргентине. В свободное время занимаюсь 3D-печатью, кодом, делаю сайты как хобби и играю в игры. Изучаю испанский и пробую AI-инструменты, чтобы ускорять и улучшать рабочие процессы.",
     "skillsTitle": "Ключевые навыки",
-    "skills": [ "2D Animation", "3D Animation", "Blender", "Spine", "Photoshop", "Unity", "Godot", "Prototyping", "Low-poly Modeling", "Texturing", "Rigging", "Maya", "3D Printing" ]
+    "skills": [ "2D Animation", "3D Animation", "Blender", "Spine", "Photoshop", "Unity", "Godot", "Prototyping", "Low-poly Modeling", "Texturing", "Rigging", "Game Development", "VFX" ]
   },
   "portfolio": {
     "title": "Портфолио",
