@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import type { Project } from '../types';
 import { useTranslations } from '../hooks/useTranslations';
 import ProjectModal from './ProjectModal';
 
+// Компонент ProjectCard не меняется, его можно оставить как есть.
 interface ProjectCardProps {
   project: Project;
   onClick: () => void;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
+  // ... код компонента ProjectCard остается без изменений
   const { language } = useTranslations();
   const title = project.title[language];
   const description = project.description[language];
@@ -21,15 +23,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
 
   // Определяем: мобильное устройство или нет
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  useEffect(() => {
+  React.useEffect(() => {
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
   const [isHovered, setIsHovered] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
   // Hover-play только на десктопе
-  useEffect(() => {
+  React.useEffect(() => {
     if (!videoRef.current || isTouchDevice) return;
 
     if (isHovered) {
@@ -89,6 +91,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   );
 };
 
+
 interface PortfolioProps {
   projects: Project[];
 }
@@ -97,8 +100,27 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
   const { t } = useTranslations();
   const [showAll, setShowAll] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  
+  // 1. Состояние для хранения выбранного тега. null означает "Все"
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  const displayedProjects = showAll ? projects : projects.slice(0, 9);
+  // 2. Получаем список всех уникальных тегов из проектов
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    projects.forEach(p => p.tags.forEach(tag => tags.add(tag)));
+    return Array.from(tags).sort(); // Сортируем для порядка
+  }, [projects]);
+
+  // 3. Фильтруем проекты на основе выбранного тега
+  const filteredProjects = useMemo(() => {
+    if (!selectedTag) {
+      return projects; // Если тег не выбран, показываем все
+    }
+    return projects.filter(p => p.tags.includes(selectedTag));
+  }, [projects, selectedTag]);
+
+  // 4. Логика для кнопки "Показать все" теперь работает с отфильтрованным списком
+  const displayedProjects = showAll ? filteredProjects : filteredProjects.slice(0, 9);
 
   return (
     <>
@@ -111,7 +133,34 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
             <p className="mt-4 text-lg leading-8 text-gray-400">{t.portfolio.subtitle}</p>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* 5. Блок с кнопками-фильтрами */}
+          <div className="mt-12 flex justify-center flex-wrap gap-3">
+            <button
+              onClick={() => setSelectedTag(null)}
+              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${
+                !selectedTag 
+                  ? 'bg-teal-600 text-white' 
+                  : 'bg-slate-800 text-gray-300 hover:bg-slate-700'
+              }`}
+            >
+              All
+            </button>
+            {allTags.map(tag => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(tag)}
+                className={`px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${
+                  selectedTag === tag 
+                    ? 'bg-teal-600 text-white' 
+                    : 'bg-slate-800 text-gray-300 hover:bg-slate-700'
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedProjects.map((project) => (
               <ProjectCard
                 key={project.id}
@@ -121,7 +170,8 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
             ))}
           </div>
 
-          {projects.length > 9 && !showAll && (
+          {/* 6. Кнопка "Показать все" теперь учитывает отфильтрованные проекты */}
+          {filteredProjects.length > 9 && !showAll && (
             <div className="mt-16 text-center">
               <button
                 onClick={() => setShowAll(true)}
@@ -134,11 +184,12 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
         </div>
       </section>
 
+      {/* 7. Модальное окно теперь будет получать отфильтрованный список для навигации */}
       {selectedProject && (
         <ProjectModal
           project={selectedProject}
-          index={projects.findIndex((p) => p.id === selectedProject.id)}
-          projects={projects}
+          index={filteredProjects.findIndex((p) => p.id === selectedProject.id)}
+          projects={filteredProjects}
           onClose={() => setSelectedProject(null)}
           onSelectProject={setSelectedProject}
         />
