@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Project } from '../types';
-
-// --- ИМПОРТЫ DND-KIT ---
+// Импорты DND-KIT
 import {
   DndContext, 
   closestCenter,
@@ -15,14 +14,14 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  rectSortingStrategy, // Стратегия для сетки!
-  verticalListSortingStrategy, // Стратегия для списка
+  rectSortingStrategy,
+  verticalListSortingStrategy,
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-// --- КОМПОНЕНТ СОРТИРУЕМОГО ЭЛЕМЕНТА ---
-// Мы вынесли карточку в отдельный мини-компонент, чтобы подключить хук useSortable
+// --- ВОТ ОН, ЭТОТ КОМПОНЕНТ ---
+// Он находится прямо здесь, в начале файла
 const SortableProjectCard = ({ 
   project, 
   index, 
@@ -42,11 +41,10 @@ const SortableProjectCard = ({
     isDragging
   } = useSortable({ id: project.id });
 
-  // Стили для плавного перемещения
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    zIndex: isDragging ? 50 : 'auto', // Поднимаем элемент, когда тащим
+    zIndex: isDragging ? 50 : 'auto',
     opacity: isDragging ? 0.8 : 1,
   };
 
@@ -61,11 +59,10 @@ const SortableProjectCard = ({
         isDragging ? 'border-teal-500 shadow-2xl shadow-teal-900/30' : 'border-slate-700 shadow-lg'
       } ${isGridView ? 'w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]' : 'w-full'}`}
     >
-      {/* Зона захвата (Drag Handle) */}
       <div
         {...attributes}
         {...listeners}
-        className="bg-slate-900 p-2 border-b border-slate-700 text-center text-slate-500 hover:text-white cursor-grab active:cursor-grabbing flex justify-center items-center gap-2 touch-none" // touch-none важен для мобилок
+        className="bg-slate-900 p-2 border-b border-slate-700 text-center text-slate-500 hover:text-white cursor-grab active:cursor-grabbing flex justify-center items-center gap-2 touch-none"
         title="Потяните, чтобы изменить порядок"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -74,7 +71,6 @@ const SortableProjectCard = ({
         <span className="text-xs uppercase font-bold tracking-widest">№ {index + 1}</span>
       </div>
 
-      {/* Превью и загрузка медиа */}
       <div className="h-48 w-full bg-black relative group flex items-center justify-center border-b border-slate-700">
         {project.mediaFile ? (
           isVideo ? (
@@ -86,7 +82,6 @@ const SortableProjectCard = ({
           <span className="text-slate-600 font-medium">Нет медиафайла</span>
         )}
         
-        {/* Оверлей загрузки */}
         <div className="absolute inset-0 bg-slate-900/80 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity backdrop-blur-sm">
           <label className="cursor-pointer bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition-transform hover:scale-105">
             {uploadingId === project.id ? '⏳ Загрузка...' : '📁 Загрузить файл'}
@@ -104,14 +99,20 @@ const SortableProjectCard = ({
         </div>
       </div>
 
-      {/* Форма редактирования */}
       <div className="p-4 flex flex-col gap-3 flex-1 bg-slate-800">
         <input type="text" value={project.title.ru} onChange={e => handleChange(index, 'title.ru', e.target.value)} placeholder="Название (RU)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-medium focus:border-teal-500 outline-none" />
         <input type="text" value={project.title.en} onChange={e => handleChange(index, 'title.en', e.target.value)} placeholder="Название (EN)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-medium focus:border-teal-500 outline-none" />
         
         <input type="text" value={project.mediaFile} onChange={e => handleChange(index, 'mediaFile', e.target.value)} placeholder="Имя файла" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-teal-400 font-mono text-sm focus:border-teal-500 outline-none" />
         
-        <input type="text" value={project.tags.join(', ')} onChange={e => handleChange(index, 'tags', e.target.value)} placeholder="Теги" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-purple-300 text-sm focus:border-purple-500 outline-none" />
+        {/* ИСПРАВЛЕНО: .join(',') без пробела, чтобы курсор не скакал */}
+        <input 
+          type="text" 
+          value={project.tags.join(',')} 
+          onChange={e => handleChange(index, 'tags', e.target.value)} 
+          placeholder="Теги (Spine,Unity,VFX)" 
+          className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-purple-300 text-sm focus:border-purple-500 outline-none" 
+        />
         
         <textarea value={project.description.ru} onChange={e => handleChange(index, 'description.ru', e.target.value)} placeholder="Описание (RU)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-gray-300 text-sm h-16 resize-none focus:border-teal-500 outline-none" />
         
@@ -137,11 +138,10 @@ const AdminPanel: React.FC = () => {
 
   const basePath = import.meta.env.BASE_URL || '/';
 
-  // Настройка сенсоров для Dnd Kit
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // Начинаем тащить только если сдвинули мышь на 5px (чтобы клики работали)
+        distance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -163,11 +163,17 @@ const AdminPanel: React.FC = () => {
       });
   },[]);
 
+  // ИСПРАВЛЕНО: Чистим теги только при сохранении
   const handleSave = async () => {
     setSaving(true);
     setMessage('');
     try {
-      const updatedProjects = projects.map((p, index) => ({ ...p, order: index + 1 }));
+      const updatedProjects = projects.map((p, index) => ({ 
+        ...p, 
+        order: index + 1,
+        tags: p.tags.map(t => t.trim()).filter(t => t !== '') // Чистим тут
+      }));
+      
       const res = await fetch('http://localhost:4000/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -203,6 +209,7 @@ const AdminPanel: React.FC = () => {
     setPublishing(false);
   };
 
+  // ИСПРАВЛЕНО: Не чистим теги при вводе
   const handleChange = (index: number, field: string, value: string) => {
     const newProjects = [...projects];
     if (field.includes('.')) {
@@ -210,7 +217,7 @@ const AdminPanel: React.FC = () => {
       // @ts-ignore
       newProjects[index][obj][lang] = value;
     } else if (field === 'tags') {
-      newProjects[index].tags = value.split(',').map(t => t.trim()).filter(t => t !== '');
+      newProjects[index].tags = value.split(','); // Просто сплитим
     } else {
       // @ts-ignore
       newProjects[index][field] = value;
@@ -266,7 +273,6 @@ const AdminPanel: React.FC = () => {
     setUploadingId(null);
   };
 
-  // --- ЛОГИКА DND: Окончание перетаскивания ---
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -275,10 +281,8 @@ const AdminPanel: React.FC = () => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over?.id);
         
-        // Меняем элементы местами в массиве
         const newItems = arrayMove(items, oldIndex, newIndex);
         
-        // Обновляем order
         return newItems.map((item, idx) => ({ ...item, order: idx + 1 }));
       });
     }
@@ -289,10 +293,13 @@ const AdminPanel: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-900 text-gray-200 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
+        
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 bg-slate-800 p-6 rounded-xl border border-slate-700 sticky top-4 z-50 shadow-2xl gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white">Панель управления</h1>
-            <p className="text-sm text-teal-400 mt-1 font-semibold min-h-[20px]">{message}</p>
+            <p className="text-sm text-teal-400 mt-1 font-semibold min-h-[20px]">
+              {message}
+            </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <button 
@@ -301,12 +308,14 @@ const AdminPanel: React.FC = () => {
             >
               {isGridView ? '🔲 Сетка' : '📄 Список'}
             </button>
-            <button onClick={() => window.location.hash = ''} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded font-medium transition">На сайт</button>
-            <button onClick={handleSave} disabled={saving} className="px-6 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded font-bold transition disabled:opacity-50 shadow-lg">
-              {saving ? '...' : '💾 Сохранить'}
+            <button onClick={() => window.location.hash = ''} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded font-medium transition">
+              На сайт
             </button>
-            <button onClick={handlePublish} disabled={publishing} className="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded font-bold transition disabled:opacity-50 shadow-lg">
-              {publishing ? '...' : '🚀 Опубликовать'}
+            <button onClick={handleSave} disabled={saving} className="px-6 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded font-bold transition disabled:opacity-50 shadow-lg shadow-teal-900/50">
+              {saving ? 'Сохранение...' : '💾 Сохранить'}
+            </button>
+            <button onClick={handlePublish} disabled={publishing} className="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded font-bold transition disabled:opacity-50 shadow-lg shadow-purple-900/50">
+              {publishing ? 'Публикация...' : '🚀 Опубликовать'}
             </button>
           </div>
         </div>
@@ -315,7 +324,6 @@ const AdminPanel: React.FC = () => {
           + Создать новый проект
         </button>
 
-        {/* --- КОНТЕКСТ DND --- */}
         <DndContext 
           sensors={sensors} 
           collisionDetection={closestCenter} 
@@ -342,7 +350,6 @@ const AdminPanel: React.FC = () => {
             </div>
           </SortableContext>
         </DndContext>
-
       </div>
     </div>
   );
