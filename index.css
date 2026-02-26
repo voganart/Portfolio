@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+  background-color: #0f172a; /* slate-900 fallback */
+}
+
+/* Анимированный градиент для фона (см. пункт 3) */
+@keyframes gradient-xy {
+  0%, 100% {
+    background-size: 400% 400%;
+    background-position: 0% 0%;
+  }
+  25% {
+    background-size: 400% 400%;
+    background-position: 100% 0%;
+  }
+  50% {
+    background-size: 400% 400%;
+    background-position: 100% 100%;
+  }
+  75% {
+    background-size: 400% 400%;
+    background-position: 0% 100%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient-xy 15s ease infinite;
+}
+
+/* Кастомный скроллбар (геймерский стиль) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a; 
+}
+::-webkit-scrollbar-thumb {
+  background: #2dd4bf; /* teal-400 */
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #14b8a6; /* teal-500 */
+}
