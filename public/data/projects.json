@@ -127,27 +127,8 @@
     ]
   },
   {
-    "id": 9,
-    "order": 8,
-    "title": {
-      "ru": "Пет-проект про морских свинок",
-      "en": "A pet project about guinea pigs"
-    },
-    "description": {
-      "ru": "Личный проект для практики Unity (морские свинки).",
-      "en": "Unity learning project: guinea pigs."
-    },
-    "mediaFile": "guinea_pig_game.mp4",
-    "tags": [
-      "Unity",
-      "Game Development",
-      "Animation",
-      "Prototyping"
-    ]
-  },
-  {
     "id": 10,
-    "order": 9,
+    "order": 8,
     "title": {
       "ru": "Иконка кота",
       "en": "Cat Icon"
@@ -166,7 +147,7 @@
   },
   {
     "id": 31,
-    "order": 10,
+    "order": 9,
     "title": {
       "ru": "Девушка открывает дверь",
       "en": "Woman Tries to Open Door"
@@ -185,7 +166,7 @@
   },
   {
     "id": 4,
-    "order": 11,
+    "order": 10,
     "title": {
       "ru": "Атака лучника",
       "en": "Archer Attack"
@@ -203,7 +184,7 @@
   },
   {
     "id": 11,
-    "order": 12,
+    "order": 11,
     "title": {
       "ru": "Чел флексит",
       "en": "Man Flexes"
@@ -221,7 +202,7 @@
   },
   {
     "id": 12,
-    "order": 13,
+    "order": 12,
     "title": {
       "ru": "Чел бьет молотком",
       "en": "Man Hits Hammer"
@@ -239,7 +220,7 @@
   },
   {
     "id": 13,
-    "order": 14,
+    "order": 13,
     "title": {
       "ru": "Чел бьет кнутом",
       "en": "Man Hits Whip"
@@ -257,7 +238,7 @@
   },
   {
     "id": 14,
-    "order": 15,
+    "order": 14,
     "title": {
       "ru": "Чел вращается с двумя клинками",
       "en": "Man spins with two blades"
@@ -275,7 +256,7 @@
   },
   {
     "id": 15,
-    "order": 16,
+    "order": 15,
     "title": {
       "ru": "Чел с двухручным мечом",
       "en": "Man Two-Handed Sword Attack"
@@ -293,7 +274,7 @@
   },
   {
     "id": 32,
-    "order": 17,
+    "order": 16,
     "title": {
       "ru": "Женщина крутит посохом",
       "en": "Woman twirls a staff"
@@ -311,7 +292,7 @@
   },
   {
     "id": 16,
-    "order": 18,
+    "order": 17,
     "title": {
       "ru": "Ракета Match3",
       "en": "Match3 rocket"
@@ -330,7 +311,7 @@
   },
   {
     "id": 17,
-    "order": 19,
+    "order": 18,
     "title": {
       "ru": "Эффекты Match3",
       "en": "Match3 VFX"
@@ -348,7 +329,7 @@
   },
   {
     "id": 18,
-    "order": 20,
+    "order": 19,
     "title": {
       "ru": "Совы",
       "en": "Owls"
@@ -366,7 +347,7 @@
   },
   {
     "id": 19,
-    "order": 21,
+    "order": 20,
     "title": {
       "ru": "Анимация мальчика",
       "en": "Boy animation"
@@ -384,7 +365,7 @@
   },
   {
     "id": 20,
-    "order": 22,
+    "order": 21,
     "title": {
       "ru": "Волшебная палочка",
       "en": "Magic wand wave"
@@ -398,6 +379,25 @@
       "3D Animation",
       "Blender",
       "Character"
+    ]
+  },
+  {
+    "id": 9,
+    "order": 22,
+    "title": {
+      "ru": "Пет-проект про морских свинок",
+      "en": "A pet project about guinea pigs"
+    },
+    "description": {
+      "ru": "Личный проект для практики Unity (морские свинки).",
+      "en": "Unity learning project: guinea pigs."
+    },
+    "mediaFile": "guinea_pig_game.mp4",
+    "tags": [
+      "Unity",
+      "Game Development",
+      "Animation",
+      "Prototyping"
     ]
   },
   {
