@@ -1,24 +1,7 @@
 [
   {
-    "id": 1,
-    "order": 1,
-    "title": {
-      "ru": "2D Анимация Альпаки",
-      "en": "Alpaca 2D Animation"
-    },
-    "description": {
-      "ru": "2D анимация в Spine.",
-      "en": "2D animation in Spine."
-    },
-    "mediaFile": "Alpaca_2danimation_spine.mp4",
-    "tags": [
-      "2D Animation",
-      "Spine"
-    ]
-  },
-  {
     "id": 2,
-    "order": 2,
+    "order": 1,
     "title": {
       "ru": "Animation showreel 2019",
       "en": "Animation showreel 2019"
@@ -36,7 +19,7 @@
   },
   {
     "id": 3,
-    "order": 3,
+    "order": 2,
     "title": {
       "ru": "Animation showreel 2021",
       "en": "Animation showreel 2021"
@@ -55,26 +38,25 @@
     ]
   },
   {
-    "id": 4,
-    "order": 4,
+    "id": 1,
+    "order": 3,
     "title": {
-      "ru": "Атака лучника",
-      "en": "Archer Attack"
+      "ru": "2D Анимация Альпаки",
+      "en": "Alpaca 2D Animation"
     },
     "description": {
-      "ru": "Анимация атаки лучника в Blender.",
-      "en": "Archer attack animation in Blender."
+      "ru": "2D анимация в Spine.",
+      "en": "2D animation in Spine."
     },
-    "mediaFile": "Archer_attack.mp4",
+    "mediaFile": "Alpaca_2danimation_spine.mp4",
     "tags": [
-      "3D Animation",
-      "Blender",
-      "Character"
+      "2D Animation",
+      "Spine"
     ]
   },
   {
     "id": 5,
-    "order": 5,
+    "order": 4,
     "title": {
       "ru": "Пугала в замке",
       "en": "Castle Scarecrows Jump"
@@ -92,7 +74,7 @@
   },
   {
     "id": 6,
-    "order": 6,
+    "order": 5,
     "title": {
       "ru": "Чистка мусора",
       "en": "Cleaning Trash"
@@ -110,7 +92,7 @@
   },
   {
     "id": 7,
-    "order": 7,
+    "order": 6,
     "title": {
       "ru": "Ходьба персонажа",
       "en": "Crouch Walk"
@@ -128,7 +110,7 @@
   },
   {
     "id": 8,
-    "order": 8,
+    "order": 7,
     "title": {
       "ru": "Анимация деления холодильников",
       "en": "Friges split animation"
@@ -146,7 +128,7 @@
   },
   {
     "id": 9,
-    "order": 9,
+    "order": 8,
     "title": {
       "ru": "Пет-проект про морских свинок",
       "en": "A pet project about guinea pigs"
@@ -164,7 +146,7 @@
   },
   {
     "id": 10,
-    "order": 10,
+    "order": 9,
     "title": {
       "ru": "Иконка кота",
       "en": "Cat Icon"
@@ -178,6 +160,24 @@
       "2D Animation",
       "Spine",
       "UI",
+      "Character"
+    ]
+  },
+  {
+    "id": 4,
+    "order": 10,
+    "title": {
+      "ru": "Атака лучника",
+      "en": "Archer Attack"
+    },
+    "description": {
+      "ru": "Анимация атаки лучника в Blender.",
+      "en": "Archer attack animation in Blender."
+    },
+    "mediaFile": "Archer_attack.mp4",
+    "tags": [
+      "3D Animation",
+      "Blender",
       "Character"
     ]
   },
