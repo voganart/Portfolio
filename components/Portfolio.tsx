@@ -1,44 +1,40 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import type { Project } from '../types';
 import { useTranslations } from '../hooks/useTranslations';
 import ProjectModal from './ProjectModal';
 
-// Компонент ProjectCard не меняется, его можно оставить как есть.
 interface ProjectCardProps {
   project: Project;
   onClick: () => void;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
-  // ... код компонента ProjectCard остается без изменений
   const { language } = useTranslations();
   const title = project.title[language];
   const description = project.description[language];
 
   const basePath = import.meta.env.BASE_URL;
   const mediaPath = `${basePath}content/${project.mediaFile}`;
-  const posterPath = `${basePath}content/posters/${project.mediaFile.replace(/\.[^/.]+$/, '.jpg')}`;
-
   const isVideo = /\.(mp4|webm|ogg)$/i.test(project.mediaFile);
 
-  // Определяем: мобильное устройство или нет
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  React.useEffect(() => {
+  useEffect(() => {
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
   const [isHovered, setIsHovered] = useState(false);
-  const videoRef = React.useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Hover-play только на десктопе
-  React.useEffect(() => {
+  useEffect(() => {
     if (!videoRef.current || isTouchDevice) return;
 
     if (isHovered) {
       videoRef.current.play().catch(() => {});
     } else {
       videoRef.current.pause();
-      videoRef.current.currentTime = 0;
+      // Возвращаем на 0.1 секунду, чтобы превью не сбрасывалось в черный экран
+      videoRef.current.currentTime = 0.1; 
     }
   }, [isHovered, isTouchDevice]);
 
@@ -49,21 +45,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Умный рендер: видео только на десктопе, JPG на мобиле */}
-      {isVideo && !isTouchDevice ? (
+      {/* 
+        Умный рендер: теперь мы всегда используем <video> для видео, 
+        даже на мобилках. Трюк #t=0.1 заставляет браузер загрузить первый кадр 
+        как картинку, так что нам больше не нужны отдельные .jpg постеры!
+      */}
+      {isVideo ? (
         <video
           ref={videoRef}
-          src={mediaPath}
+          src={`${mediaPath}#t=0.1`} 
           className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
           muted
           loop
           playsInline
           preload="metadata"
-          poster={posterPath} // fallback на случай медленной загрузки
         />
       ) : (
         <img
-          src={isVideo ? posterPath : mediaPath}
+          src={mediaPath}
           alt={title}
           className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
           loading="lazy"
@@ -91,35 +90,28 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   );
 };
 
-
 interface PortfolioProps {
   projects: Project[];
 }
 
 const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
   const { t } = useTranslations();
-  const [showAll, setShowAll] = useState(false);
+  const[showAll, setShowAll] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   
-  // 1. Состояние для хранения выбранного тега. null означает "Все"
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  // 2. Получаем список всех уникальных тегов из проектов
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     projects.forEach(p => p.tags.forEach(tag => tags.add(tag)));
-    return Array.from(tags).sort(); // Сортируем для порядка
+    return Array.from(tags).sort();
   }, [projects]);
 
-  // 3. Фильтруем проекты на основе выбранного тега
   const filteredProjects = useMemo(() => {
-    if (!selectedTag) {
-      return projects; // Если тег не выбран, показываем все
-    }
+    if (!selectedTag) return projects;
     return projects.filter(p => p.tags.includes(selectedTag));
-  }, [projects, selectedTag]);
+  },[projects, selectedTag]);
 
-  // 4. Логика для кнопки "Показать все" теперь работает с отфильтрованным списком
   const displayedProjects = showAll ? filteredProjects : filteredProjects.slice(0, 9);
 
   return (
@@ -133,7 +125,6 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
             <p className="mt-4 text-lg leading-8 text-gray-400">{t.portfolio.subtitle}</p>
           </div>
 
-          {/* 5. Блок с кнопками-фильтрами */}
           <div className="mt-12 flex justify-center flex-wrap gap-3">
             <button
               onClick={() => setSelectedTag(null)}
@@ -170,7 +161,6 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
             ))}
           </div>
 
-          {/* 6. Кнопка "Показать все" теперь учитывает отфильтрованные проекты */}
           {filteredProjects.length > 9 && !showAll && (
             <div className="mt-16 text-center">
               <button
@@ -184,7 +174,6 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
         </div>
       </section>
 
-      {/* 7. Модальное окно теперь будет получать отфильтрованный список для навигации */}
       {selectedProject && (
         <ProjectModal
           project={selectedProject}
