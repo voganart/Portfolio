@@ -10,7 +10,8 @@ import { LanguageProvider } from './context/LanguageContext';
 const App: React.FC = () => {
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 text-gray-200">
+      {/* Добавил класс animate-gradient и изменил цвета на более глубокие */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 text-gray-200 animate-gradient bg-[length:400%_400%]">
         <LanguageSwitcher />
         <Header />
         <main className="container mx-auto px-4 sm:px-6 lg:px-8">
