@@ -401,8 +401,27 @@
     ]
   },
   {
-    "id": 42,
+    "id": 43,
     "order": 23,
+    "title": {
+      "ru": "Прототип гиперкэж игры",
+      "en": "Hyper-casual prototype"
+    },
+    "description": {
+      "ru": "Разработка прототипа игры, в котором игроки управляют пылесосом для уборки разбросанных предметов. Простая механика, приятные тактильные ощущения и «невероятно увлекательный» игровой процесс.",
+      "en": ""
+    },
+    "mediaFile": "0001-0500.mp4",
+    "tags": [
+      "3D Animation",
+      "Prototyping",
+      "Godot",
+      "Game Development"
+    ]
+  },
+  {
+    "id": 42,
+    "order": 24,
     "title": {
       "ru": "Смена дня и ночи в Godot 4",
       "en": "Day night cycle in Godot 4"
@@ -421,7 +440,7 @@
   },
   {
     "id": 21,
-    "order": 24,
+    "order": 25,
     "title": {
       "ru": "Личный проект для практики Godot",
       "en": "Personal project for practicing Godot"
@@ -441,7 +460,7 @@
   },
   {
     "id": 22,
-    "order": 25,
+    "order": 26,
     "title": {
       "ru": "Личный проект для практики Godot",
       "en": "Personal project for practicing Godot"
@@ -461,7 +480,7 @@
   },
   {
     "id": 23,
-    "order": 26,
+    "order": 27,
     "title": {
       "ru": "Punch Boy Debug",
       "en": "Punch Boy Debug"
@@ -481,7 +500,7 @@
   },
   {
     "id": 24,
-    "order": 27,
+    "order": 28,
     "title": {
       "ru": "Мультяшная анимация",
       "en": "Cartoon animation"
@@ -499,7 +518,7 @@
   },
   {
     "id": 25,
-    "order": 28,
+    "order": 29,
     "title": {
       "ru": "UI анимация",
       "en": "UI Animation"
@@ -517,7 +536,7 @@
   },
   {
     "id": 26,
-    "order": 29,
+    "order": 30,
     "title": {
       "ru": "Тест работы слоев в Unity Animator",
       "en": "Unity Animator Layers Test"
@@ -535,7 +554,7 @@
   },
   {
     "id": 27,
-    "order": 30,
+    "order": 31,
     "title": {
       "ru": "Unity Cinemachine",
       "en": "Unity Cinemachine Setup"
@@ -553,7 +572,7 @@
   },
   {
     "id": 28,
-    "order": 31,
+    "order": 32,
     "title": {
       "ru": "Unity Low Poly VFX",
       "en": "Unity Low Poly VFX"
@@ -571,7 +590,7 @@
   },
   {
     "id": 29,
-    "order": 32,
+    "order": 33,
     "title": {
       "ru": "Анимация лиан айдл",
       "en": "Vines Idle"
@@ -589,7 +608,7 @@
   },
   {
     "id": 30,
-    "order": 33,
+    "order": 34,
     "title": {
       "ru": "Водопад",
       "en": "Waterfall"
@@ -607,7 +626,7 @@
   },
   {
     "id": 33,
-    "order": 34,
+    "order": 35,
     "title": {
       "ru": "Замок",
       "en": "Castle"
@@ -625,7 +644,7 @@
   },
   {
     "id": 34,
-    "order": 35,
+    "order": 36,
     "title": {
       "ru": "Спальня замка",
       "en": "Castle Bedroom"
@@ -643,7 +662,7 @@
   },
   {
     "id": 35,
-    "order": 36,
+    "order": 37,
     "title": {
       "ru": "Двор замка",
       "en": "Castle Courtyard"
@@ -661,7 +680,7 @@
   },
   {
     "id": 36,
-    "order": 37,
+    "order": 38,
     "title": {
       "ru": "Столовая замка",
       "en": "Castle Dining Room"
@@ -679,7 +698,7 @@
   },
   {
     "id": 37,
-    "order": 38,
+    "order": 39,
     "title": {
       "ru": "Гостиная замка",
       "en": "Castle Living Room"
@@ -697,7 +716,7 @@
   },
   {
     "id": 38,
-    "order": 39,
+    "order": 40,
     "title": {
       "ru": "Кот-мальчик",
       "en": "Cat Boy"
@@ -715,7 +734,7 @@
   },
   {
     "id": 39,
-    "order": 40,
+    "order": 41,
     "title": {
       "ru": "Консоль",
       "en": "Game Console"
@@ -733,7 +752,7 @@
   },
   {
     "id": 40,
-    "order": 41,
+    "order": 42,
     "title": {
       "ru": "Полка с хламом",
       "en": "A shelf with junk"
@@ -751,7 +770,7 @@
   },
   {
     "id": 41,
-    "order": 42,
+    "order": 43,
     "title": {
       "ru": "Ванная комната",
       "en": "Shower room"
