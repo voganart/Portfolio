@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import type { Project } from '../types';
-// Импорты DND-KIT
 import {
   DndContext, 
   closestCenter,
@@ -20,8 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-// --- ВОТ ОН, ЭТОТ КОМПОНЕНТ ---
-// Он находится прямо здесь, в начале файла
+// --- КОМПОНЕНТ КАРТОЧКИ ---
 const SortableProjectCard = ({ 
   project, 
   index, 
@@ -30,7 +28,8 @@ const SortableProjectCard = ({
   handleChange, 
   deleteProject, 
   handleFileUpload,
-  uploadingId 
+  uploadingId,
+  handleAutoTranslate // <-- Новая функция прокинута сюда
 }: any) => {
   const {
     attributes,
@@ -100,12 +99,14 @@ const SortableProjectCard = ({
       </div>
 
       <div className="p-4 flex flex-col gap-3 flex-1 bg-slate-800">
-        <input type="text" value={project.title.ru} onChange={e => handleChange(index, 'title.ru', e.target.value)} placeholder="Название (RU)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-medium focus:border-teal-500 outline-none" />
-        <input type="text" value={project.title.en} onChange={e => handleChange(index, 'title.en', e.target.value)} placeholder="Название (EN)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-medium focus:border-teal-500 outline-none" />
+        {/* Заголовки */}
+        <div className="grid grid-cols-2 gap-2">
+           <input type="text" value={project.title.ru} onChange={e => handleChange(index, 'title.ru', e.target.value)} placeholder="Название (RU)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-medium focus:border-teal-500 outline-none text-sm" />
+           <input type="text" value={project.title.en} onChange={e => handleChange(index, 'title.en', e.target.value)} placeholder="Title (EN)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-medium focus:border-teal-500 outline-none text-sm" />
+        </div>
         
-        <input type="text" value={project.mediaFile} onChange={e => handleChange(index, 'mediaFile', e.target.value)} placeholder="Имя файла" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-teal-400 font-mono text-sm focus:border-teal-500 outline-none" />
+        <input type="text" value={project.mediaFile} onChange={e => handleChange(index, 'mediaFile', e.target.value)} placeholder="Имя файла" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-teal-400 font-mono text-xs focus:border-teal-500 outline-none" />
         
-        {/* ИСПРАВЛЕНО: .join(',') без пробела, чтобы курсор не скакал */}
         <input 
           type="text" 
           value={project.tags.join(',')} 
@@ -114,11 +115,32 @@ const SortableProjectCard = ({
           className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-purple-300 text-sm focus:border-purple-500 outline-none" 
         />
         
-        <textarea value={project.description.ru} onChange={e => handleChange(index, 'description.ru', e.target.value)} placeholder="Описание (RU)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-gray-300 text-sm h-16 resize-none focus:border-teal-500 outline-none" />
+        {/* Описание RU */}
+        <textarea value={project.description.ru} onChange={e => handleChange(index, 'description.ru', e.target.value)} placeholder="Описание (RU)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-gray-300 text-sm h-20 resize-none focus:border-teal-500 outline-none" />
         
-        <div className="mt-auto pt-4 flex justify-end">
+        {/* Кнопка перевода и Описание EN */}
+        <div className="relative">
+          <div className="flex justify-between items-center mb-1">
+             <span className="text-xs text-gray-500">English Description</span>
+             <button 
+               onClick={() => handleAutoTranslate(index)} 
+               className="text-xs text-teal-400 hover:text-teal-300 border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 rounded transition hover:scale-105"
+               title="Автоматически перевести русское описание"
+             >
+               ✨ Перевести с RU
+             </button>
+          </div>
+          <textarea 
+            value={project.description.en} 
+            onChange={e => handleChange(index, 'description.en', e.target.value)} 
+            placeholder="Description (EN)" 
+            className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-gray-300 text-sm h-20 resize-none focus:border-teal-500 outline-none" 
+          />
+        </div>
+        
+        <div className="mt-auto pt-2 flex justify-end">
           <button onClick={() => deleteProject(index)} className="text-xs text-red-500 hover:text-red-400 font-bold px-3 py-1 rounded border border-red-900/50 hover:bg-red-900/20 transition">
-            Удалить проект
+            Удалить
           </button>
         </div>
       </div>
@@ -163,7 +185,6 @@ const AdminPanel: React.FC = () => {
       });
   },[]);
 
-  // ИСПРАВЛЕНО: Чистим теги только при сохранении
   const handleSave = async () => {
     setSaving(true);
     setMessage('');
@@ -171,7 +192,7 @@ const AdminPanel: React.FC = () => {
       const updatedProjects = projects.map((p, index) => ({ 
         ...p, 
         order: index + 1,
-        tags: p.tags.map(t => t.trim()).filter(t => t !== '') // Чистим тут
+        tags: p.tags.map(t => t.trim()).filter(t => t !== '')
       }));
       
       const res = await fetch('http://localhost:4000/api/projects', {
@@ -209,7 +230,6 @@ const AdminPanel: React.FC = () => {
     setPublishing(false);
   };
 
-  // ИСПРАВЛЕНО: Не чистим теги при вводе
   const handleChange = (index: number, field: string, value: string) => {
     const newProjects = [...projects];
     if (field.includes('.')) {
@@ -217,12 +237,51 @@ const AdminPanel: React.FC = () => {
       // @ts-ignore
       newProjects[index][obj][lang] = value;
     } else if (field === 'tags') {
-      newProjects[index].tags = value.split(','); // Просто сплитим
+      newProjects[index].tags = value.split(',');
     } else {
       // @ts-ignore
       newProjects[index][field] = value;
     }
     setProjects(newProjects);
+  };
+
+  // --- ЛОГИКА АВТОПЕРЕВОДА ---
+  const handleAutoTranslate = async (index: number) => {
+    const textToTranslate = projects[index].description.ru;
+    if (!textToTranslate) {
+      alert("Сначала заполните русское описание!");
+      return;
+    }
+
+    // Временная индикация
+    const newProjects = [...projects];
+    newProjects[index].description.en = "Translating...";
+    setProjects(newProjects);
+
+    try {
+      // Используем бесплатный API (MyMemory)
+      const response = await fetch(
+        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(textToTranslate)}&langpair=ru|en`
+      );
+      const data = await response.json();
+      
+      if (data.responseData && data.responseData.translatedText) {
+        const translated = data.responseData.translatedText;
+        // Обновляем стейт с переводом
+        const updatedProjects = [...projects];
+        updatedProjects[index].description.en = translated;
+        setProjects(updatedProjects);
+      } else {
+        alert("Не удалось перевести. Попробуйте вручную.");
+      }
+    } catch (error) {
+      console.error("Ошибка перевода:", error);
+      alert("Ошибка сервиса перевода.");
+      // Возвращаем как было
+      const fallbackProjects = [...projects];
+      fallbackProjects[index].description.en = "";
+      setProjects(fallbackProjects);
+    }
   };
 
   const addProject = () => {
@@ -345,6 +404,7 @@ const AdminPanel: React.FC = () => {
                   deleteProject={deleteProject}
                   handleFileUpload={handleFileUpload}
                   uploadingId={uploadingId}
+                  handleAutoTranslate={handleAutoTranslate} // Передаем функцию
                 />
               ))}
             </div>
