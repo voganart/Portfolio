@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { Project } from '../types';
 import { useTranslations } from '../hooks/useTranslations';
 import ProjectModal from './ProjectModal';
@@ -13,24 +13,32 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   const title = project.title[language];
   const description = project.description[language];
 
-  const isVideo = ['.mp4', '.webm', '.ogg'].some(ext =>
-    project.mediaFile.toLowerCase().endsWith(ext)
-  );
-  const mediaPath = `${import.meta.env.BASE_URL}content/${project.mediaFile}`;
+  const basePath = import.meta.env.BASE_URL;
+  const mediaPath = `${basePath}content/${project.mediaFile}`;
+  const posterPath = `${basePath}content/posters/${project.mediaFile.replace(/\.[^/.]+$/, '.jpg')}`;
 
-  const [isHovered, setIsHovered] = React.useState(false);
-  const videoRef = React.useRef<HTMLVideoElement>(null);
+  const isVideo = /\.(mp4|webm|ogg)$/i.test(project.mediaFile);
 
-  // Эффект для управления воспроизведением видео
-  React.useEffect(() => {
-    if (!videoRef.current) return;
+  // Определяем: мобильное устройство или нет
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
+
+  const [isHovered, setIsHovered] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Hover-play только на десктопе
+  useEffect(() => {
+    if (!videoRef.current || isTouchDevice) return;
+
     if (isHovered) {
-      videoRef.current.play().catch(() => {}); // предотвращает ошибку autoplay
+      videoRef.current.play().catch(() => {});
     } else {
       videoRef.current.pause();
-      videoRef.current.currentTime = 0; // сброс к началу
+      videoRef.current.currentTime = 0;
     }
-  }, [isHovered]);
+  }, [isHovered, isTouchDevice]);
 
   return (
     <div
@@ -39,7 +47,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {isVideo ? (
+      {/* Умный рендер: видео только на десктопе, JPG на мобиле */}
+      {isVideo && !isTouchDevice ? (
         <video
           ref={videoRef}
           src={mediaPath}
@@ -48,22 +57,29 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
           loop
           playsInline
           preload="metadata"
+          poster={posterPath} // fallback на случай медленной загрузки
         />
       ) : (
         <img
-          src={mediaPath}
+          src={isVideo ? posterPath : mediaPath}
           alt={title}
           className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
         />
       )}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
       <div className="absolute bottom-0 left-0 p-6 text-white w-full">
         <h3 className="text-xl font-bold">{title}</h3>
-        <p className="mt-2 text-sm text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-0 group-hover:h-auto">{description}</p>
+        <p className="mt-2 text-sm text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-0 group-hover:h-auto">
+          {description}
+        </p>
         <div className="mt-3 flex flex-wrap gap-2">
           {project.tags.map((tag) => (
-            <span key={tag} className="text-xs font-semibold bg-teal-400/20 text-teal-200 px-2 py-1 rounded-md">
+            <span
+              key={tag}
+              className="text-xs font-semibold bg-teal-400/20 text-teal-200 px-2 py-1 rounded-md"
+            >
               {tag}
             </span>
           ))}
@@ -72,7 +88,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
     </div>
   );
 };
-
 
 interface PortfolioProps {
   projects: Project[];
@@ -90,13 +105,19 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
       <section id="portfolio" className="py-20 sm:py-32">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">{t.portfolio.title}</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+              {t.portfolio.title}
+            </h2>
             <p className="mt-4 text-lg leading-8 text-gray-400">{t.portfolio.subtitle}</p>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} onClick={() => setSelectedProject(project)} />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onClick={() => setSelectedProject(project)}
+              />
             ))}
           </div>
 
@@ -114,13 +135,13 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
       </section>
 
       {selectedProject && (
-          <ProjectModal
-            project={selectedProject}
-            index={projects.findIndex(p => p.id === selectedProject.id)}
-            projects={projects}
-            onClose={() => setSelectedProject(null)}
-            onSelectProject={setSelectedProject}
-          />
+        <ProjectModal
+          project={selectedProject}
+          index={projects.findIndex((p) => p.id === selectedProject.id)}
+          projects={projects}
+          onClose={() => setSelectedProject(null)}
+          onSelectProject={setSelectedProject}
+        />
       )}
     </>
   );
