@@ -1,18 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { LanguageProvider } from './context/LanguageContext';
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VG Art - 3D Artist Portfolio</title>
 
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
-}
+    <!-- 🧭 Open Graph / LinkedIn / Telegram -->
+    <meta property="og:title" content="Vladimir Grigorov – 2D/3D Game Animator" />
+    <meta property="og:description" content="Animations, characters and environments made in Blender, Spine, Unity and Godot." />
+    <meta property="og:image" content="/WebPreview.jpg" />
+    <meta property="og:url" content="https://voganart.github.io/Portfolio/" />
+    <meta property="og:type" content="website" />
 
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <LanguageProvider>
-      <App />
-    </LanguageProvider>
-  </React.StrictMode>
-);
+    <!-- 🐦 Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vladimir Grigorov – 2D/3D Game Animator" />
+    <meta name="twitter:description" content="Animations, characters and environments made in Blender, Spine, Unity and Godot." />
+    <meta name="twitter:image" content="/WebPreview.jpg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-slate-900 text-white">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

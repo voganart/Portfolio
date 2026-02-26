@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Твои кастомные стили, если нужны, можно перенести сюда из index.html */
+body {
+  @apply bg-slate-900 text-white;
+}
