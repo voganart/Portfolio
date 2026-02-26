@@ -1,24 +1,22 @@
+import defaultTheme from 'tailwindcss/defaultTheme';
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Указываем, где используются классы Tailwind
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
     "./App.tsx",
     "./components/**/*.{js,ts,jsx,tsx}"
   ],
+
+  // В этой секции мы подключаем стандартную тему и расширяем её
   theme: {
+    ...defaultTheme, // <-- Вот эта строка подключает все стандартные стили (цвета, отступы и т.д.)
     extend: {
+      // А здесь мы добавляем свои кастомные стили или переопределяем стандартные
       fontFamily: {
-        sans: ['Rubik', 'sans-serif'],
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
+        // Добавляем Rubik в стек шрифтов без засечек, сохраняя стандартные
+        sans: ['Rubik', ...defaultTheme.fontFamily.sans],
       },
     },
   },
