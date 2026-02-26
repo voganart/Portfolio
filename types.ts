@@ -11,10 +11,13 @@ export type Tag =
   | 'Environment' 
   | 'Showreel' 
   | 'Prototyping'
-  | '3D Render'; // Добавь другие по необходимости
+  | '3D Render'
+  | 'Game Development'
+  | 'Animator';
 
 export interface Project {
   id: number;
+  order: number; // <-- Добавили это поле для сортировки
   title: {
     ru: string;
     en: string;
@@ -24,5 +27,5 @@ export interface Project {
     en: string;
   };
   mediaFile: string;
-  tags: string[]; // Можно заменить на Tag[], если хочешь строгой проверки
+  tags: string[];
 }
