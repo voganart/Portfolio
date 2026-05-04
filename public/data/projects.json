@@ -439,8 +439,28 @@
     ]
   },
   {
-    "id": 21,
+    "id": 47,
     "order": 25,
+    "title": {
+      "ru": "Демо игры Godot",
+      "en": "Godot Demo"
+    },
+    "description": {
+      "ru": "Прототип игры на Godot. Создан тестовый уровень и реализована демонстрация умений главного героя, включая базовые механики передвижения и боя.",
+      "en": "Game prototype in Godot. Test level created with a showcase of the main character abilities, including core movement and combat mechanics."
+    },
+    "mediaFile": "Desktop_2026.05.04_-_11.49.22.02.mp4",
+    "tags": [
+      "Gameplay",
+      "Level Design",
+      "Character Abilities",
+      "Animation",
+      "Godot"
+    ]
+  },
+  {
+    "id": 21,
+    "order": 26,
     "title": {
       "ru": "Личный проект для практики Godot",
       "en": "Personal project for practicing Godot"
@@ -459,8 +479,28 @@
     ]
   },
   {
+    "id": 46,
+    "order": 27,
+    "title": {
+      "ru": "Персонаж Godot",
+      "en": "Godot character"
+    },
+    "description": {
+      "ru": "Сборка и настройка игрового персонажа в Godot с компонентной архитектурой. Реализованы state machine, способности (abilities), зоны взаимодействия и параметры анимации.",
+      "en": "Character setup and configuration in Godot with component-based architecture. Implemented state machine, abilities, interaction zones and animation parameters."
+    },
+    "mediaFile": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº_ÑÐºÑÐ°Ð½Ð°_2026-05-04_113838.png",
+    "tags": [
+      "3D Setup",
+      "Animation Systems",
+      "State Machine",
+      "Gameplay",
+      "Godot"
+    ]
+  },
+  {
     "id": 22,
-    "order": 26,
+    "order": 28,
     "title": {
       "ru": "Личный проект для практики Godot",
       "en": "Personal project for practicing Godot"
@@ -480,7 +520,7 @@
   },
   {
     "id": 23,
-    "order": 27,
+    "order": 29,
     "title": {
       "ru": "Punch Boy Debug",
       "en": "Punch Boy Debug"
@@ -500,7 +540,7 @@
   },
   {
     "id": 24,
-    "order": 28,
+    "order": 30,
     "title": {
       "ru": "Мультяшная анимация",
       "en": "Cartoon animation"
@@ -518,7 +558,7 @@
   },
   {
     "id": 25,
-    "order": 29,
+    "order": 31,
     "title": {
       "ru": "UI анимация",
       "en": "UI Animation"
@@ -536,7 +576,7 @@
   },
   {
     "id": 44,
-    "order": 30,
+    "order": 32,
     "title": {
       "ru": "Анимация UI оффера",
       "en": "Animation UI offer"
@@ -554,7 +594,7 @@
   },
   {
     "id": 45,
-    "order": 31,
+    "order": 33,
     "title": {
       "ru": "UI анимация игрового окна",
       "en": "Game Window UI Animation"
@@ -572,7 +612,7 @@
   },
   {
     "id": 26,
-    "order": 32,
+    "order": 34,
     "title": {
       "ru": "Тест работы слоев в Unity Animator",
       "en": "Unity Animator Layers Test"
@@ -590,7 +630,7 @@
   },
   {
     "id": 27,
-    "order": 33,
+    "order": 35,
     "title": {
       "ru": "Unity Cinemachine",
       "en": "Unity Cinemachine Setup"
@@ -608,7 +648,7 @@
   },
   {
     "id": 28,
-    "order": 34,
+    "order": 36,
     "title": {
       "ru": "Unity Low Poly VFX",
       "en": "Unity Low Poly VFX"
@@ -626,7 +666,7 @@
   },
   {
     "id": 29,
-    "order": 35,
+    "order": 37,
     "title": {
       "ru": "Анимация лиан айдл",
       "en": "Vines Idle"
@@ -644,7 +684,7 @@
   },
   {
     "id": 30,
-    "order": 36,
+    "order": 38,
     "title": {
       "ru": "Водопад",
       "en": "Waterfall"
@@ -662,7 +702,7 @@
   },
   {
     "id": 33,
-    "order": 37,
+    "order": 39,
     "title": {
       "ru": "Замок",
       "en": "Castle"
@@ -680,7 +720,7 @@
   },
   {
     "id": 34,
-    "order": 38,
+    "order": 40,
     "title": {
       "ru": "Спальня замка",
       "en": "Castle Bedroom"
@@ -698,7 +738,7 @@
   },
   {
     "id": 35,
-    "order": 39,
+    "order": 41,
     "title": {
       "ru": "Двор замка",
       "en": "Castle Courtyard"
@@ -716,7 +756,7 @@
   },
   {
     "id": 36,
-    "order": 40,
+    "order": 42,
     "title": {
       "ru": "Столовая замка",
       "en": "Castle Dining Room"
@@ -734,7 +774,7 @@
   },
   {
     "id": 37,
-    "order": 41,
+    "order": 43,
     "title": {
       "ru": "Гостиная замка",
       "en": "Castle Living Room"
@@ -752,7 +792,7 @@
   },
   {
     "id": 38,
-    "order": 42,
+    "order": 44,
     "title": {
       "ru": "Кот-мальчик",
       "en": "Cat Boy"
@@ -770,7 +810,7 @@
   },
   {
     "id": 39,
-    "order": 43,
+    "order": 45,
     "title": {
       "ru": "Консоль",
       "en": "Game Console"
@@ -788,7 +828,7 @@
   },
   {
     "id": 40,
-    "order": 44,
+    "order": 46,
     "title": {
       "ru": "Полка с хламом",
       "en": "A shelf with junk"
@@ -806,7 +846,7 @@
   },
   {
     "id": 41,
-    "order": 45,
+    "order": 47,
     "title": {
       "ru": "Ванная комната",
       "en": "Shower room"
