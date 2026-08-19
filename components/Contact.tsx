@@ -29,7 +29,7 @@ const Contact: React.FC = () => {
   const tt = tooltips[language];
 
   const links = [
-    { href: 'https://www.linkedin.com/in/vg-art/', Icon: LinkedInIcon, tooltip: tt.linkedin },
+    { href: 'https://www.linkedin.com/in/vgart/', Icon: LinkedInIcon, tooltip: tt.linkedin },
     { href: 'https://t.me/voganistr', Icon: TelegramIcon, tooltip: tt.telegram },
     { href: 'mailto:punktc77@gmail.com', Icon: EmailIcon, tooltip: tt.email },
     { href: 'https://github.com/voganart', Icon: GitHubIcon, tooltip: tt.github },
