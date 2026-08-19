@@ -154,11 +154,31 @@ const AdminPanel: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  const [undoingCommits, setUndoingCommits] = useState(false);
+  const [gitStatus, setGitStatus] = useState<{ ahead: number; behind: number; tracking: string | null } | null>(null);
   const [message, setMessage] = useState('');
   const [isGridView, setIsGridView] = useState(true);
   const [uploadingId, setUploadingId] = useState<number | null>(null);
 
   const basePath = import.meta.env.BASE_URL || '/';
+
+  const refreshGitStatus = async () => {
+    try {
+      const res = await fetch('http://localhost:4000/api/git-status');
+      if (res.ok) setGitStatus(await res.json());
+    } catch (err) {
+      console.error('Ошибка проверки Git:', err);
+    }
+  };
+
+  const readApiError = async (res: Response) => {
+    const data = await res.json().catch(() => null);
+    if (data?.files?.length) {
+      const files = data.files.map((file: { name: string; sizeMb: string }) => `${file.name} (${file.sizeMb} МБ)`).join(', ');
+      return `${data.message} ${files}`;
+    }
+    return data?.message || data?.error || `Ошибка сервера: ${res.status}`;
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -172,6 +192,7 @@ const AdminPanel: React.FC = () => {
   );
 
   useEffect(() => {
+    refreshGitStatus();
     fetch('http://localhost:4000/api/projects')
       .then(res => res.json())
       .then(data => {
@@ -221,13 +242,36 @@ const AdminPanel: React.FC = () => {
       const res = await fetch('http://localhost:4000/api/publish', { method: 'POST' });
       if (res.ok) {
         setMessage('🚀 Опубликовано! Сайт обновится через пару минут.');
+        await refreshGitStatus();
       } else {
-        setMessage('❌ Ошибка при публикации.');
+        setMessage(`❌ ${await readApiError(res)}`);
       }
     } catch (err) {
       setMessage('❌ Ошибка соединения.');
     }
     setPublishing(false);
+  };
+
+  const handleUndoUnpublished = async () => {
+    const count = gitStatus?.ahead || 0;
+    if (count < 1) return;
+    if (!window.confirm(`Отменить ${count} неопубликованных коммитов?\n\nФайлы останутся на диске, ничего не удалится.`)) return;
+
+    setUndoingCommits(true);
+    setMessage('⏳ Отмена неопубликованных коммитов...');
+    try {
+      const res = await fetch('http://localhost:4000/api/undo-unpublished', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        setMessage(`✅ ${data.message}`);
+        await refreshGitStatus();
+      } else {
+        setMessage(`❌ ${await readApiError(res)}`);
+      }
+    } catch (err) {
+      setMessage('❌ Ошибка соединения с админ-сервером.');
+    }
+    setUndoingCommits(false);
   };
 
   const handleChange = (index: number, field: string, value: string) => {
@@ -376,6 +420,16 @@ const AdminPanel: React.FC = () => {
             <button onClick={handlePublish} disabled={publishing} className="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded font-bold transition disabled:opacity-50 shadow-lg shadow-purple-900/50">
               {publishing ? 'Публикация...' : '🚀 Опубликовать'}
             </button>
+            {gitStatus && gitStatus.ahead > 0 && (
+              <button
+                onClick={handleUndoUnpublished}
+                disabled={undoingCommits || publishing}
+                className="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded font-bold transition disabled:opacity-50"
+                title="Отменить локальные коммиты, которые ещё не попали на GitHub. Файлы сохранятся."
+              >
+                {undoingCommits ? 'Отмена...' : `↩ Отменить коммиты (${gitStatus.ahead})`}
+              </button>
+            )}
           </div>
         </div>
 

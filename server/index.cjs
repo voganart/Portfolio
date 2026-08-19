@@ -6,6 +6,11 @@ const simpleGit = require('simple-git');
 const { exec } = require('child_process');
 const util = require('util');
 const multer = require('multer'); // Импортируем multer для загрузки файлов
+const {
+  findOversizedFiles,
+  getUnpublishedStatus,
+  undoUnpublishedCommits,
+} = require('./gitSafety.cjs');
 
 const execPromise = util.promisify(exec);
 const app = express();
@@ -15,7 +20,8 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
 const projectsFilePath = path.join(__dirname, '..', 'public', 'data', 'projects.json');
-const git = simpleGit();
+const contentDirectory = path.join(__dirname, '..', 'public', 'content');
+const git = simpleGit(path.join(__dirname, '..'));
 
 // --- НАСТРОЙКА ЗАГРУЗКИ ФАЙЛОВ (MULTER) ---
 const storage = multer.diskStorage({
@@ -67,6 +73,17 @@ app.post('/api/projects', async (req, res) => {
 
 app.post('/api/publish', async (req, res) => {
   try {
+    const oversizedFiles = await findOversizedFiles(contentDirectory);
+    if (oversizedFiles.length > 0) {
+      return res.status(413).json({
+        message: 'Публикация остановлена: найдены файлы больше 100 МБ.',
+        files: oversizedFiles.map((file) => ({
+          name: file.name,
+          sizeMb: (file.sizeBytes / 1024 / 1024).toFixed(2),
+        })),
+      });
+    }
+
     const status = await git.status();
     if (!status.isClean()) {
       const message = req.body?.message || 'Update portfolio content via admin panel';
@@ -84,6 +101,30 @@ app.post('/api/publish', async (req, res) => {
   } catch (error) {
     console.error('Ошибка при публикации:', error);
     res.status(500).json({ message: 'Failed to publish', error: error.message || error });
+  }
+});
+
+app.get('/api/git-status', async (req, res) => {
+  try {
+    res.json(await getUnpublishedStatus(git));
+  } catch (error) {
+    console.error('Ошибка проверки Git:', error);
+    res.status(500).json({ message: 'Не удалось проверить состояние Git.', error: error.message || error });
+  }
+});
+
+app.post('/api/undo-unpublished', async (req, res) => {
+  try {
+    const result = await undoUnpublishedCommits(git);
+    res.json({
+      ...result,
+      message: result.undoneCommits > 0
+        ? `Отменено неопубликованных коммитов: ${result.undoneCommits}. Файлы сохранены на диске.`
+        : 'Неопубликованных коммитов нет.',
+    });
+  } catch (error) {
+    console.error('Ошибка отмены коммитов:', error);
+    res.status(409).json({ message: error.message || 'Не удалось отменить коммиты.' });
   }
 });
 
