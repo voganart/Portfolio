@@ -34,7 +34,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   };
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-white/10 bg-slate-900/75 shadow-xl shadow-slate-950/30 transition duration-300 hover:-translate-y-1 hover:border-teal-300/30 hover:shadow-teal-950/30">
+    <article className="theme-surface theme-card-hover group overflow-hidden rounded-2xl border border-white/10 shadow-xl shadow-black/20 transition duration-300 hover:-translate-y-1">
       <button onClick={onClick} onMouseEnter={playPreview} onMouseLeave={stopPreview} className="block w-full text-left" aria-label={`${title}: ${description}`}>
         <div className="aspect-[16/10] overflow-hidden bg-black">
           {isVideo ? (
@@ -50,7 +50,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
           <h3 className="text-xl font-black text-white">{title}</h3>
           <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-slate-400">{description}</p>
           <div className="mt-4 flex flex-wrap gap-2">
-            {project.tags.slice(0, 4).map((tag) => <span key={tag} className="rounded-full bg-teal-400/10 px-2.5 py-1 text-[11px] font-bold text-teal-300">{tag}</span>)}
+            {project.tags.slice(0, 4).map((tag) => <span key={tag} className="theme-accent-soft rounded-full px-2.5 py-1 text-[11px] font-bold">{tag}</span>)}
             {project.tags.length > 4 && <span className="rounded-full bg-slate-800 px-2.5 py-1 text-[11px] font-bold text-slate-400">+{project.tags.length - 4}</span>}
           </div>
         </div>
@@ -87,7 +87,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.25em] text-teal-400">Selected work</p>
+            <p className="theme-accent-text text-xs font-black uppercase tracking-[0.25em]">Selected work</p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">{t.portfolio.title}</h2>
             <p className="mt-3 text-lg text-slate-400">{t.portfolio.subtitle}</p>
           </div>
@@ -95,12 +95,12 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
         </div>
 
         <div className="filter-scroll mt-9 flex gap-2 overflow-x-auto pb-2 sm:flex-wrap">
-          <button onClick={() => chooseCategory(null)} className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold transition ${!selectedCategory && !selectedTag ? 'bg-teal-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>{t.portfolio.all}</button>
-          {PROJECT_CATEGORIES.map((category) => <button key={category.id} onClick={() => chooseCategory(category.id)} className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold transition ${selectedCategory === category.id ? 'bg-teal-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>{category.label[language]}</button>)}
-          <button onClick={() => setShowAllFilters((value) => !value)} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold transition ${showAllFilters || selectedTag ? 'border-purple-400 bg-purple-400/15 text-purple-200' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>{t.portfolio.allFilters}</button>
+          <button onClick={() => chooseCategory(null)} className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold transition ${!selectedCategory && !selectedTag ? 'theme-accent-bg' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>{t.portfolio.all}</button>
+          {PROJECT_CATEGORIES.map((category) => <button key={category.id} onClick={() => chooseCategory(category.id)} className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold transition ${selectedCategory === category.id ? 'theme-accent-bg' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>{category.label[language]}</button>)}
+          <button onClick={() => setShowAllFilters((value) => !value)} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold transition ${showAllFilters || selectedTag ? 'theme-secondary-soft border-transparent' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>{t.portfolio.allFilters}</button>
         </div>
 
-        {showAllFilters && <div className="mt-3 flex flex-wrap gap-2 rounded-2xl border border-white/5 bg-slate-900/60 p-4">{allTags.map((tag) => <button key={tag} onClick={() => chooseTag(tag)} className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${selectedTag === tag ? 'bg-purple-500 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}>{tag}</button>)}</div>}
+        {showAllFilters && <div className="theme-surface-soft mt-3 flex flex-wrap gap-2 rounded-2xl border border-white/5 p-4">{allTags.map((tag) => <button key={tag} onClick={() => chooseTag(tag)} className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${selectedTag === tag ? 'theme-secondary-bg text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}>{tag}</button>)}</div>}
 
         {displayedProjects.length ? (
           <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -110,7 +110,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
           <div className="mt-8 rounded-2xl border border-dashed border-slate-700 py-20 text-center text-slate-500">{t.portfolio.empty}</div>
         )}
 
-        {filteredProjects.length > 9 && <div className="mt-12 text-center"><button onClick={() => setShowAll((value) => !value)} className="rounded-full border border-teal-400/30 bg-teal-400/10 px-8 py-3 font-bold text-teal-300 transition hover:bg-teal-400 hover:text-slate-950">{showAll ? t.portfolio.showLess : t.portfolio.showAll}</button></div>}
+        {filteredProjects.length > 9 && <div className="mt-12 text-center"><button onClick={() => setShowAll((value) => !value)} className="theme-accent-soft theme-accent-border theme-accent-hover rounded-full border px-8 py-3 font-bold transition">{showAll ? t.portfolio.showLess : t.portfolio.showAll}</button></div>}
       </div>
 
       {selectedProject && <ProjectModal project={selectedProject} index={filteredProjects.findIndex((project) => project.id === selectedProject.id)} projects={filteredProjects} onClose={() => setSelectedProject(null)} onSelectProject={setSelectedProject} />}

@@ -8,9 +8,11 @@ import Showreel from './components/Showreel';
 import AdminPanel from './components/AdminPanel'; // Импортируем админку
 import type { Project } from './types';
 import SiteNav from './components/SiteNav';
+import { DEFAULT_THEME, normalizeTheme, type SiteTheme } from './utils/themes';
 
 const App: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [theme, setTheme] = useState<SiteTheme>(DEFAULT_THEME);
   const [loading, setLoading] = useState(true);
   
   // Состояние: находимся ли мы на странице админки
@@ -32,14 +34,16 @@ const App: React.FC = () => {
         const url = import.meta.env.DEV 
           ? 'http://localhost:4000/api/projects' 
           : '/Portfolio/data/projects.json';
+        const themeUrl = `${import.meta.env.BASE_URL || '/'}data/theme.json`;
 
-        const response = await fetch(url);
+        const [response, themeResponse] = await Promise.all([fetch(url), fetch(themeUrl)]);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data: Project[] = await response.json();
         const sortedData = data.sort((a, b) => a.order - b.order);
         setProjects(sortedData);
+        if (themeResponse.ok) setTheme(normalizeTheme(await themeResponse.json()));
       } catch (error) {
         console.error("Не удалось загрузить проекты:", error);
       } finally {
@@ -78,7 +82,7 @@ const App: React.FC = () => {
 
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 text-gray-200">
+      <div data-theme={theme.preset} className="site-shell min-h-screen text-gray-200">
         <SiteNav />
         <Header />
         <main className="container mx-auto px-4 sm:px-6 lg:px-8">

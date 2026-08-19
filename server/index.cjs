@@ -14,17 +14,19 @@ const {
 
 const execPromise = util.promisify(exec);
 const app = express();
-const port = 4000;
+const port = Number(process.env.PORT) || 4000;
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
 const projectsFilePath = path.join(__dirname, '..', 'public', 'data', 'projects.json');
+const themeFilePath = path.join(__dirname, '..', 'public', 'data', 'theme.json');
 const contentDirectory = path.join(__dirname, '..', 'public', 'content');
 const git = simpleGit(path.join(__dirname, '..'));
 const MAX_UPLOAD_SIZE = 100 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = new Set(['.mp4', '.webm', '.ogg', '.png', '.jpg', '.jpeg', '.webp']);
 const ALLOWED_MIME_TYPES = new Set(['video/mp4', 'video/webm', 'video/ogg', 'image/png', 'image/jpeg', 'image/webp']);
+const ALLOWED_THEME_PRESETS = new Set(['midnight-violet', 'deep-ocean', 'ember-night']);
 
 // --- НАСТРОЙКА ЗАГРУЗКИ ФАЙЛОВ (MULTER) ---
 const storage = multer.diskStorage({
@@ -85,6 +87,27 @@ app.post('/api/projects', async (req, res) => {
   }
 });
 
+app.get('/api/theme', async (req, res) => {
+  try {
+    const data = await fs.readFile(themeFilePath, 'utf-8');
+    res.json(JSON.parse(data));
+  } catch (error) {
+    res.status(500).json({ message: 'Error reading theme file' });
+  }
+});
+
+app.post('/api/theme', async (req, res) => {
+  try {
+    if (!ALLOWED_THEME_PRESETS.has(req.body?.preset)) {
+      return res.status(400).json({ message: 'Неизвестная цветовая схема.' });
+    }
+    await fs.writeFile(themeFilePath, JSON.stringify({ preset: req.body.preset }, null, 2), 'utf-8');
+    res.json({ message: 'Theme saved successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error writing theme file' });
+  }
+});
+
 app.post('/api/publish', async (req, res) => {
   try {
     const oversizedFiles = await findOversizedFiles(contentDirectory);
@@ -98,7 +121,7 @@ app.post('/api/publish', async (req, res) => {
       });
     }
 
-    await git.add(['public/data/projects.json', 'public/content']);
+    await git.add(['public/data/projects.json', 'public/data/theme.json', 'public/content']);
     const status = await git.status();
     if (status.staged.length > 0) {
       const message = req.body?.message || 'Update portfolio content via admin panel';

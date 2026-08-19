@@ -5,7 +5,9 @@ import type { Project } from '../types';
 import AdminToolbar from './admin/AdminToolbar';
 import ProjectList from './admin/ProjectList';
 import ProjectEditor from './admin/ProjectEditor';
+import ThemePicker from './admin/ThemePicker';
 import { filterProjects, getProjectValidationErrors, getUniqueTags, normalizeProjects } from '../utils/projects';
+import { DEFAULT_THEME, normalizeTheme, type SiteTheme, type ThemePresetId } from '../utils/themes';
 
 interface GitStatus {
   ahead: number;
@@ -19,6 +21,7 @@ const ACCEPTED_EXTENSIONS = /\.(mp4|webm|ogg|png|jpe?g|webp)$/i;
 
 const AdminPanel: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [theme, setTheme] = useState<SiteTheme>(DEFAULT_THEME);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [query, setQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -69,6 +72,10 @@ const AdminPanel: React.FC = () => {
       })
       .catch((error) => setMessage(`Ошибка загрузки: ${error.message}. Сервер запущен?`))
       .finally(() => setLoading(false));
+    fetch(`${API_URL}/theme`)
+      .then((response) => response.ok ? response.json() : DEFAULT_THEME)
+      .then((data) => setTheme(normalizeTheme(data)))
+      .catch(() => setTheme(DEFAULT_THEME));
   }, []);
 
   useEffect(() => {
@@ -123,12 +130,20 @@ const AdminPanel: React.FC = () => {
     if (!options.silent) setMessage('Сохраняю локально…');
     const normalized = normalizeProjects(projects);
     try {
-      const response = await fetch(`${API_URL}/projects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(normalized),
-      });
-      if (!response.ok) throw new Error(await readApiError(response));
+      const [projectsResponse, themeResponse] = await Promise.all([
+        fetch(`${API_URL}/projects`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(normalized),
+        }),
+        fetch(`${API_URL}/theme`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(theme),
+        }),
+      ]);
+      if (!projectsResponse.ok) throw new Error(await readApiError(projectsResponse));
+      if (!themeResponse.ok) throw new Error(await readApiError(themeResponse));
       setProjects(normalized);
       setDirty(false);
       if (!options.silent) setMessage('Сохранено локально. Можно проверить сайт или опубликовать.');
@@ -247,6 +262,12 @@ const AdminPanel: React.FC = () => {
     window.location.hash = '';
   };
 
+  const changeTheme = (preset: ThemePresetId) => {
+    setTheme({ preset });
+    setDirty(true);
+    setMessage('Тема выбрана. Нажмите «Сохранить», чтобы проверить её на локальном сайте.');
+  };
+
   const undoCommits = async () => {
     const count = gitStatus?.ahead || 0;
     if (!count || !window.confirm(`Отменить ${count} неопубликованных коммитов? Файлы останутся на диске.`)) return;
@@ -270,6 +291,7 @@ const AdminPanel: React.FC = () => {
     <div className="min-h-screen bg-slate-950 text-slate-200">
       <div className="mx-auto max-w-[1600px] p-3 sm:p-6">
         <AdminToolbar projectCount={projects.length} dirty={dirty} saving={saving} publishing={publishing} undoing={undoing} ahead={gitStatus?.ahead || 0} message={message} onBack={goToSite} onSave={() => { void saveProjects(); }} onPublish={() => { void publishProjects(); }} onUndo={() => { void undoCommits(); }} />
+        <ThemePicker value={theme.preset} onChange={changeTheme} />
         <main className="mt-5 grid gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
           <ProjectList projects={visibleProjects} selectedId={selectedId} basePath={basePath} query={query} tag={selectedTag} tags={tags} onQueryChange={setQuery} onTagChange={setSelectedTag} onSelect={selectProject} onAdd={addProject} onReorder={reorderProjects} />
           <ProjectEditor key={selectedProject?.id || 'empty'} project={selectedProject} basePath={basePath} uploading={uploadingId === selectedProject?.id} translating={translatingId === selectedProject?.id} duplicateTitle={duplicateTitle} onChange={handleFieldChange} onUpload={uploadMedia} onTranslate={() => { void translateDescription(); }} onDelete={deleteProject} />

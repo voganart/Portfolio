@@ -28,7 +28,7 @@ const Showreel: React.FC<ShowreelProps> = ({ project }) => {
         <p className="text-lg text-gray-400 mb-8">{description}</p>
         
         {/* Видеоплеер для шоурила */}
-        <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl shadow-teal-950/40">
+        <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl shadow-black/30">
           <video
             src={mediaPath}
             className="w-full h-full object-contain"
@@ -44,7 +44,7 @@ const Showreel: React.FC<ShowreelProps> = ({ project }) => {
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="text-sm font-semibold bg-slate-800 text-teal-300 px-3 py-1 rounded-full border border-slate-700"
+              className="theme-accent-soft theme-accent-border rounded-full border px-3 py-1 text-sm font-semibold"
             >
               {tag}
             </span>

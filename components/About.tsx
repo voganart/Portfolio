@@ -5,7 +5,7 @@ const About: React.FC = () => {
   const { t } = useTranslations();
 
   return (
-    <section id="about" className="scroll-mt-20 rounded-2xl border border-white/5 bg-slate-900/45 py-16 backdrop-blur-sm sm:py-20">
+    <section id="about" className="theme-surface-soft scroll-mt-20 rounded-2xl border border-white/5 py-16 backdrop-blur-sm sm:py-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1.2fr_0.8fr]">
 

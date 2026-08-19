@@ -37,7 +37,7 @@ const Contact: React.FC = () => {
   ];
 
   return (
-    <footer id="contact" className="relative mt-16 scroll-mt-20 border-t border-white/10 bg-slate-900/50 py-14">
+    <footer id="contact" className="theme-surface-soft relative mt-16 scroll-mt-20 border-t border-white/10 py-14">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-white">{t.contact.title}</h2>
         <p className="mt-4 text-lg text-gray-400">{t.contact.subtitle}</p>
@@ -49,7 +49,7 @@ const Contact: React.FC = () => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative group text-gray-400 hover:text-teal-400 transition-colors duration-300"
+              className="theme-accent-text-hover relative group text-gray-400 transition-colors duration-300"
             >
               <Icon className="w-8 h-8" />
               <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">

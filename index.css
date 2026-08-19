@@ -17,6 +17,66 @@ body {
   background: #020617;
 }
 
+.site-shell,
+[data-theme="midnight-violet"] {
+  --site-bg: #020617;
+  --site-bg-deep: #0f172a;
+  --site-bg-glow: #3b0764;
+  --site-surface: rgba(15, 23, 42, 0.75);
+  --site-surface-soft: rgba(15, 23, 42, 0.5);
+  --site-accent: #2dd4bf;
+  --site-accent-soft: rgba(45, 212, 191, 0.12);
+  --site-accent-text: #5eead4;
+  --site-secondary: #a855f7;
+  --site-secondary-soft: rgba(168, 85, 247, 0.15);
+}
+
+[data-theme="deep-ocean"] {
+  --site-bg: #020b18;
+  --site-bg-deep: #071426;
+  --site-bg-glow: #082f49;
+  --site-surface: rgba(7, 20, 38, 0.78);
+  --site-surface-soft: rgba(8, 47, 73, 0.28);
+  --site-accent: #22d3ee;
+  --site-accent-soft: rgba(34, 211, 238, 0.12);
+  --site-accent-text: #67e8f9;
+  --site-secondary: #3b82f6;
+  --site-secondary-soft: rgba(59, 130, 246, 0.16);
+}
+
+[data-theme="ember-night"] {
+  --site-bg: #14070a;
+  --site-bg-deep: #250b12;
+  --site-bg-glow: #4c0519;
+  --site-surface: rgba(37, 11, 18, 0.78);
+  --site-surface-soft: rgba(76, 5, 25, 0.25);
+  --site-accent: #f59e0b;
+  --site-accent-soft: rgba(245, 158, 11, 0.13);
+  --site-accent-text: #fbbf24;
+  --site-secondary: #f43f5e;
+  --site-secondary-soft: rgba(244, 63, 94, 0.15);
+}
+
+.site-shell {
+  background: linear-gradient(135deg, var(--site-bg-deep), var(--site-bg-glow), var(--site-bg-deep));
+}
+
+.theme-nav { background-color: color-mix(in srgb, var(--site-bg) 82%, transparent); }
+.theme-surface { background-color: var(--site-surface); }
+.theme-surface-soft { background-color: var(--site-surface-soft); }
+.theme-accent-text { color: var(--site-accent-text); }
+.theme-accent-bg { background-color: var(--site-accent); color: var(--site-bg); }
+.theme-accent-soft { background-color: var(--site-accent-soft); color: var(--site-accent-text); }
+.theme-accent-border { border-color: color-mix(in srgb, var(--site-accent) 32%, transparent); }
+.theme-secondary-soft { background-color: var(--site-secondary-soft); color: color-mix(in srgb, var(--site-secondary) 60%, white); }
+.theme-secondary-bg { background-color: var(--site-secondary); }
+.theme-hero-glow {
+  background: radial-gradient(circle at 70% 35%, var(--site-accent-soft), transparent 30%), radial-gradient(circle at 30% 65%, var(--site-secondary-soft), transparent 34%);
+}
+.theme-accent-hover:hover { background-color: var(--site-accent); color: var(--site-bg); }
+.theme-accent-text-hover:hover { color: var(--site-accent-text); }
+.theme-card-hover:hover { border-color: color-mix(in srgb, var(--site-accent) 32%, transparent); box-shadow: 0 20px 35px color-mix(in srgb, var(--site-accent) 12%, transparent); }
+
 button,
 a,
 input,

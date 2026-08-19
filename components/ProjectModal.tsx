@@ -91,7 +91,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           <button
             onClick={handlePrev}
             disabled={index === 0}
-            className={`hidden sm:flex p-2 rounded-full bg-white/10 hover:bg-teal-600/80 transition-all ${
+            className={`theme-accent-hover hidden rounded-full bg-white/10 p-2 transition-all sm:flex ${
               index === 0 ? 'opacity-0 cursor-default' : 'text-white cursor-pointer'
             }`}
           >
@@ -130,7 +130,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                    <h3 className="text-2xl font-bold text-white">{title}</h3>
                    <div className="mt-2 flex flex-wrap gap-2">
                     {project.tags.map(tag => (
-                      <span key={tag} className="px-2 py-0.5 rounded text-xs bg-gray-700 text-teal-400 border border-gray-600">
+                      <span key={tag} className="theme-accent-soft theme-accent-border rounded border px-2 py-0.5 text-xs">
                         {tag}
                       </span>
                     ))}
@@ -146,7 +146,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           <button
             onClick={handleNext}
             disabled={index === projects.length - 1}
-            className={`hidden sm:flex p-2 rounded-full bg-white/10 hover:bg-teal-600/80 transition-all ${
+            className={`theme-accent-hover hidden rounded-full bg-white/10 p-2 transition-all sm:flex ${
               index === projects.length - 1 ? 'opacity-0 cursor-default' : 'text-white cursor-pointer'
             }`}
           >

@@ -12,9 +12,9 @@ const SiteNav: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed inset-x-0 top-0 z-40 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+    <nav className="theme-nav fixed inset-x-0 top-0 z-40 border-b border-white/5 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="#top" className="font-black tracking-[0.18em] text-white">VG<span className="text-teal-400">.</span>ART</a>
+        <a href="#top" className="font-black tracking-[0.18em] text-white">VG<span className="theme-accent-text">.</span>ART</a>
         <div className="hidden items-center gap-6 sm:flex">
           {links.map((link) => <a key={link.href} href={link.href} className="text-sm font-semibold text-slate-400 transition hover:text-white">{link.label}</a>)}
         </div>
