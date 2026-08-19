@@ -1,469 +1,279 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { arrayMove } from '@dnd-kit/sortable';
+import type { DragEndEvent } from '@dnd-kit/core';
 import type { Project } from '../types';
-import {
-  DndContext, 
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  rectSortingStrategy,
-  verticalListSortingStrategy,
-  useSortable
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import AdminToolbar from './admin/AdminToolbar';
+import ProjectList from './admin/ProjectList';
+import ProjectEditor from './admin/ProjectEditor';
+import { filterProjects, getProjectValidationErrors, getUniqueTags, normalizeProjects } from '../utils/projects';
 
-// --- КОМПОНЕНТ КАРТОЧКИ ---
-const SortableProjectCard = ({ 
-  project, 
-  index, 
-  isGridView, 
-  basePath, 
-  handleChange, 
-  deleteProject, 
-  handleFileUpload,
-  uploadingId,
-  handleAutoTranslate // <-- Новая функция прокинута сюда
-}: any) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({ id: project.id });
+interface GitStatus {
+  ahead: number;
+  behind: number;
+  tracking: string | null;
+}
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 50 : 'auto',
-    opacity: isDragging ? 0.8 : 1,
-  };
+const API_URL = 'http://localhost:4000/api';
+const MAX_UPLOAD_SIZE = 100 * 1024 * 1024;
+const ACCEPTED_EXTENSIONS = /\.(mp4|webm|ogg|png|jpe?g|webp)$/i;
 
-  const mediaUrl = `${basePath}content/${project.mediaFile}`;
-  const isVideo = /\.(mp4|webm|ogg)$/i.test(project.mediaFile);
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`bg-slate-800 rounded-xl border overflow-hidden flex flex-col transition-shadow ${
-        isDragging ? 'border-teal-500 shadow-2xl shadow-teal-900/30' : 'border-slate-700 shadow-lg'
-      } ${isGridView ? 'w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]' : 'w-full'}`}
-    >
-      <div
-        {...attributes}
-        {...listeners}
-        className="bg-slate-900 p-2 border-b border-slate-700 text-center text-slate-500 hover:text-white cursor-grab active:cursor-grabbing flex justify-center items-center gap-2 touch-none"
-        title="Потяните, чтобы изменить порядок"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-        </svg>
-        <span className="text-xs uppercase font-bold tracking-widest">№ {index + 1}</span>
-      </div>
-
-      <div className="h-48 w-full bg-black relative group flex items-center justify-center border-b border-slate-700">
-        {project.mediaFile ? (
-          isVideo ? (
-            <video src={`${mediaUrl}#t=0.1`} className="max-w-full max-h-full object-contain" muted playsInline />
-          ) : (
-            <img src={mediaUrl} className="max-w-full max-h-full object-contain" alt="preview" />
-          )
-        ) : (
-          <span className="text-slate-600 font-medium">Нет медиафайла</span>
-        )}
-        
-        <div className="absolute inset-0 bg-slate-900/80 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity backdrop-blur-sm">
-          <label className="cursor-pointer bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition-transform hover:scale-105">
-            {uploadingId === project.id ? '⏳ Загрузка...' : '📁 Загрузить файл'}
-            <input 
-              type="file" 
-              className="hidden" 
-              accept="video/*,image/*" 
-              onChange={(e) => handleFileUpload(index, e)} 
-              disabled={uploadingId === project.id} 
-            />
-          </label>
-          <span className="text-xs text-gray-400 mt-2 text-center px-4">
-            Выберите .mp4, .webm или .png
-          </span>
-        </div>
-      </div>
-
-      <div className="p-4 flex flex-col gap-3 flex-1 bg-slate-800">
-        {/* Заголовки */}
-        <div className="grid grid-cols-2 gap-2">
-           <input type="text" value={project.title.ru} onChange={e => handleChange(index, 'title.ru', e.target.value)} placeholder="Название (RU)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-medium focus:border-teal-500 outline-none text-sm" />
-           <input type="text" value={project.title.en} onChange={e => handleChange(index, 'title.en', e.target.value)} placeholder="Title (EN)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-medium focus:border-teal-500 outline-none text-sm" />
-        </div>
-        
-        <input type="text" value={project.mediaFile} onChange={e => handleChange(index, 'mediaFile', e.target.value)} placeholder="Имя файла" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-teal-400 font-mono text-xs focus:border-teal-500 outline-none" />
-        
-        <input 
-          type="text" 
-          value={project.tags.join(',')} 
-          onChange={e => handleChange(index, 'tags', e.target.value)} 
-          placeholder="Теги (Spine,Unity,VFX)" 
-          className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-purple-300 text-sm focus:border-purple-500 outline-none" 
-        />
-        
-        {/* Описание RU */}
-        <textarea value={project.description.ru} onChange={e => handleChange(index, 'description.ru', e.target.value)} placeholder="Описание (RU)" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-gray-300 text-sm h-20 resize-none focus:border-teal-500 outline-none" />
-        
-        {/* Кнопка перевода и Описание EN */}
-        <div className="relative">
-          <div className="flex justify-between items-center mb-1">
-             <span className="text-xs text-gray-500">English Description</span>
-             <button 
-               onClick={() => handleAutoTranslate(index)} 
-               className="text-xs text-teal-400 hover:text-teal-300 border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 rounded transition hover:scale-105"
-               title="Автоматически перевести русское описание"
-             >
-               ✨ Перевести с RU
-             </button>
-          </div>
-          <textarea 
-            value={project.description.en} 
-            onChange={e => handleChange(index, 'description.en', e.target.value)} 
-            placeholder="Description (EN)" 
-            className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-gray-300 text-sm h-20 resize-none focus:border-teal-500 outline-none" 
-          />
-        </div>
-        
-        <div className="mt-auto pt-2 flex justify-end">
-          <button onClick={() => deleteProject(index)} className="text-xs text-red-500 hover:text-red-400 font-bold px-3 py-1 rounded border border-red-900/50 hover:bg-red-900/20 transition">
-            Удалить
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// --- ГЛАВНЫЙ КОМПОНЕНТ ---
 const AdminPanel: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [query, setQuery] = useState('');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
-  const [undoingCommits, setUndoingCommits] = useState(false);
-  const [gitStatus, setGitStatus] = useState<{ ahead: number; behind: number; tracking: string | null } | null>(null);
-  const [message, setMessage] = useState('');
-  const [isGridView, setIsGridView] = useState(true);
+  const [undoing, setUndoing] = useState(false);
   const [uploadingId, setUploadingId] = useState<number | null>(null);
+  const [translatingId, setTranslatingId] = useState<number | null>(null);
+  const [gitStatus, setGitStatus] = useState<GitStatus | null>(null);
+  const [message, setMessage] = useState('');
 
   const basePath = import.meta.env.BASE_URL || '/';
+  const selectedProject = projects.find((project) => project.id === selectedId) || null;
+  const tags = useMemo(() => getUniqueTags(projects), [projects]);
+  const visibleProjects = useMemo(() => filterProjects(projects, query, selectedTag), [projects, query, selectedTag]);
+  const duplicateTitle = Boolean(selectedProject && projects.some((project) => project.id !== selectedProject.id && project.title.ru.trim() && project.title.ru.trim().toLocaleLowerCase() === selectedProject.title.ru.trim().toLocaleLowerCase()));
+
+  const readApiError = async (response: Response) => {
+    const data = await response.json().catch(() => null);
+    if (data?.files?.length) {
+      return `${data.message} ${data.files.map((file: { name: string; sizeMb: string }) => `${file.name} (${file.sizeMb} МБ)`).join(', ')}`;
+    }
+    return data?.message || data?.error || `Ошибка сервера: ${response.status}`;
+  };
 
   const refreshGitStatus = async () => {
     try {
-      const res = await fetch('http://localhost:4000/api/git-status');
-      if (res.ok) setGitStatus(await res.json());
-    } catch (err) {
-      console.error('Ошибка проверки Git:', err);
+      const response = await fetch(`${API_URL}/git-status`);
+      if (response.ok) setGitStatus(await response.json());
+    } catch (error) {
+      console.error('Ошибка проверки Git:', error);
     }
   };
-
-  const readApiError = async (res: Response) => {
-    const data = await res.json().catch(() => null);
-    if (data?.files?.length) {
-      const files = data.files.map((file: { name: string; sizeMb: string }) => `${file.name} (${file.sizeMb} МБ)`).join(', ');
-      return `${data.message} ${files}`;
-    }
-    return data?.message || data?.error || `Ошибка сервера: ${res.status}`;
-  };
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   useEffect(() => {
     refreshGitStatus();
-    fetch('http://localhost:4000/api/projects')
-      .then(res => res.json())
-      .then(data => {
-        setProjects(data.sort((a: Project, b: Project) => a.order - b.order));
-        setLoading(false);
+    fetch(`${API_URL}/projects`)
+      .then(async (response) => {
+        if (!response.ok) throw new Error(await readApiError(response));
+        return response.json();
       })
-      .catch(err => {
-        console.error(err);
-        setMessage('Ошибка загрузки данных. Сервер запущен?');
-        setLoading(false);
-      });
-  },[]);
+      .then((data: Project[]) => {
+        const sorted = [...data].sort((a, b) => a.order - b.order);
+        setProjects(sorted);
+        setSelectedId(sorted[0]?.id ?? null);
+      })
+      .catch((error) => setMessage(`Ошибка загрузки: ${error.message}. Сервер запущен?`))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const handleSave = async () => {
+  useEffect(() => {
+    const warnBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!dirty) return;
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warnBeforeUnload);
+    return () => window.removeEventListener('beforeunload', warnBeforeUnload);
+  }, [dirty]);
+
+  const updateProject = (id: number, updater: (project: Project) => Project) => {
+    setProjects((current) => current.map((project) => project.id === id ? updater(project) : project));
+    setDirty(true);
+  };
+
+  const selectProject = (id: number) => {
+    setSelectedId(id);
+    if (window.matchMedia('(max-width: 1023px)').matches) {
+      window.requestAnimationFrame(() => document.getElementById('admin-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+  };
+
+  const handleFieldChange = (field: string, value: string | string[]) => {
+    if (!selectedProject) return;
+    updateProject(selectedProject.id, (project) => {
+      if (field === 'tags') return { ...project, tags: value as string[] };
+      if (field === 'mediaFile') return { ...project, mediaFile: value as string };
+      const [group, language] = field.split('.') as ['title' | 'description', 'ru' | 'en'];
+      return { ...project, [group]: { ...project[group], [language]: value as string } };
+    });
+  };
+
+  const validationMessage = (items: Project[]) => {
+    const invalid = items
+      .map((project) => ({ project, errors: getProjectValidationErrors(project) }))
+      .find((entry) => entry.errors.length > 0);
+    if (!invalid) return '';
+    setSelectedId(invalid.project.id);
+    return `Не сохранено: «${invalid.project.title.ru || `проект #${invalid.project.order}`}» — ${invalid.errors.join(', ')}.`;
+  };
+
+  const saveProjects = async (options: { silent?: boolean } = {}) => {
+    const validationError = validationMessage(projects);
+    if (validationError) {
+      setMessage(validationError);
+      return false;
+    }
+
     setSaving(true);
-    setMessage('');
+    if (!options.silent) setMessage('Сохраняю локально…');
+    const normalized = normalizeProjects(projects);
     try {
-      const updatedProjects = projects.map((p, index) => ({ 
-        ...p, 
-        order: index + 1,
-        tags: p.tags.map(t => t.trim()).filter(t => t !== '')
-      }));
-      
-      const res = await fetch('http://localhost:4000/api/projects', {
+      const response = await fetch(`${API_URL}/projects`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedProjects),
+        body: JSON.stringify(normalized),
       });
-      if (res.ok) {
-        setProjects(updatedProjects);
-        setMessage('✅ Сохранено успешно!');
-      } else {
-        setMessage('❌ Ошибка при сохранении.');
-      }
-    } catch (err) {
-      setMessage('❌ Ошибка соединения.');
-    }
-    setSaving(false);
-    setTimeout(() => setMessage(''), 3000);
-  };
-
-  const handlePublish = async () => {
-    if (!window.confirm('Опубликовать изменения на GitHub Pages?')) return;
-    setPublishing(true);
-    setMessage('⏳ Публикация... Это займет около 30 секунд.');
-    try {
-      const res = await fetch('http://localhost:4000/api/publish', { method: 'POST' });
-      if (res.ok) {
-        setMessage('🚀 Опубликовано! Сайт обновится через пару минут.');
-        await refreshGitStatus();
-      } else {
-        setMessage(`❌ ${await readApiError(res)}`);
-      }
-    } catch (err) {
-      setMessage('❌ Ошибка соединения.');
-    }
-    setPublishing(false);
-  };
-
-  const handleUndoUnpublished = async () => {
-    const count = gitStatus?.ahead || 0;
-    if (count < 1) return;
-    if (!window.confirm(`Отменить ${count} неопубликованных коммитов?\n\nФайлы останутся на диске, ничего не удалится.`)) return;
-
-    setUndoingCommits(true);
-    setMessage('⏳ Отмена неопубликованных коммитов...');
-    try {
-      const res = await fetch('http://localhost:4000/api/undo-unpublished', { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        setMessage(`✅ ${data.message}`);
-        await refreshGitStatus();
-      } else {
-        setMessage(`❌ ${await readApiError(res)}`);
-      }
-    } catch (err) {
-      setMessage('❌ Ошибка соединения с админ-сервером.');
-    }
-    setUndoingCommits(false);
-  };
-
-  const handleChange = (index: number, field: string, value: string) => {
-    const newProjects = [...projects];
-    if (field.includes('.')) {
-      const [obj, lang] = field.split('.');
-      // @ts-ignore
-      newProjects[index][obj][lang] = value;
-    } else if (field === 'tags') {
-      newProjects[index].tags = value.split(',');
-    } else {
-      // @ts-ignore
-      newProjects[index][field] = value;
-    }
-    setProjects(newProjects);
-  };
-
-  // --- ЛОГИКА АВТОПЕРЕВОДА ---
-  const handleAutoTranslate = async (index: number) => {
-    const textToTranslate = projects[index].description.ru;
-    if (!textToTranslate) {
-      alert("Сначала заполните русское описание!");
-      return;
-    }
-
-    // Временная индикация
-    const newProjects = [...projects];
-    newProjects[index].description.en = "Translating...";
-    setProjects(newProjects);
-
-    try {
-      // Используем бесплатный API (MyMemory)
-      const response = await fetch(
-        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(textToTranslate)}&langpair=ru|en`
-      );
-      const data = await response.json();
-      
-      if (data.responseData && data.responseData.translatedText) {
-        const translated = data.responseData.translatedText;
-        // Обновляем стейт с переводом
-        const updatedProjects = [...projects];
-        updatedProjects[index].description.en = translated;
-        setProjects(updatedProjects);
-      } else {
-        alert("Не удалось перевести. Попробуйте вручную.");
-      }
+      if (!response.ok) throw new Error(await readApiError(response));
+      setProjects(normalized);
+      setDirty(false);
+      if (!options.silent) setMessage('Сохранено локально. Можно проверить сайт или опубликовать.');
+      return true;
     } catch (error) {
-      console.error("Ошибка перевода:", error);
-      alert("Ошибка сервиса перевода.");
-      // Возвращаем как было
-      const fallbackProjects = [...projects];
-      fallbackProjects[index].description.en = "";
-      setProjects(fallbackProjects);
+      setMessage(`Ошибка сохранения: ${error instanceof Error ? error.message : 'нет соединения'}`);
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const publishProjects = async () => {
+    if (!window.confirm('Сохранить изменения и опубликовать сайт на GitHub Pages?')) return;
+    if (dirty && !(await saveProjects({ silent: true }))) return;
+    setPublishing(true);
+    setMessage('Публикация… Обычно занимает около 30 секунд.');
+    try {
+      const response = await fetch(`${API_URL}/publish`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+      if (!response.ok) throw new Error(await readApiError(response));
+      setMessage('Опубликовано. GitHub Pages обновится через несколько минут.');
+      await refreshGitStatus();
+    } catch (error) {
+      setMessage(`Ошибка публикации: ${error instanceof Error ? error.message : 'нет соединения'}`);
+    } finally {
+      setPublishing(false);
     }
   };
 
   const addProject = () => {
-    const newId = projects.length > 0 ? Math.max(...projects.map(p => p.id)) + 1 : 1;
-    const newProject: Project = {
-      id: newId,
-      order: projects.length + 1,
-      title: { ru: 'Новый проект', en: 'New Project' },
-      description: { ru: '', en: '' },
-      mediaFile: '',
-      tags: []
-    };
-    setProjects([newProject, ...projects]);
-  };
-
-  const deleteProject = (index: number) => {
-    if (window.confirm('Точно удалить этот проект?')) {
-      const newProjects = [...projects];
-      newProjects.splice(index, 1);
-      setProjects(newProjects);
+    const id = projects.length ? Math.max(...projects.map((project) => project.id)) + 1 : 1;
+    const created: Project = { id, order: 1, title: { ru: 'Новый проект', en: 'New Project' }, description: { ru: '', en: '' }, mediaFile: '', tags: [] };
+    setProjects((current) => normalizeProjects([created, ...current]));
+    setSelectedId(id);
+    setQuery('');
+    setSelectedTag(null);
+    setDirty(true);
+    setMessage('Новый проект создан локально. Заполните поля и сохраните.');
+    if (window.matchMedia('(max-width: 1023px)').matches) {
+      window.requestAnimationFrame(() => document.getElementById('admin-editor')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     }
   };
 
-  const handleFileUpload = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const deleteProject = () => {
+    if (!selectedProject || !window.confirm(`Удалить проект «${selectedProject.title.ru}» из списка? Изменение применится после сохранения.`)) return;
+    const index = projects.findIndex((project) => project.id === selectedProject.id);
+    const next = projects[index + 1] || projects[index - 1] || null;
+    setProjects((current) => normalizeProjects(current.filter((project) => project.id !== selectedProject.id)));
+    setSelectedId(next?.id ?? null);
+    setDirty(true);
+    setMessage('Проект убран из списка. Для применения нажмите «Сохранить».');
+  };
 
-    setUploadingId(projects[index].id);
+  const uploadMedia = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !selectedProject) return;
+    event.target.value = '';
+    if (!ACCEPTED_EXTENSIONS.test(file.name)) {
+      setMessage('Неподдерживаемый формат. Используйте MP4, WebM, OGG, PNG, JPG или WebP.');
+      return;
+    }
+    if (file.size > MAX_UPLOAD_SIZE) {
+      setMessage('Файл больше 100 МБ. Уменьшите размер перед загрузкой.');
+      return;
+    }
+
+    const projectId = selectedProject.id;
+    setUploadingId(projectId);
     const formData = new FormData();
     formData.append('file', file);
-
     try {
-      const res = await fetch('http://localhost:4000/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (res.ok) {
-        const data = await res.json();
-        handleChange(index, 'mediaFile', data.filename);
-        setMessage(`✅ Файл ${data.filename} загружен!`);
-      } else {
-        setMessage('❌ Ошибка загрузки файла.');
-      }
-    } catch (err) {
-      setMessage('❌ Ошибка соединения.');
-    }
-    setUploadingId(null);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (active.id !== over?.id) {
-      setProjects((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over?.id);
-        
-        const newItems = arrayMove(items, oldIndex, newIndex);
-        
-        return newItems.map((item, idx) => ({ ...item, order: idx + 1 }));
-      });
+      const response = await fetch(`${API_URL}/upload`, { method: 'POST', body: formData });
+      if (!response.ok) throw new Error(await readApiError(response));
+      const data = await response.json();
+      updateProject(projectId, (project) => ({ ...project, mediaFile: data.filename }));
+      setMessage(`Файл ${data.filename} загружен. Сохраните проект.`);
+    } catch (error) {
+      setMessage(`Ошибка загрузки: ${error instanceof Error ? error.message : 'нет соединения'}`);
+    } finally {
+      setUploadingId(null);
     }
   };
 
-  if (loading) return <div className="p-10 text-white font-bold text-xl">Загрузка админки...</div>;
+  const translateDescription = async () => {
+    if (!selectedProject?.description.ru.trim()) {
+      setMessage('Сначала заполните описание на русском.');
+      return;
+    }
+    const projectId = selectedProject.id;
+    setTranslatingId(projectId);
+    try {
+      const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(selectedProject.description.ru)}&langpair=ru|en`);
+      const data = await response.json();
+      if (!response.ok || !data.responseData?.translatedText) throw new Error('сервис не вернул перевод');
+      updateProject(projectId, (project) => ({ ...project, description: { ...project.description, en: data.responseData.translatedText } }));
+      setMessage('Перевод добавлен. Проверьте текст перед сохранением.');
+    } catch (error) {
+      setMessage(`Ошибка перевода: ${error instanceof Error ? error.message : 'сервис недоступен'}`);
+    } finally {
+      setTranslatingId(null);
+    }
+  };
+
+  const reorderProjects = (event: DragEndEvent) => {
+    if (!event.over || event.active.id === event.over.id || query.trim() || selectedTag) return;
+    setProjects((current) => {
+      const oldIndex = current.findIndex((project) => project.id === event.active.id);
+      const newIndex = current.findIndex((project) => project.id === event.over?.id);
+      return normalizeProjects(arrayMove(current, oldIndex, newIndex));
+    });
+    setDirty(true);
+  };
+
+  const goToSite = () => {
+    if (dirty && !window.confirm('Есть несохранённые изменения. Перейти на сайт без сохранения?')) return;
+    window.location.hash = '';
+  };
+
+  const undoCommits = async () => {
+    const count = gitStatus?.ahead || 0;
+    if (!count || !window.confirm(`Отменить ${count} неопубликованных коммитов? Файлы останутся на диске.`)) return;
+    setUndoing(true);
+    try {
+      const response = await fetch(`${API_URL}/undo-unpublished`, { method: 'POST' });
+      if (!response.ok) throw new Error(await readApiError(response));
+      const data = await response.json();
+      setMessage(data.message);
+      await refreshGitStatus();
+    } catch (error) {
+      setMessage(`Ошибка отмены: ${error instanceof Error ? error.message : 'нет соединения'}`);
+    } finally {
+      setUndoing(false);
+    }
+  };
+
+  if (loading) return <div className="min-h-screen bg-slate-950 p-10 text-xl font-bold text-white">Загрузка админки…</div>;
 
   return (
-    <div className="min-h-screen bg-slate-900 text-gray-200 p-4 sm:p-8">
-      <div className="max-w-7xl mx-auto">
-        
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 bg-slate-800 p-6 rounded-xl border border-slate-700 sticky top-4 z-50 shadow-2xl gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-white">Панель управления</h1>
-            <p className="text-sm text-teal-400 mt-1 font-semibold min-h-[20px]">
-              {message}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <button 
-              onClick={() => setIsGridView(!isGridView)} 
-              className="px-4 py-2 bg-slate-900 border border-slate-600 hover:bg-slate-700 rounded transition flex items-center gap-2"
-            >
-              {isGridView ? '🔲 Сетка' : '📄 Список'}
-            </button>
-            <button onClick={() => window.location.hash = ''} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded font-medium transition">
-              На сайт
-            </button>
-            <button onClick={handleSave} disabled={saving} className="px-6 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded font-bold transition disabled:opacity-50 shadow-lg shadow-teal-900/50">
-              {saving ? 'Сохранение...' : '💾 Сохранить'}
-            </button>
-            <button onClick={handlePublish} disabled={publishing} className="px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded font-bold transition disabled:opacity-50 shadow-lg shadow-purple-900/50">
-              {publishing ? 'Публикация...' : '🚀 Опубликовать'}
-            </button>
-            {gitStatus && gitStatus.ahead > 0 && (
-              <button
-                onClick={handleUndoUnpublished}
-                disabled={undoingCommits || publishing}
-                className="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded font-bold transition disabled:opacity-50"
-                title="Отменить локальные коммиты, которые ещё не попали на GitHub. Файлы сохранятся."
-              >
-                {undoingCommits ? 'Отмена...' : `↩ Отменить коммиты (${gitStatus.ahead})`}
-              </button>
-            )}
-          </div>
-        </div>
-
-        <button onClick={addProject} className="mb-8 w-full py-4 bg-slate-800/50 border-2 border-dashed border-slate-600 hover:border-teal-500 hover:text-teal-400 rounded-xl text-slate-400 font-bold transition text-lg">
-          + Создать новый проект
-        </button>
-
-        <DndContext 
-          sensors={sensors} 
-          collisionDetection={closestCenter} 
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext 
-            items={projects.map(p => p.id)} 
-            strategy={isGridView ? rectSortingStrategy : verticalListSortingStrategy}
-          >
-            <div className={isGridView ? "flex flex-wrap gap-6" : "flex flex-col gap-6"}>
-              {projects.map((proj, idx) => (
-                <SortableProjectCard
-                  key={proj.id}
-                  project={proj}
-                  index={idx}
-                  isGridView={isGridView}
-                  basePath={basePath}
-                  handleChange={handleChange}
-                  deleteProject={deleteProject}
-                  handleFileUpload={handleFileUpload}
-                  uploadingId={uploadingId}
-                  handleAutoTranslate={handleAutoTranslate} // Передаем функцию
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
+    <div className="min-h-screen bg-slate-950 text-slate-200">
+      <div className="mx-auto max-w-[1600px] p-3 sm:p-6">
+        <AdminToolbar projectCount={projects.length} dirty={dirty} saving={saving} publishing={publishing} undoing={undoing} ahead={gitStatus?.ahead || 0} message={message} onBack={goToSite} onSave={() => { void saveProjects(); }} onPublish={() => { void publishProjects(); }} onUndo={() => { void undoCommits(); }} />
+        <main className="mt-5 grid gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
+          <ProjectList projects={visibleProjects} selectedId={selectedId} basePath={basePath} query={query} tag={selectedTag} tags={tags} onQueryChange={setQuery} onTagChange={setSelectedTag} onSelect={selectProject} onAdd={addProject} onReorder={reorderProjects} />
+          <ProjectEditor key={selectedProject?.id || 'empty'} project={selectedProject} basePath={basePath} uploading={uploadingId === selectedProject?.id} translating={translatingId === selectedProject?.id} duplicateTitle={duplicateTitle} onChange={handleFieldChange} onUpload={uploadMedia} onTranslate={() => { void translateDescription(); }} onDelete={deleteProject} />
+        </main>
       </div>
     </div>
   );

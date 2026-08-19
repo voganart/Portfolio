@@ -5,7 +5,7 @@ const path = require('path');
 const simpleGit = require('simple-git');
 const { exec } = require('child_process');
 const util = require('util');
-const multer = require('multer'); // Импортируем multer для загрузки файлов
+const multer = require('multer');
 const {
   findOversizedFiles,
   getUnpublishedStatus,
@@ -22,6 +22,9 @@ app.use(express.json({ limit: '10mb' }));
 const projectsFilePath = path.join(__dirname, '..', 'public', 'data', 'projects.json');
 const contentDirectory = path.join(__dirname, '..', 'public', 'content');
 const git = simpleGit(path.join(__dirname, '..'));
+const MAX_UPLOAD_SIZE = 100 * 1024 * 1024;
+const ALLOWED_EXTENSIONS = new Set(['.mp4', '.webm', '.ogg', '.png', '.jpg', '.jpeg', '.webp']);
+const ALLOWED_MIME_TYPES = new Set(['video/mp4', 'video/webm', 'video/ogg', 'image/png', 'image/jpeg', 'image/webp']);
 
 // --- НАСТРОЙКА ЗАГРУЗКИ ФАЙЛОВ (MULTER) ---
 const storage = multer.diskStorage({
@@ -30,25 +33,36 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, '..', 'public', 'content'));
   },
   filename: function (req, file, cb) {
-    // Убираем пробелы из имени файла, чтобы не было проблем с URL
-    const safeName = file.originalname.replace(/\s+/g, '_');
+    const safeName = path.basename(file.originalname).replace(/\s+/g, '_');
     cb(null, safeName);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: MAX_UPLOAD_SIZE },
+  fileFilter: (req, file, cb) => {
+    const extension = path.extname(file.originalname).toLowerCase();
+    if (!ALLOWED_EXTENSIONS.has(extension) || !ALLOWED_MIME_TYPES.has(file.mimetype)) {
+      return cb(new multer.MulterError('LIMIT_UNEXPECTED_FILE', 'file'));
+    }
+    cb(null, true);
+  },
+});
 
 // Эндпоинт для загрузки медиа
-app.post('/api/upload', upload.single('file'), (req, res) => {
-  try {
+app.post('/api/upload', (req, res) => {
+  upload.single('file')(req, res, (error) => {
+    if (error) {
+      const message = error.code === 'LIMIT_FILE_SIZE'
+        ? 'Файл больше 100 МБ.'
+        : 'Поддерживаются только MP4, WebM, OGG, PNG, JPG и WebP.';
+      return res.status(400).json({ message });
+    }
     if (!req.file) {
       return res.status(400).json({ message: 'Файл не найден' });
     }
-    // Возвращаем имя сохраненного файла
     res.json({ filename: req.file.filename, message: 'Файл успешно загружен!' });
-  } catch (error) {
-    console.error('Ошибка загрузки:', error);
-    res.status(500).json({ message: 'Ошибка сервера при загрузке' });
-  }
+  });
 });
 // ------------------------------------------
 
@@ -84,10 +98,10 @@ app.post('/api/publish', async (req, res) => {
       });
     }
 
+    await git.add(['public/data/projects.json', 'public/content']);
     const status = await git.status();
-    if (!status.isClean()) {
+    if (status.staged.length > 0) {
       const message = req.body?.message || 'Update portfolio content via admin panel';
-      await git.add('.');
       await git.commit(message);
     }
     await git.push();

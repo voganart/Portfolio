@@ -37,7 +37,7 @@ const Contact: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-slate-900/50 border-t border-white/10 py-12 relative mt-16">
+    <footer id="contact" className="relative mt-16 scroll-mt-20 border-t border-white/10 bg-slate-900/50 py-14">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-white">{t.contact.title}</h2>
         <p className="mt-4 text-lg text-gray-400">{t.contact.subtitle}</p>

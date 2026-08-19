@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useTranslations } from '../hooks/useTranslations';
 import { LanguageContext } from '../context/LanguageContext';
 import { useContext } from 'react';
 
@@ -19,7 +18,8 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <button
       onClick={toggleLanguage}
-      className="fixed top-4 right-4 z-50 bg-teal-600 text-white px-4 py-2 rounded-full hover:bg-teal-700 transition-colors duration-300"
+      className="rounded-full border border-teal-400/20 bg-teal-500/10 px-3 py-1.5 text-sm font-bold text-teal-300 transition-colors hover:bg-teal-500 hover:text-white"
+      aria-label={language === 'ru' ? 'Switch to English' : 'Переключить на русский'}
     >
       {language === 'ru' ? 'EN' : 'RU'}
     </button>

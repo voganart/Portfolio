@@ -20,6 +20,12 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const { language } = useTranslations();
 
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, []);
+
   // Обработка клавиш (Esc, Left, Right)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -61,15 +67,18 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     <div
       ref={modalRef}
       onClick={handleBackdropClick}
-      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/95 p-3 backdrop-blur-md animate-fade-in sm:p-6"
       style={{ animationDuration: '0.3s' }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
     >
-      <div className="relative w-full max-w-6xl flex flex-col items-center">
+      <div className="relative my-auto flex w-full max-w-6xl flex-col items-center py-10 sm:py-0">
         
         {/* Кнопка Закрыть */}
         <button
           onClick={onClose}
-          className="absolute -top-10 right-0 sm:-right-4 text-gray-400 hover:text-white transition-colors z-50 p-2"
+          className="absolute right-1 top-0 z-50 rounded-full bg-black/60 p-2 text-gray-300 transition-colors hover:bg-slate-700 hover:text-white sm:-right-2 sm:-top-12"
           aria-label="Close"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,17 +101,17 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           </button>
 
           {/* Контент */}
-          <div className="relative bg-gray-900 rounded-lg shadow-2xl overflow-hidden max-h-[85vh] w-full flex flex-col">
+          <div className="relative flex max-h-[88vh] w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-gray-900 shadow-2xl">
             <div className="flex-1 bg-black flex items-center justify-center relative overflow-hidden">
                {isVideo ? (
                 <video
                   key={mediaPath} // Ключ заставляет React пересоздать элемент при смене src
                   src={mediaPath}
-                  className="max-w-full max-h-[70vh] object-contain"
+                  className="max-h-[64vh] max-w-full object-contain"
                   controls
                   autoPlay
                   loop
-                  muted={false} // В модалке звук можно включить по дефолту или оставить выкл
+                  muted
                   playsInline
                 />
               ) : (
@@ -115,7 +124,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             </div>
 
             {/* Информация внизу */}
-            <div className="p-6 bg-gray-800 border-t border-gray-700">
+            <div className="border-t border-gray-700 bg-gray-800 p-5 sm:p-6">
               <div className="flex justify-between items-start">
                 <div>
                    <h3 className="text-2xl font-bold text-white">{title}</h3>
@@ -128,7 +137,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                    </div>
                 </div>
               </div>
-              <p className="mt-4 text-gray-300 leading-relaxed">{description}</p>
+              <p className="mt-4 text-sm leading-relaxed text-gray-300 sm:text-base">{description}</p>
+              <p className="mt-4 text-xs font-bold uppercase tracking-widest text-slate-500">{index + 1} / {projects.length}</p>
             </div>
           </div>
 

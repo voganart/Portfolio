@@ -20,23 +20,22 @@ const Showreel: React.FC<ShowreelProps> = ({ project }) => {
   const mediaPath = `${basePath}content/${project.mediaFile}`;
 
   return (
-    <section id="showreel" className="py-16 sm:py-24">
-      <div className="max-w-5xl mx-auto px-6 lg:px-8 text-center">
+    <section id="showreel" className="scroll-mt-20 py-16 sm:py-20">
+      <div className="mx-auto max-w-5xl px-6 text-center lg:px-8">
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
           Animation Showreel
         </h2>
         <p className="text-lg text-gray-400 mb-8">{description}</p>
         
         {/* Видеоплеер для шоурила */}
-        <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden border-2 border-slate-700/50 shadow-2xl shadow-teal-500/10">
+        <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl shadow-teal-950/40">
           <video
             src={mediaPath}
             className="w-full h-full object-contain"
             controls
-            autoPlay
-            loop
             muted
             playsInline
+            preload="metadata"
           />
         </div>
         

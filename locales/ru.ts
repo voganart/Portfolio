@@ -1,9 +1,15 @@
 export default {
   "header": {
     "name": "Владимир Григоров",
-    "title": "2D/3D Анимация • Blender • Spine • Photoshop • Unity • Godot",
-    "intro": "Привет, я Владимир! Создаю захватывающие миры и оживляю персонажей для игр.",
+    "title": "Game Animator & Technical Artist",
+    "intro": "Создаю 2D/3D анимацию, игровые VFX и интерактивные прототипы — от Spine и After Effects до Unity, Godot и PixiJS.",
     "button": "Посмотреть работы"
+  },
+  "nav": {
+    "work": "Работы",
+    "showreel": "Showreel",
+    "about": "Обо мне",
+    "contact": "Контакты"
   },
   "about": {
     "title": "Обо мне",
@@ -24,8 +30,13 @@ export default {
   },
   "portfolio": {
     "title": "Портфолио",
-    "subtitle": "Избранные работы, демонстрирующие мои навыки.",
-    "showAll": "Показать все"
+    "subtitle": "Анимация, VFX, игровые превью и технические прототипы.",
+    "showAll": "Показать все",
+    "showLess": "Показать меньше",
+    "all": "Все",
+    "allFilters": "Все фильтры",
+    "projectsCount": "работ",
+    "empty": "В этой категории пока нет работ."
   },
   "contact": {
     "title": "Свяжитесь со мной",
