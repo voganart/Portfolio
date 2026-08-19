@@ -36,7 +36,11 @@ const App: React.FC = () => {
           : '/Portfolio/data/projects.json';
         const themeUrl = `${import.meta.env.BASE_URL || '/'}data/theme.json`;
 
-        const [response, themeResponse] = await Promise.all([fetch(url), fetch(themeUrl)]);
+        const freshDataRequest: RequestInit = { cache: 'no-store' };
+        const [response, themeResponse] = await Promise.all([
+          fetch(url, freshDataRequest),
+          fetch(themeUrl, freshDataRequest),
+        ]);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
