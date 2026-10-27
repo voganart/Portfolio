@@ -587,7 +587,7 @@ $('play').onclick = () => {
   newGame(); game.started = true;
   buildShop();
   C.sound.unlocked = true;
-  C.sound.unlock().then(() => { applyPrefs(); C.sound.playMusic(0); });
+  Promise.all([C.sound.unlock(), C.soundsReady]).then(() => { applyPrefs(); C.sound.playMusic(0); }); // music may still be decoding
   // short intro: from the saw to the yard
   { const v = viewPose(VIEWS.mill); controls.target.copy(v.t); camera.position.copy(v.p); }
   setView('yard', 2.5);

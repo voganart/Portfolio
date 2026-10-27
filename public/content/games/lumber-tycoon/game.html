@@ -90,6 +90,8 @@
     .big-btn.alt { background: linear-gradient(#5aa8ff, #2a6fd6); box-shadow: 0 5px 0 #1b4a94, 0 12px 30px rgba(0,0,0,.35); animation: none; }
     @keyframes pulse { to { transform: scale(1.05); } }
     .hidden { display: none !important; }
+    #load-error { position: fixed; left: 16px; right: 16px; bottom: 24px; z-index: 60; background: #fff; color: #c0221a; border-radius: 14px; padding: 12px 16px;
+      font-size: 14px; box-shadow: var(--shadow); text-align: center; user-select: text; -webkit-user-select: text; }
     .screen .stars { font-size: 44px; }
     #logo { width: min(86vw, 460px); animation: logo-in .8s cubic-bezier(.2, 1.6, .4, 1) both, float 2.6s 1s ease-in-out infinite alternate; }
     @keyframes logo-in { from { transform: scale(.3) rotate(-8deg); opacity: 0; } }
@@ -146,6 +148,22 @@
     }
     @keyframes glow { to { box-shadow: var(--shadow), 0 0 0 4px var(--gold), 0 0 22px var(--gold); } }
   </style>
+  <script>
+    // a phone has no console: a loading error is shown on screen (the game can't start without these features)
+    function showLoadError(msg) {
+      var el = document.getElementById('load-error');
+      if (!el) { el = document.createElement('div'); el.id = 'load-error'; document.body.appendChild(el); }
+      el.textContent = msg;
+    }
+    addEventListener('error', function (e) { showLoadError('Ошибка загрузки: ' + (e.message || e.filename || 'неизвестно')); });
+    addEventListener('unhandledrejection', function (e) { var r = e.reason; showLoadError('Ошибка загрузки: ' + ((r && (r.message || r)) || 'неизвестно')); });
+    addEventListener('DOMContentLoaded', function () {
+      if (!(window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('importmap')))
+        showLoadError('Браузер устарел: обнови iOS до 16.4 или новее (или открой в свежем Chrome / Safari).');
+      else if (!document.createElement('canvas').getContext('webgl2'))
+        showLoadError('В этом браузере не работает WebGL 2 — игра не может запуститься.');
+    });
+  </script>
   <script type="importmap">
   {
     "imports": {
