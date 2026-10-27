@@ -143,7 +143,9 @@ for (const ev of ['pointerdown', 'keydown']) window.addEventListener(ev, () => {
 }, true);
 
 // ───────────────────────── renderer / post ─────────────────────────
-await Promise.all([RAPIER.init(), sound.load({ ...SOUND_FILES, crane: 'sounds/crane.wav', box_crash: 'sounds/box_crash.mp3' })]);
+// sounds don't hold the start for long: on iOS Safari decoding may wait until the first tap unlocks the audio
+const soundsReady = sound.load({ ...SOUND_FILES, crane: 'sounds/crane.wav', box_crash: 'sounds/box_crash.mp3' });
+await Promise.all([RAPIER.init(), Promise.race([soundsReady, new Promise((r) => setTimeout(r, 2500))])]);
 document.getElementById('loading').remove();
 
 const stage = document.getElementById('stage');
@@ -2349,6 +2351,6 @@ requestAnimationFrame(frame);
 
 // debug: advance the simulation by `sec` seconds at a fixed step, then draw one frame
 function advance(sec) { for (let i = 0; i < sec * 60; i++) { direct(); tick(1 / 60); } direct(); render(performance.now()); }
-window.__creative = { cfg, state, camera, controls, scene, jumpTo, shotStart, activeShots, advance, sound, trucks, cranes, renderer, pools: () => ({ yardPool, loadPool, riverPool }), production,
+window.__creative = { cfg, state, camera, controls, scene, jumpTo, shotStart, activeShots, advance, sound, soundsReady, trucks, cranes, renderer, pools: () => ({ yardPool, loadPool, riverPool }), production,
   GAME, hooks, bridge, saw, moneyTiles, moneyMesh, sfx, resetWorld, setActiveLanes, setActiveCranes, laneOn, craneOn, YARD_Y, LANE_X, BRIDGE_X, SAW_X, GATE_X, SPLIT_X, HALF, LANE_Z, CRANE_X, BAYS, BIN, celebrate, flashMaterial, setCraneGrade, drawBelt,
   beltMat, bladeMat, M, setBridgeBuilt, bridgeState, SPAN_N, setWoodPalette, preloadWood, rakeLogs, setSawGrade, FULL };
