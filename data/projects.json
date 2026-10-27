@@ -1,7 +1,44 @@
 [
   {
-    "id": 51,
+    "id": 53,
     "order": 1,
+    "title": {
+      "ru": "Креатив для соц-сетей",
+      "en": "Creatives for social media"
+    },
+    "description": {
+      "ru": "Сценарий креатива где игрок выбирает не правильный вариант (смотреть со звуком!)",
+      "en": "Creative scenario where the player chooses the wrong option (watch with sound!)"
+    },
+    "mediaFile": "Kioko_creative_v2_1080x1350.mp4",
+    "tags": [
+      "Creatives",
+      "Character",
+      "3D Animation",
+      "Blender"
+    ]
+  },
+  {
+    "id": 52,
+    "order": 2,
+    "title": {
+      "ru": "Анимация лисенка-мага в спайне ",
+      "en": "Spine Magic Fox Animation"
+    },
+    "description": {
+      "ru": "Анимация лисенка-мага в спайне ",
+      "en": "Spine Magic Fox Animation"
+    },
+    "mediaFile": "fox_Idle_Showcase_20261027_141526.mp4",
+    "tags": [
+      "2D Animation",
+      "Spine",
+      "Character"
+    ]
+  },
+  {
+    "id": 51,
+    "order": 3,
     "title": {
       "ru": "Анимация персонажа в Spine",
       "en": "Character animation in Spine"
@@ -19,7 +56,7 @@
   },
   {
     "id": 2,
-    "order": 2,
+    "order": 4,
     "title": {
       "ru": "Animation showreel 2",
       "en": "Animation showreel 2"
@@ -37,7 +74,7 @@
   },
   {
     "id": 3,
-    "order": 3,
+    "order": 5,
     "title": {
       "ru": "Animation showreel 1",
       "en": "Animation showreel 1"
@@ -57,7 +94,7 @@
   },
   {
     "id": 1,
-    "order": 4,
+    "order": 6,
     "title": {
       "ru": "2D Анимация Альпаки",
       "en": "Alpaca 2D Animation"
@@ -74,7 +111,7 @@
   },
   {
     "id": 48,
-    "order": 5,
+    "order": 7,
     "title": {
       "ru": "Превью слот игры",
       "en": "Slot game preview"
@@ -95,7 +132,7 @@
   },
   {
     "id": 50,
-    "order": 6,
+    "order": 8,
     "title": {
       "ru": "Превью слот игры",
       "en": "Slot game preview"
@@ -116,7 +153,7 @@
   },
   {
     "id": 49,
-    "order": 7,
+    "order": 9,
     "title": {
       "ru": "Превью слот игры",
       "en": "Slot game preview"
@@ -137,7 +174,7 @@
   },
   {
     "id": 5,
-    "order": 8,
+    "order": 10,
     "title": {
       "ru": "Пугала в замке",
       "en": "Castle Scarecrows Jump"
@@ -155,7 +192,7 @@
   },
   {
     "id": 6,
-    "order": 9,
+    "order": 11,
     "title": {
       "ru": "Чистка мусора",
       "en": "Cleaning Trash"
@@ -173,7 +210,7 @@
   },
   {
     "id": 7,
-    "order": 10,
+    "order": 12,
     "title": {
       "ru": "Ходьба персонажа",
       "en": "Crouch Walk"
@@ -191,7 +228,7 @@
   },
   {
     "id": 8,
-    "order": 11,
+    "order": 13,
     "title": {
       "ru": "Анимация деления холодильников",
       "en": "Friges split animation"
@@ -209,7 +246,7 @@
   },
   {
     "id": 10,
-    "order": 12,
+    "order": 14,
     "title": {
       "ru": "Иконка кота",
       "en": "Cat Icon"
@@ -228,7 +265,7 @@
   },
   {
     "id": 31,
-    "order": 13,
+    "order": 15,
     "title": {
       "ru": "Девушка открывает дверь",
       "en": "Woman Tries to Open Door"
@@ -247,7 +284,7 @@
   },
   {
     "id": 4,
-    "order": 14,
+    "order": 16,
     "title": {
       "ru": "Атака лучника",
       "en": "Archer Attack"
@@ -265,7 +302,7 @@
   },
   {
     "id": 11,
-    "order": 15,
+    "order": 17,
     "title": {
       "ru": "Чел флексит",
       "en": "Man Flexes"
@@ -283,7 +320,7 @@
   },
   {
     "id": 12,
-    "order": 16,
+    "order": 18,
     "title": {
       "ru": "Чел бьет молотком",
       "en": "Man Hits Hammer"
@@ -301,7 +338,7 @@
   },
   {
     "id": 13,
-    "order": 17,
+    "order": 19,
     "title": {
       "ru": "Чел бьет кнутом",
       "en": "Man Hits Whip"
@@ -319,7 +356,7 @@
   },
   {
     "id": 14,
-    "order": 18,
+    "order": 20,
     "title": {
       "ru": "Чел вращается с двумя клинками",
       "en": "Man spins with two blades"
@@ -337,7 +374,7 @@
   },
   {
     "id": 15,
-    "order": 19,
+    "order": 21,
     "title": {
       "ru": "Чел с двухручным мечом",
       "en": "Man Two-Handed Sword Attack"
@@ -355,7 +392,7 @@
   },
   {
     "id": 32,
-    "order": 20,
+    "order": 22,
     "title": {
       "ru": "Женщина крутит посохом",
       "en": "Woman twirls a staff"
@@ -373,7 +410,7 @@
   },
   {
     "id": 16,
-    "order": 21,
+    "order": 23,
     "title": {
       "ru": "Ракета Match3",
       "en": "Match3 rocket"
@@ -392,7 +429,7 @@
   },
   {
     "id": 17,
-    "order": 22,
+    "order": 24,
     "title": {
       "ru": "Эффекты Match3",
       "en": "Match3 VFX"
@@ -410,7 +447,7 @@
   },
   {
     "id": 18,
-    "order": 23,
+    "order": 25,
     "title": {
       "ru": "Совы",
       "en": "Owls"
@@ -428,7 +465,7 @@
   },
   {
     "id": 19,
-    "order": 24,
+    "order": 26,
     "title": {
       "ru": "Анимация мальчика",
       "en": "Boy animation"
@@ -446,7 +483,7 @@
   },
   {
     "id": 20,
-    "order": 25,
+    "order": 27,
     "title": {
       "ru": "Волшебная палочка",
       "en": "Magic wand wave"
@@ -464,7 +501,7 @@
   },
   {
     "id": 9,
-    "order": 26,
+    "order": 28,
     "title": {
       "ru": "Пет-проект про морских свинок",
       "en": "A pet project about guinea pigs"
@@ -483,7 +520,7 @@
   },
   {
     "id": 43,
-    "order": 27,
+    "order": 29,
     "title": {
       "ru": "Прототип гиперкэж игры",
       "en": "Hyper-casual prototype"
@@ -502,7 +539,7 @@
   },
   {
     "id": 42,
-    "order": 28,
+    "order": 30,
     "title": {
       "ru": "Смена дня и ночи в Godot 4",
       "en": "Day night cycle in Godot 4"
@@ -521,7 +558,7 @@
   },
   {
     "id": 47,
-    "order": 29,
+    "order": 31,
     "title": {
       "ru": "Демо игры Godot",
       "en": "Godot Demo"
@@ -541,7 +578,7 @@
   },
   {
     "id": 21,
-    "order": 30,
+    "order": 32,
     "title": {
       "ru": "Личный проект для практики Godot",
       "en": "Personal project for practicing Godot"
@@ -561,7 +598,7 @@
   },
   {
     "id": 46,
-    "order": 31,
+    "order": 33,
     "title": {
       "ru": "Персонаж Godot",
       "en": "Godot character"
@@ -581,7 +618,7 @@
   },
   {
     "id": 22,
-    "order": 32,
+    "order": 34,
     "title": {
       "ru": "Личный проект для практики Godot",
       "en": "Personal project for practicing Godot"
@@ -601,7 +638,7 @@
   },
   {
     "id": 23,
-    "order": 33,
+    "order": 35,
     "title": {
       "ru": "Punch Boy Debug",
       "en": "Punch Boy Debug"
@@ -621,7 +658,7 @@
   },
   {
     "id": 24,
-    "order": 34,
+    "order": 36,
     "title": {
       "ru": "Мультяшная анимация",
       "en": "Cartoon animation"
@@ -639,7 +676,7 @@
   },
   {
     "id": 25,
-    "order": 35,
+    "order": 37,
     "title": {
       "ru": "UI анимация",
       "en": "UI Animation"
@@ -657,7 +694,7 @@
   },
   {
     "id": 44,
-    "order": 36,
+    "order": 38,
     "title": {
       "ru": "Анимация UI оффера",
       "en": "Animation UI offer"
@@ -675,7 +712,7 @@
   },
   {
     "id": 45,
-    "order": 37,
+    "order": 39,
     "title": {
       "ru": "UI анимация игрового окна",
       "en": "Game Window UI Animation"
@@ -693,7 +730,7 @@
   },
   {
     "id": 26,
-    "order": 38,
+    "order": 40,
     "title": {
       "ru": "Тест работы слоев в Unity Animator",
       "en": "Unity Animator Layers Test"
@@ -711,7 +748,7 @@
   },
   {
     "id": 27,
-    "order": 39,
+    "order": 41,
     "title": {
       "ru": "Unity Cinemachine",
       "en": "Unity Cinemachine Setup"
@@ -729,7 +766,7 @@
   },
   {
     "id": 28,
-    "order": 40,
+    "order": 42,
     "title": {
       "ru": "Unity Low Poly VFX",
       "en": "Unity Low Poly VFX"
@@ -747,7 +784,7 @@
   },
   {
     "id": 29,
-    "order": 41,
+    "order": 43,
     "title": {
       "ru": "Анимация лиан айдл",
       "en": "Vines Idle"
@@ -765,7 +802,7 @@
   },
   {
     "id": 30,
-    "order": 42,
+    "order": 44,
     "title": {
       "ru": "Водопад",
       "en": "Waterfall"
@@ -783,7 +820,7 @@
   },
   {
     "id": 33,
-    "order": 43,
+    "order": 45,
     "title": {
       "ru": "Замок",
       "en": "Castle"
@@ -801,7 +838,7 @@
   },
   {
     "id": 34,
-    "order": 44,
+    "order": 46,
     "title": {
       "ru": "Спальня замка",
       "en": "Castle Bedroom"
@@ -819,7 +856,7 @@
   },
   {
     "id": 35,
-    "order": 45,
+    "order": 47,
     "title": {
       "ru": "Двор замка",
       "en": "Castle Courtyard"
@@ -837,7 +874,7 @@
   },
   {
     "id": 36,
-    "order": 46,
+    "order": 48,
     "title": {
       "ru": "Столовая замка",
       "en": "Castle Dining Room"
@@ -855,7 +892,7 @@
   },
   {
     "id": 37,
-    "order": 47,
+    "order": 49,
     "title": {
       "ru": "Гостиная замка",
       "en": "Castle Living Room"
@@ -873,7 +910,7 @@
   },
   {
     "id": 38,
-    "order": 48,
+    "order": 50,
     "title": {
       "ru": "Кот-мальчик",
       "en": "Cat Boy"
@@ -891,7 +928,7 @@
   },
   {
     "id": 39,
-    "order": 49,
+    "order": 51,
     "title": {
       "ru": "Консоль",
       "en": "Game Console"
@@ -909,7 +946,7 @@
   },
   {
     "id": 40,
-    "order": 50,
+    "order": 52,
     "title": {
       "ru": "Полка с хламом",
       "en": "A shelf with junk"
@@ -927,7 +964,7 @@
   },
   {
     "id": 41,
-    "order": 51,
+    "order": 53,
     "title": {
       "ru": "Ванная комната",
       "en": "Shower room"
