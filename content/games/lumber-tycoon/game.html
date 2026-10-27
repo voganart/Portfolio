@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Lumber Tycoon</title>
+  <style>
+    :root {
+      --ink: #1d1a14; --cream: #fff8e6; --gold: #ffc531; --gold-d: #d98c00; --green: #3fd15a; --green-d: #1f8f35;
+      --red: #ff4d3d; --panel: rgba(255, 248, 230, .96); --shadow: 0 4px 0 rgba(0,0,0,.25), 0 10px 24px rgba(0,0,0,.25);
+    }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #8fd0ff; font: 800 14px/1.2 system-ui, 'Segoe UI', Arial, sans-serif; color: var(--ink);
+      -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; }
+    #stage { position: fixed; inset: 0; }
+    #stage canvas { display: block; }
+    #info, #rec { display: none; }
+    #loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; background: #3a8fd6; z-index: 50; }
+
+    /* HUD */
+    #hud { position: fixed; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
+      padding: max(10px, env(safe-area-inset-top)) 12px 0; pointer-events: none; z-index: 10; }
+    .pill { display: flex; align-items: center; gap: 8px; background: var(--panel); border-radius: 999px; padding: 6px 14px 6px 6px; box-shadow: var(--shadow); }
+    .coin { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff3a8, var(--gold) 45%, var(--gold-d)); display: grid; place-items: center; font-size: 17px; color: #8a5200; box-shadow: inset 0 -2px 0 rgba(0,0,0,.2); }
+    #money { font-size: 24px; min-width: 70px; font-variant-numeric: tabular-nums; }
+    #money.bump { animation: bump .25s; }
+    @keyframes bump { 50% { transform: scale(1.18); } }
+    #goal { font-size: 13px; padding: 8px 14px; flex-direction: column; align-items: stretch; gap: 5px; border-radius: 16px; min-width: 150px; }
+    #goal .bar { height: 8px; border-radius: 4px; background: #e3d8bd; overflow: hidden; }
+    #goal .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--green), #9cf06a); transition: width .3s; }
+    #views { position: fixed; right: 12px; top: 70px; display: flex; flex-direction: column; gap: 6px; z-index: 10; }
+    #views button { pointer-events: auto; }
+    .chip { border: 0; border-radius: 12px; padding: 8px 10px; background: var(--panel); font: inherit; font-size: 12px; box-shadow: var(--shadow); cursor: pointer; color: var(--ink); }
+    .chip.on { background: var(--gold); }
+
+    /* upgrade cards */
+    #shop { position: fixed; left: 0; right: 0; bottom: 0; padding: 0 10px max(10px, env(safe-area-inset-bottom)); z-index: 10;
+      display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 132px); justify-content: center; gap: 8px; }
+    .card { min-width: 0; background: var(--panel); border-radius: 18px; padding: 8px 8px 8px; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; position: relative; }
+    .card .ico { font-size: 28px; line-height: 1; }
+    .card .name { font-size: 12px; min-height: 29px; display: flex; align-items: center; }
+    .card .lvl { display: flex; gap: 3px; height: 6px; }
+    .card .lvl i { width: 12px; border-radius: 3px; background: #ddd1b4; }
+    .card .lvl i.on { background: var(--green); }
+    .card button { width: 100%; border: 0; border-radius: 12px; padding: 7px 0; font: inherit; font-size: 15px; color: #fff; cursor: pointer;
+      background: linear-gradient(var(--green), var(--green-d)); box-shadow: inset 0 -3px 0 rgba(0,0,0,.2); }
+    .card button:disabled { background: #b9b2a0; cursor: default; }
+    .card.max button { background: #8a8476; }
+    .card.hint::after { content: '👆'; position: absolute; top: -34px; left: 50%; font-size: 30px; animation: point .8s infinite alternate; transform: translateX(-50%); }
+    @keyframes point { to { transform: translate(-50%, 8px); } }
+    .card.final { background: linear-gradient(#fff2b8, #ffd96a); }
+    .card.final button { background: linear-gradient(#ff8a3d, #e5451d); }
+    .card.setup { width: 200px; }
+    .card.setup .name { font-size: 14px; }
+
+    /* turbo */
+    #turbo { position: fixed; right: 14px; bottom: calc(var(--shop-h, 130px) + 18px); width: 84px; height: 84px; border-radius: 50%; border: 0; z-index: 11; cursor: pointer;
+      background: radial-gradient(circle at 35% 30%, #fff5a8, #ffb21f 55%, #e07800); box-shadow: var(--shadow), inset 0 -4px 0 rgba(0,0,0,.2);
+      font: 900 13px/1 system-ui, sans-serif; color: #5a2c00; display: grid; place-items: center; touch-action: none; }
+    #turbo span { font-size: 30px; display: block; }
+    #turbo svg { position: absolute; inset: -6px; transform: rotate(-90deg); pointer-events: none; }
+    #turbo.active { transform: scale(.94); filter: saturate(1.4) brightness(1.1); }
+    #turbo.empty { filter: grayscale(.8); }
+
+    /* floating texts & cash labels */
+    .float { position: fixed; z-index: 9; pointer-events: none; font-size: 22px; color: #fff; -webkit-text-stroke: 1px #1b4d14; text-shadow: 0 2px 0 #1b4d14, 0 4px 10px rgba(0,0,0,.35);
+      transform: translate(-50%, -50%); animation: rise 1.1s ease-out forwards; white-space: nowrap; }
+    #wage { font-size: 11px; color: #6b5d3f; }
+    #level { font-size: 10px; color: #b5651d; text-transform: uppercase; letter-spacing: .5px; }
+    #level:empty { display: none; }
+    #wage:empty { display: none; }
+    #wage.soon { color: #d97a00; animation: bump .5s infinite; }
+    #wage.strike { color: #e5231d; }
+    .float.minus { color: #ff5a4a; -webkit-text-stroke: 1px #5c0d06; text-shadow: 0 2px 0 #5c0d06, 0 4px 10px rgba(0,0,0,.35); }
+    .float.big { font-size: 30px; color: #ffe066; -webkit-text-stroke: 1px #6b3d00; text-shadow: 0 2px 0 #6b3d00, 0 4px 10px rgba(0,0,0,.35); }
+    @keyframes rise { 0% { opacity: 0; margin-top: 10px; transform: translate(-50%, -50%) scale(.6); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); } 100% { opacity: 0; margin-top: -70px; transform: translate(-50%, -50%) scale(1); } }
+    .cash { position: fixed; z-index: 9; transform: translate(-50%, -100%); pointer-events: none; background: var(--green); color: #fff; border-radius: 12px; padding: 4px 9px; font-size: 16px;
+      box-shadow: var(--shadow); animation: bob .6s infinite alternate; white-space: nowrap; }
+    .cash::after { content: ''; position: absolute; left: 50%; bottom: -6px; margin-left: -6px; border: 6px solid transparent; border-bottom: 0; border-top-color: var(--green); }
+    @keyframes bob { to { margin-top: -6px; } }
+    .toast { position: fixed; left: 50%; top: 22%; transform: translateX(-50%); z-index: 12; background: var(--panel); padding: 10px 18px; border-radius: 14px; box-shadow: var(--shadow); font-size: 17px; animation: toast 2.2s forwards; pointer-events: none; text-align: center; }
+    @keyframes toast { 0% { opacity: 0; transform: translate(-50%, 10px); } 10%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+
+    /* screens */
+    .screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 24px; box-sizing: border-box;
+      background: radial-gradient(circle at 50% 40%, rgba(40,90,160,.55), rgba(10,25,50,.85)); color: #fff; }
+    .screen h1 { margin: 0; font-size: 40px; letter-spacing: .5px; text-shadow: 0 4px 0 #0d2f5c, 0 8px 20px rgba(0,0,0,.4); }
+    .screen p { margin: 0; max-width: 340px; font-weight: 600; font-size: 16px; opacity: .92; }
+    .big-btn { border: 0; border-radius: 18px; padding: 16px 34px; font: 900 20px system-ui, sans-serif; color: #fff; cursor: pointer;
+      background: linear-gradient(var(--green), var(--green-d)); box-shadow: 0 5px 0 #145a22, 0 12px 30px rgba(0,0,0,.35); animation: pulse 1s infinite alternate; }
+    .big-btn.alt { background: linear-gradient(#5aa8ff, #2a6fd6); box-shadow: 0 5px 0 #1b4a94, 0 12px 30px rgba(0,0,0,.35); animation: none; }
+    @keyframes pulse { to { transform: scale(1.05); } }
+    .hidden { display: none !important; }
+    .screen .stars { font-size: 44px; }
+    #logo { width: min(86vw, 460px); animation: logo-in .8s cubic-bezier(.2, 1.6, .4, 1) both, float 2.6s 1s ease-in-out infinite alternate; }
+    @keyframes logo-in { from { transform: scale(.3) rotate(-8deg); opacity: 0; } }
+    @keyframes float { to { transform: translateY(-8px) rotate(-1deg); } }
+    #start { background: radial-gradient(circle at 50% 35%, rgba(120,200,255,.35), rgba(10,40,80,.82)); }
+
+    /* tutorial */
+    #tut { position: fixed; left: 50%; top: 92px; transform: translateX(-50%); z-index: 30; max-width: min(86vw, 380px); background: #fff; border-radius: 16px;
+      padding: 10px 16px; box-shadow: var(--shadow); font-size: 16px; text-align: center; animation: tut-in .35s ease-out; pointer-events: none; }
+    #tut::before { content: '💡 '; }
+    @keyframes tut-in { from { opacity: 0; transform: translate(-50%, -10px); } }
+    .tut-focus { animation: glow .7s infinite alternate !important; }
+    #turbo.tut-focus { animation: glow .7s infinite alternate, pulse .7s infinite alternate !important; }
+
+    /* quick menu */
+    #menu-btn { position: fixed; left: 12px; top: 64px; z-index: 12; width: 44px; height: 44px; border: 0; border-radius: 14px; background: var(--panel);
+      box-shadow: var(--shadow); font-size: 22px; cursor: pointer; color: var(--ink); }
+    #menu { z-index: 45; }
+    .menu-list { display: flex; flex-direction: column; gap: 10px; width: min(78vw, 280px); }
+    .chip.big { padding: 14px; font-size: 17px; border-radius: 16px; }
+    .chip.big.off { opacity: .6; }
+    a.big-btn, a.chip { text-decoration: none; text-align: center; }
+    .card.hint::after { display: none; }
+    .card.hint { animation: glow .8s infinite alternate; }
+    /* phones: compact HUD and cards, icon-only camera chips */
+    @media (max-width: 640px) {
+      #hud { padding-left: 8px; padding-right: 8px; }
+      .pill { padding: 4px 10px 4px 4px; gap: 6px; }
+      .coin { width: 24px; height: 24px; font-size: 14px; }
+      #money { font-size: 19px; min-width: 50px; }
+      #goal { font-size: 11px; min-width: 0; max-width: 58vw; padding: 6px 10px; }
+      #views { top: auto; bottom: calc(var(--shop-h, 130px) + 18px); left: 10px; right: auto; flex-direction: row; }
+      #views .chip span { display: none; }
+      .chip { padding: 8px 9px; font-size: 16px; }
+      #menu-btn { top: 56px; left: 8px; width: 38px; height: 38px; font-size: 19px; }
+      #shop { grid-auto-flow: row; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 0 6px max(6px, env(safe-area-inset-bottom)); }
+      .card { padding: 5px 4px 6px; border-radius: 14px; gap: 2px; }
+      .card .ico { font-size: 20px; }
+      .card .name { font-size: 10px; min-height: 24px; line-height: 1.1; }
+      .card .lvl i { width: 9px; }
+      .card .lvl { height: 5px; }
+      .card button { font-size: 12px; padding: 5px 0; border-radius: 10px; }
+      .card.setup { width: 70vw; grid-column: 1 / -1; justify-self: center; }
+      #turbo { width: 66px; height: 66px; font-size: 11px; }
+      #turbo span { font-size: 24px; }
+      #tut { top: 100px; font-size: 14px; }
+      .toast { font-size: 14px; top: 26%; }
+      .screen h1 { font-size: 30px; }
+    }
+    @media (max-height: 460px) and (orientation: landscape) {
+      #shop { grid-auto-columns: minmax(0, 110px); }
+      .card .ico { font-size: 18px; } .card .name { font-size: 10px; min-height: 22px; }
+      #views { top: 56px; }
+    }
+    @keyframes glow { to { box-shadow: var(--shadow), 0 0 0 4px var(--gold), 0 0 22px var(--gold); } }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+      "rapier": "https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.14.0/rapier.es.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="loading">Загрузка…</div>
+  <div id="rec"></div>
+  <div id="info"></div>
+
+  <div id="hud" class="hidden">
+    <div class="pill"><div class="coin">$</div><div id="money">0</div></div>
+    <div class="pill" id="goal"><div id="level"></div><div id="goal-text">Отправь 6 грузовиков</div><div class="bar"><i></i></div><div id="wage"></div></div>
+  </div>
+  <div id="views" class="hidden">
+    <button class="chip" data-view="mill">🪚<span> Лесопилка</span></button>
+    <button class="chip on" data-view="yard">🏗️<span> Склад</span></button>
+    <button class="chip" data-view="road">🚚<span> Трасса</span></button>
+    <button class="chip hidden" data-view="bridge">🌉<span> Мост</span></button>
+  </div>
+  <button id="turbo" class="hidden"><svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="45" fill="none" stroke="rgba(0,0,0,.15)" stroke-width="6"/><circle id="turbo-ring" cx="48" cy="48" r="45" fill="none" stroke="#3fd15a" stroke-width="6" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0"/></svg><div><span>⚡</span>ТУРБО</div></button>
+  <div id="shop" class="hidden"></div>
+
+  <div id="start" class="screen hidden">
+    <img id="logo" src="logo.svg" alt="Lumber Tycoon">
+    <p>Пили лес, грузи грузовики и проложи дорогу в город</p>
+    <button class="big-btn" id="play">▶ Играть</button>
+    <a class="big-btn alt home-link hidden" href="#">← На главную</a>
+  </div>
+  <div id="fail" class="screen hidden">
+    <div class="stars">🚧</div>
+    <h1>Мост не достроен!</h1>
+    <p id="fail-text">Колонна сорвалась в реку.</p>
+    <button class="big-btn" id="fix">🔨 Уровень 2: ремонт моста</button>
+  </div>
+  <div id="win" class="screen hidden">
+    <div class="stars">🎉🌉🎉</div>
+    <h1>Лес доставлен!</h1>
+    <p id="win-text">Мост построен, город получил древесину.</p>
+    <button class="big-btn" id="again">Играть снова</button>
+    <a class="big-btn alt home-link hidden" href="#">← На главную</a>
+  </div>
+
+  <div id="tut" class="hidden"><div id="tut-text"></div></div>
+  <button id="menu-btn" class="hidden" aria-label="Меню">☰</button>
+  <div id="menu" class="screen hidden">
+    <h1>Пауза</h1>
+    <div class="menu-list">
+      <button class="big-btn" id="m-resume">▶ Продолжить</button>
+      <button class="chip big" id="m-music"></button>
+      <button class="chip big" id="m-sfx"></button>
+      <button class="chip big" id="m-restart">↺ Начать заново</button>
+      <a class="chip big home-link hidden" href="#">← На главную сайта</a>
+    </div>
+  </div>
+
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
