@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" font-family="'Arial Black', 'Segoe UI Black', system-ui, sans-serif">
+  <defs>
+    <linearGradient id="plank" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e9a15a"/><stop offset=".5" stop-color="#c97a36"/><stop offset="1" stop-color="#9c5524"/>
+    </linearGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6ee36a"/><stop offset="1" stop-color="#239b39"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f7fa"/><stop offset=".55" stop-color="#b9c3cd"/><stop offset="1" stop-color="#7f8b97"/>
+    </linearGradient>
+    <radialGradient id="ring" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffe3a8"/><stop offset=".7" stop-color="#f2be6e"/><stop offset="1" stop-color="#c98a3d"/>
+    </radialGradient>
+    <pattern id="grain" width="80" height="22" patternUnits="userSpaceOnUse">
+      <path d="M0 6 Q20 2 40 7 T80 6 M0 16 Q25 12 45 17 T80 15" fill="none" stroke="#8a4a1c" stroke-opacity=".35" stroke-width="2"/>
+    </pattern>
+    <filter id="drop" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity=".35"/></filter>
+  </defs>
+
+  <!-- saw blade behind the sign -->
+  <g transform="translate(470 92)" filter="url(#drop)">
+    <g id="teeth" fill="url(#steel)" stroke="#55606b" stroke-width="3" stroke-linejoin="round">
+      <path d="M0-86 L14-70 L26-82 L34-64 L50-70 L52-51 L69-50 L63-33 L80-27 L69-12 L84 0 L69 12 L80 27 L63 33 L69 50 L52 51 L50 70 L34 64 L26 82 L14 70 L0 86 L-14 70 L-26 82 L-34 64 L-50 70 L-52 51 L-69 50 L-63 33 L-80 27 L-69 12 L-84 0 L-69-12 L-80-27 L-63-33 L-69-50 L-52-51 L-50-70 L-34-64 L-26-82 L-14-70Z"/>
+    </g>
+    <circle r="22" fill="#e5231d" stroke="#8c1410" stroke-width="4"/>
+    <circle r="7" fill="#fff"/>
+  </g>
+
+  <!-- wooden sign -->
+  <g filter="url(#drop)">
+    <rect x="40" y="88" width="520" height="150" rx="34" fill="url(#plank)" stroke="#5e2f10" stroke-width="8"/>
+    <rect x="40" y="88" width="520" height="150" rx="34" fill="url(#grain)"/>
+    <path d="M70 108 H530" stroke="#fff" stroke-opacity=".25" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="74" cy="122" r="7" fill="#6b3a17"/><circle cx="526" cy="122" r="7" fill="#6b3a17"/>
+    <circle cx="74" cy="206" r="7" fill="#6b3a17"/><circle cx="526" cy="206" r="7" fill="#6b3a17"/>
+    <text x="300" y="196" text-anchor="middle" font-size="96" letter-spacing="2" fill="#fff" stroke="#5e2f10" stroke-width="14" paint-order="stroke" stroke-linejoin="round">LUMBER</text>
+  </g>
+
+  <!-- ribbon -->
+  <g filter="url(#drop)">
+    <path d="M70 252 L110 238 L110 312 L70 326 L88 289Z" fill="#1c7a2d"/>
+    <path d="M530 252 L490 238 L490 312 L530 326 L512 289Z" fill="#1c7a2d"/>
+    <rect x="100" y="228" width="400" height="86" rx="16" fill="url(#ribbon)" stroke="#145a22" stroke-width="7"/>
+    <text x="300" y="294" text-anchor="middle" font-size="62" letter-spacing="6" fill="#fff" stroke="#145a22" stroke-width="10" paint-order="stroke" stroke-linejoin="round">TYCOON</text>
+  </g>
+
+  <!-- stacked logs -->
+  <g filter="url(#drop)" stroke="#5e2f10" stroke-width="5">
+    <rect x="18" y="40" width="120" height="44" rx="22" fill="#a8622c"/>
+    <rect x="58" y="2" width="110" height="44" rx="22" fill="#b86d33"/>
+    <circle cx="40" cy="62" r="22" fill="url(#ring)"/><circle cx="40" cy="62" r="11" fill="none" stroke="#c98a3d" stroke-width="3"/>
+    <circle cx="80" cy="24" r="22" fill="url(#ring)"/><circle cx="80" cy="24" r="11" fill="none" stroke="#c98a3d" stroke-width="3"/>
+  </g>
+  <!-- leaves -->
+  <g fill="#3fbf4f" stroke="#1d7a2c" stroke-width="3">
+    <path d="M552 236 q30 -6 40 24 q-32 6 -40 -24z"/>
+    <path d="M540 250 q8 26 -14 42 q-12 -26 14 -42z"/>
+  </g>
+</svg>
