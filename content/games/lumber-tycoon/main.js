@@ -36,6 +36,45 @@ let saved = null;
 try { if (!GAME) saved = JSON.parse(localStorage.getItem(STORE_KEY)); } catch { /* no storage */ }
 const cfg = deepMerge(structuredClone(DEFAULTS), saved);
 if (GAME) { cfg.freeCam = true; cfg.physics.physicsStart = 0; }
+// Graphics presets. Phones start on low (no AO and bloom, lower pixel ratio, smaller hard shadows, fewer trees,
+// lighter logs; game.js also lowers the physics and particle limits), computers on high. The game menu switches them
+// live (remembered); ?quality=low|medium|high in the URL overrides. The creative always uses high.
+const QUALITY_KEY = 'lumber-game-quality';
+const QUALITY_PRESETS = {
+  low: { pr: 1.5, ao: false, bloom: false, shadowRes: 1024, soft: false, trees: 0.5, farTrees: 0.35, lod: 60, logLo: true },
+  medium: { pr: 1.75, ao: false, bloom: true, shadowRes: 2048, soft: false, trees: 0.75, farTrees: 0.6, lod: 85, logLo: true },
+  high: { pr: 2, ao: true, bloom: true, shadowRes: 2048, soft: true, trees: 1, farTrees: 1, lod: 110, logLo: false },
+};
+const quality = { name: (() => {
+  const ok = (q) => q in QUALITY_PRESETS;
+  const q = new URLSearchParams(location.search).get('quality');
+  if (ok(q)) return q;
+  if (!GAME) return 'high';
+  try { const s = localStorage.getItem(QUALITY_KEY); if (ok(s)) return s; } catch { /* no storage */ }
+  const phone = matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 820;
+  return phone || /iPhone|iPad|Android/i.test(navigator.userAgent) ? 'low' : 'high';
+})() };
+quality.P = QUALITY_PRESETS[quality.name];
+const BASE_WORLD = { ...cfg.world };
+let booted = false; // set once the world is built: from then on setQuality rebuilds what changed
+function setQuality(name) {
+  const P = QUALITY_PRESETS[name] || QUALITY_PRESETS.high, prev = quality.P;
+  quality.name = name; quality.P = P;
+  cfg.look.shadowRes = P.shadowRes;
+  cfg.world.trees = Math.round(BASE_WORLD.trees * P.trees); cfg.world.farTrees = Math.round(BASE_WORLD.farTrees * P.farTrees);
+  cfg.world.lodDistance = P.lod; // simplified trucks and trees start closer on lower presets
+  if (!booted) return;
+  renderer.shadowMap.type = P.soft ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
+  scene.traverse((o) => { for (const m of [o.material ?? []].flat()) m.needsUpdate = true; }); // new shadow filter
+  applyLook(); resize();
+  if (P.trees !== prev.trees || P.farTrees !== prev.farTrees) buildVegetation();
+  if (P.logLo !== prev.logLo) {
+    rawGeos.forEach((g) => g.dispose());
+    rawGeos = cfg.wood.map((w, i) => A.makeRawLogGeo(RAW_R, LOG_LEN, i * 7.3 + 1, P.logLo));
+    production.rebuildMeshes();
+  }
+}
+setQuality(quality.name);
 // Which lanes / cranes are working (the game unlocks them one by one: middle first, then the sides)
 const UNLOCK_ORDER = [1, 0, 2];
 const laneOn = (i) => UNLOCK_ORDER.indexOf(i) < cfg.production.activeLanes;
@@ -152,7 +191,7 @@ const stage = document.getElementById('stage');
 const info = document.getElementById('info');
 const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = quality.P.soft ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
 renderer.localClippingEnabled = true;
 stage.appendChild(renderer.domElement);
 A.setMaxAnisotropy(renderer.capabilities.getMaxAnisotropy());
@@ -177,6 +216,7 @@ composer.addPass(gtao);
   const setSize = gtao.setSize.bind(gtao), render = gtao.render.bind(gtao);
   gtao.setSize = (w, h) => setSize(Math.ceil(w / 2), Math.ceil(h / 2));
   let aoSkip = null;
+  gtao.refresh = () => { aoSkip = null; }; // sprites added or removed later (the game's fire and smoke)
   gtao.render = (...args) => {
     if (!aoSkip) { aoSkip = []; scene.traverse((o) => { if (o.isSprite || o.isPoints || o.material?.transparent || o.userData.noAO) aoSkip.push(o); }); }
     const hidden = aoSkip.filter((o) => o.visible);
@@ -210,7 +250,7 @@ function resize() {
   if (h > ah) { h = ah; w = ah * asp; }
   if (GAME) { w = window.innerWidth; h = window.innerHeight; } // the game fills the window
   w = Math.max(2, Math.floor(w)); h = Math.max(2, Math.floor(h));
-  const pr = Math.min(window.devicePixelRatio, 2) * cfg.renderScale;
+  const pr = Math.min(window.devicePixelRatio, quality.P.pr) * cfg.renderScale;
   renderer.setPixelRatio(pr);
   renderer.setSize(w, h);
   composer.setPixelRatio(pr);
@@ -489,7 +529,7 @@ function syncMoney(dt) {
   for (let i = 0; i < PN; i += 8) pts.push([PX[i], PZ[i]]);
   roadRibbon(pts, 7.5, -3.92);
   roadRibbon([[BRIDGE_X, 160], [BRIDGE_X, RIVER_Z + 0.5]], 7, -3.92);
-  roadRibbon([[RIVER_X0 - 6, -19], [300, -19]], 8, -3.92);
+  roadRibbon([[RIVER_X0 - 6, -19], [410, -19]], 8, -3.92); // the street runs on through the new quarter
 }
 
 // Bridge: deck ends mid-river, pillars, railings
@@ -544,11 +584,76 @@ const facade = A.makeFacadeTexture();
     }
   }
   // street lamps
-  const lamps = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.08, 0.12, 5, 8), M.dark, 16), heads = new THREE.InstancedMesh(new RoundedBoxGeometry(0.9, 0.2, 0.4, 2, 0.05), M.lamp, 16);
-  // shifted so no lamp stands on the road off the bridge (x ≈ BRIDGE_X)
-  for (let i = 0; i < 16; i++) { const x = RIVER_X0 + 12.5 + i * 9; _m.makeTranslation(x, -1.5, -15.5); lamps.setMatrixAt(i, _m); _m.makeTranslation(x + 0.3, 1.0, -15.5); heads.setMatrixAt(i, _m); }
+  const lamps = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.08, 0.12, 5, 8), M.dark, 27), heads = new THREE.InstancedMesh(new RoundedBoxGeometry(0.9, 0.2, 0.4, 2, 0.05), M.lamp, 27);
+  // shifted so no lamp stands on the road off the bridge (x ≈ BRIDGE_X); the last ones light the new quarter
+  for (let i = 0; i < 27; i++) { const x = RIVER_X0 + 12.5 + i * 9; _m.makeTranslation(x, -1.5, -15.5); lamps.setMatrixAt(i, _m); _m.makeTranslation(x + 0.3, 1.0, -15.5); heads.setMatrixAt(i, _m); }
   lamps.castShadow = true; scene.add(lamps, heads);
 }
+// New quarter east of the town (game, level 3): six plots along the street. Each house is built in three stages
+// (foundation → walls → roof) that pop / drop into place; in the evening finale every window lights up.
+const CITY_STAGES = 3;
+box(104, 0.3, 50, M.concrete, 352, -4.1, -38, scene, false);
+const city = { plots: [], built: 0, active: false, lights: [], lightK: 0 };
+{
+  const rng = mulberry32(77);
+  const SPEC = [['house', 7.5, '#f3c9b1'], ['shop', 7, '#cfe0e8'], ['office', 15, '#f7d98b'], ['house', 7, '#d9e7c7'], ['office', 19, '#c9d3ea'], ['shop', 7.5, '#f2e3c6']];
+  const POS = [[312, -30], [340, -30], [368, -30], [312, -50], [340, -50], [368, -50]]; // the street row first
+  const dirtMat = new THREE.MeshStandardMaterial({ color: 0x9a7a52, roughness: 1 });
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xffd23a, transparent: true, opacity: 0.8, depthWrite: false, toneMapped: false });
+  POS.forEach(([x, z], i) => {
+    const [type, h, col] = SPEC[i], w = 17, d = 10;
+    const g = new THREE.Group(); g.position.set(x, -4, z); scene.add(g);
+    const lot = new THREE.Group(); g.add(lot); // empty plot: dirt and four stakes
+    box(w + 3, 0.1, d + 3, dirtMat, 0, 0.05, 0, lot, false);
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) cyl(0.12, 1.4, 8, M.curb, sx * (w / 2 + 1.2), 0.7, sz * (d / 2 + 1.2), lot);
+    const found = new THREE.Group(); g.add(found);
+    rbox(w + 0.8, 0.6, d + 0.8, 0.1, M.concretePlain, 0, 0.3, 0, found);
+    // the building is split in two: walls (scaled up from the ground) and the roof with its details (dropped from above)
+    const b = A.makeBuilding(type, w, d, h, col, facade, rng);
+    const walls = new THREE.Group(), roof = new THREE.Group(); walls.position.y = roof.position.y = 0.6; g.add(walls, roof);
+    for (const m of [...b.children]) (m.position.y < h * 0.7 ? walls : roof).add(m);
+    for (const m of walls.children) for (const mm of [m.material].flat()) if (mm.emissiveMap && !city.lights.includes(mm)) city.lights.push(mm);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(w * 0.62, 0.16, 8, 48).rotateX(Math.PI / 2), ringMat); ring.position.y = 0.3; ring.renderOrder = 4; g.add(ring);
+    for (const o of [found, walls, roof, ring]) o.visible = false;
+    city.plots.push({ g, lot, found, walls, roof, ring, h, anim: [0, 0, 0] });
+  });
+}
+// n = stages built in total (0 … 6 × 3); the plot being built next gets a glowing ring while the level runs
+function setCityBuilt(n, animate = false) {
+  city.built = n;
+  city.plots.forEach((p, i) => {
+    const st = clamp(n - i * CITY_STAGES, 0, CITY_STAGES);
+    [p.found, p.walls, p.roof].forEach((o, k) => {
+      if (k < st && !o.visible && animate) p.anim[k] = 1;
+      o.visible = k < st;
+    });
+    p.lot.visible = st < CITY_STAGES;
+    p.ring.visible = city.active && i === Math.floor(n / CITY_STAGES);
+  });
+}
+function setCityActive(on) { city.active = on; setCityBuilt(city.built); }
+function updateCity(dt) {
+  for (const p of city.plots) {
+    const [f, w, r] = p.anim;
+    if (f) { p.anim[0] = Math.max(0, f - dt * 2.2); p.found.scale.set(1, Math.max(0.01, easeOutBack(1 - p.anim[0])), 1); }
+    if (w) { p.anim[1] = Math.max(0, w - dt * 1.5); p.walls.scale.set(1, Math.max(0.01, easeOutBack(1 - p.anim[1])), 1); }
+    if (r) { p.anim[2] = Math.max(0, r - dt * 1.6); p.roof.position.y = 0.6 + (1 - easeOutBounce(1 - p.anim[2])) * 10; }
+    if (p.ring.visible) p.ring.scale.setScalar(1 + Math.sin(state.t * 4) * 0.05);
+  }
+}
+// evening finale: warm low sun, dusk sky, street lamps and every window of the new quarter light up (k = 0 … 1)
+const SUN_DAY = new THREE.Color(0xfff0dc), DUSK_SUN = new THREE.Color('#ff9a5a'), DUSK_TOP = new THREE.Color('#24306e'), DUSK_HORIZON = new THREE.Color('#ffb07a');
+function setEvening(k) {
+  const L = cfg.look;
+  sun.intensity = L.sunIntensity * (1 - 0.6 * k); hemi.intensity = L.skyIntensity * (1 - 0.45 * k);
+  sun.color.copy(SUN_DAY).lerp(DUSK_SUN, k);
+  sky.material.uniforms.uTop.value.set(L.sky).lerp(DUSK_TOP, k);
+  sky.material.uniforms.uHorizon.value.set(L.horizon).lerp(DUSK_HORIZON, k);
+  scene.background.set(L.horizon).lerp(DUSK_HORIZON, k); scene.fog.color.copy(scene.background);
+  M.lamp.emissiveIntensity = 2 + 4 * k;
+  for (const m of city.lights) m.emissiveIntensity = 1.6 * k;
+}
+
 // industrial buildings near the mill
 for (const [type, w, d, h, x, y, z, col] of [
   ['warehouse', 24, 16, 9, -40, 0, -24, '#c8ccd2'], ['warehouse', 18, 14, 8, -70, 0, 22, '#d8b98a'], ['office', 12, 10, 10, 47, -4, -20, '#e6e6e6'],
@@ -590,7 +695,7 @@ function mergeStatic(keep) {
   }
   return merged.length;
 }
-mergeStatic(new Set([sawBar, sky, ...gateNets, ...bridgeBlockers, ...splitBlades]));
+mergeStatic(new Set([sawBar, sky, ...gateNets, ...bridgeBlockers, ...splitBlades, ...city.plots.map((p) => p.g)]));
 
 // Missing bridge spans (game): they drop into place one by one, the last one reaches the far bank
 const SPAN_N = 3, SPAN_Z0 = -4.3, SPAN_LEN = 2.95;
@@ -659,7 +764,8 @@ function blocked(x, z) {
   if (x < 60 && z > -34 && z < 40) return true;
   if (nearRoad(x, z, 7)) return true;
   if (x > RIVER_X0 - 8 && Math.abs(z) < RIVER_Z + 4) return true;
-  if (x > RIVER_X0 - 4 && x < 302 && z < -10 && z > -66) return true;
+  if (x > RIVER_X0 - 4 && x < 404 && z < -10 && z > -66) return true; // town + new quarter
+  if (GAME && x > 168 && x < 198 && z > 8 && z < 34) return true; // timber chute (level 4)
   if (Math.abs(x - BRIDGE_X) < 7 && z > 8 && z < 170) return true;
   if (x > BRIDGE_X - 4 && x < BRIDGE_X + 40 && z > 8 && z < 75) return true; // keep the bridge camera clear
   return false;
@@ -1113,7 +1219,7 @@ function makeWoodSet(woods) {
 }
 function useWoodSet(set) { ({ rawMats, cleanMats, decorGeos } = set); }
 function buildWoodAssets() {
-  if (!rawGeos.length) rawGeos = cfg.wood.map((w, i) => A.makeRawLogGeo(RAW_R, LOG_LEN, i * 7.3 + 1)); // shape doesn't depend on colours
+  if (!rawGeos.length) rawGeos = cfg.wood.map((w, i) => A.makeRawLogGeo(RAW_R, LOG_LEN, i * 7.3 + 1, quality.P.logLo)); // shape doesn't depend on colours
   if (![...woodSets.values()].some((s) => s.decorGeos === decorGeos)) decorGeos.forEach((g) => g.dispose());
   useWoodSet(makeWoodSet(cfg.wood));
 }
@@ -1128,7 +1234,7 @@ const decorMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness:
 function buildTruckGeo() { truckGeo?.dispose(); truckGeoLo?.dispose(); truckGeo = A.makeTruckGeo(cfg.look); truckGeoLo = A.makeTruckGeo(cfg.look, true); }
 
 // ───────────────────────── systems ─────────────────────────
-const state = { t: 0, playing: true, shotIdx: -1, recording: false, acc: 0, fps: 60 };
+const state = { t: 0, playing: true, shotIdx: -1, recording: false, acc: 0, fps: 60, maxFps: 60 };
 let yardPool, riverPool, loadPool, sparks, glitter, splash, debris, bundleBatch, cargoBatch, cargoBatchLo, carryBatch;
 
 // Production line: raw log → gate (debark) → bundle → saw (cut in halves) → physics logs
@@ -1782,7 +1888,7 @@ const bridge = {
         t.mesh.position.set(x, deckY(z) + Math.abs(Math.sin(t.t * 13)) * 0.02, z);
         t.mesh.rotation.set(0, h, 0);
         if (!this.cross && t.z <= DECK_END - 0.8) this.drop(t); // centre past the broken edge: it tips nose-first
-        if (this.cross && x > BRIDGE_X + 110) { t.mesh.visible = false; this.trucks.splice(this.trucks.indexOf(t), 1); }
+        if (this.cross && x > BRIDGE_X + 190) { t.mesh.visible = false; this.trucks.splice(this.trucks.indexOf(t), 1); }
       } else {
         const p = t.body.translation(), r = t.body.rotation();
         t.mesh.position.set(p.x, p.y, p.z); t.mesh.quaternion.set(r.x, r.y, r.z, r.w);
@@ -1825,6 +1931,101 @@ function seedRiver() {
     riverPool.spawn(_p, _q, { x: cfg.physics.current, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, _c.copy(wood).multiplyScalar(rand(0.85, 1.1)), { limit: 280 });
   }
 }
+
+// Level 4 «Сплав по реке» (game): timber rolls down a chute on the north bank into the river, floats under the bridge
+// and a floating boom steers it into a barge with a tug. A fallen tree can jam the river until the player clears it.
+const RAFT = { CHUTE_X: 182, BARGE_X: 272, BARGE_Z: 2, CAP: 30 };
+const raft = { on: false, g: null, boat: null, cargo: null, snag: null, jamBody: null, jamX: 0 };
+if (GAME) {
+  const wood = new THREE.MeshStandardMaterial({ color: 0x9a6a3c, roughness: 0.85 });
+  const bark = new THREE.MeshStandardMaterial({ color: 0x4a3524, roughness: 1 });
+  const g = raft.g = new THREE.Group(); g.visible = false; scene.add(g);
+  // chute: from a trestle on the bank down to the water, a stack of logs waits at the top
+  const L = 12.3, ch = new THREE.Group(); ch.position.set(RAFT.CHUTE_X, -2.65, 18.25); ch.rotation.x = -0.358; g.add(ch);
+  box(3.4, 0.25, L, wood, 0, 0, 0, ch, true);
+  for (const sx of [-1, 1]) box(0.25, 0.8, L, wood, sx * 1.7, 0.45, 0, ch, true);
+  for (const [z, h] of [[22.5, 3.2], [19.5, 2.1], [16.5, 1]]) for (const sx of [-1, 1]) cyl(0.18, h, 8, bark, RAFT.CHUTE_X + sx * 1.5, -4 + h / 2, z, g, true);
+  for (let i = 0; i < 6; i++) {
+    const row = i < 3 ? 0 : i < 5 ? 1 : 2, k = i - [0, 3, 5][row];
+    const lg = cyl(0.36, 4.2, 10, bark, RAFT.CHUTE_X + (k - (2 - row) / 2) * 0.76, -3.6 + row * 0.64, 26, g, true);
+    lg.rotation.z = Math.PI / 2;
+  }
+  // floating boom: two lines of orange floats from the banks to the barge mouth
+  const floatMat = new THREE.MeshStandardMaterial({ color: 0xff8a2a, roughness: 0.5 });
+  for (const sz of [-1, 1]) for (let i = 0; i <= 8; i++) {
+    const t = i / 8, x = RAFT.BARGE_X - 22 + t * 12, z = RAFT.BARGE_Z + sz * lerp(RIVER_Z - 1, 4.6, t);
+    const f = cyl(0.42, 1.3, 10, floatMat, x, WATER_Y + 0.1, z, g, false); f.rotation.x = Math.PI / 2;
+  }
+  // barge (with its cargo) and the tug behind it: one group that sails away and comes back empty
+  const boat = raft.boat = new THREE.Group(); boat.position.set(RAFT.BARGE_X, 0, RAFT.BARGE_Z); g.add(boat);
+  const hull = new THREE.MeshStandardMaterial({ color: 0xb8432f, roughness: 0.7 }), deck = new THREE.MeshStandardMaterial({ color: 0x4b4f55, roughness: 0.9 });
+  const white = new THREE.MeshStandardMaterial({ color: 0xf2f2ee, roughness: 0.5 }), glass = new THREE.MeshStandardMaterial({ color: 0x23394d, roughness: 0.2, metalness: 0.4 });
+  rbox(18, 2.2, 8.6, 0.35, hull, 0, WATER_Y + 0.1, 0, boat, true);
+  box(17.2, 0.1, 7.8, deck, 0, WATER_Y + 1.22, 0, boat, false);
+  for (const sz of [-1, 1]) box(17.6, 0.7, 0.25, hull, 0, WATER_Y + 1.5, sz * 4.1, boat, true);
+  for (const sx of [-1, 1]) box(0.25, 0.7, 8.4, hull, sx * 8.7, WATER_Y + 1.5, 0, boat, true);
+  rbox(6.5, 1.8, 4.6, 0.4, white, 12.6, WATER_Y + 0.2, 0, boat, true);
+  box(6.6, 0.35, 4.7, hull, 12.6, WATER_Y + 0.6, 0, boat, false);
+  box(3, 2.2, 3.2, white, 13.4, WATER_Y + 2.2, 0, boat, true);
+  box(3.1, 0.6, 3.3, glass, 13.4, WATER_Y + 2.7, 0, boat, false);
+  cyl(0.35, 2, 10, hull, 14.4, WATER_Y + 3.8, 0, boat, true);
+  const cargo = raft.cargo = new THREE.InstancedMesh(halfLogGeo, LOG_MATS, RAFT.CAP);
+  cargo.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(RAFT.CAP * 3).fill(1), 3);
+  cargo.castShadow = true; cargo.count = 0; boat.add(cargo);
+  for (let i = 0; i < RAFT.CAP; i++) {
+    const layer = Math.floor(i / 10), k = i % 10, col = k % 2, row = Math.floor(k / 2);
+    _m.compose(_p.set(-4 + col * 8, WATER_Y + 1.85 + layer * 1.1, -2.6 + row * 1.3 + (layer % 2) * 0.4), Q_Y2X, _s.set(2.3, 4.4, 2.3));
+    cargo.setMatrixAt(i, _m);
+  }
+  // the fallen tree that jams the river
+  const snag = raft.snag = new THREE.Group(); snag.visible = false; g.add(snag);
+  const trunk = cyl(0.75, 25, 12, bark, 0, WATER_Y + 0.2, 0, snag, true); trunk.rotation.x = Math.PI / 2;
+  const rng = mulberry32(5), leaf = new THREE.MeshStandardMaterial({ color: 0x3d6b2a, roughness: 1 });
+  for (let i = 0; i < 7; i++) {
+    const z = -10 + i * 3.2, br = cyl(0.18, 3.4, 6, bark, 0, WATER_Y + 1, z, snag, true);
+    br.rotation.set(rng() - 0.5, 0, (rng() > 0.5 ? 1 : -1) * (0.5 + rng() * 0.6));
+    const lf = mesh(new THREE.IcosahedronGeometry(1 + rng() * 0.5, 0), leaf, (rng() - 0.5) * 3, WATER_Y + 1.6 + rng(), z + 1, snag, true); lf.scale.y = 0.7;
+  }
+  const root = mesh(new THREE.DodecahedronGeometry(2, 0), bark, 0, WATER_Y + 0.6, -RIVER_Z, snag, true); root.scale.set(0.8, 1, 0.6);
+}
+function setRaftActive(on) { raft.on = on; raft.g.visible = on; if (!on) setJam(null); }
+function setBargeFill(n) {
+  const c = raft.cargo; c.count = Math.min(RAFT.CAP, n);
+  for (let i = 0; i < c.count; i++) c.setColorAt(i, _c.set(cfg.wood[i % 3].wood).multiplyScalar(0.9 + hash3(i, 3, 7) * 0.2));
+  c.instanceColor.needsUpdate = true;
+}
+// a log rolls off the chute into the river
+function raftLaunch(limit) {
+  _p.set(RAFT.CHUTE_X + rand(-0.8, 0.8), WATER_Y + 1.6, RIVER_Z - 0.8);
+  _q.setFromAxisAngle(UP, rand(-0.25, 0.25)).multiply(Q_Y2X);
+  riverPool.spawn(_p, _q, { x: rand(0.5, 1.5), y: -3, z: -rand(4, 6) }, { x: -rand(2, 5), y: 0, z: 0 },
+    _c.set(cfg.wood[Math.floor(rand(0, 3))].wood).multiplyScalar(rand(0.9, 1.08)), { limit });
+}
+// x = where the tree falls across the river (a fixed collider the logs pile against), null = no jam
+function setJam(x) {
+  if (raft.jamBody) { world.removeRigidBody(raft.jamBody); raft.jamBody = null; }
+  raft.snag.visible = x != null;
+  if (x == null) return;
+  raft.jamX = x; raft.snag.position.x = x;
+  raft.jamBody = world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(x, WATER_Y, 0));
+  world.createCollider(RAPIER.ColliderDesc.cuboid(0.8, 1.6, RIVER_Z), raft.jamBody);
+  sfx('bridge', 'box_crash', { vol: 0.5 });
+  emitSplash(x, -4, 1.2); emitSplash(x, 4, 1);
+}
+// the jam is broken up: the tree is gone and the logs piled behind it are thrown on downstream
+function clearJam() {
+  const x = raft.jamX;
+  setJam(null);
+  for (const it of riverPool.items) {
+    const p = it.body.translation();
+    if (p.x < x - 20 || p.x > x + 3) continue;
+    it.body.setLinvel({ x: rand(3, 7), y: rand(2, 6), z: rand(-3, 3) }, true);
+    it.body.setAngvel({ x: rand(-3, 3), y: rand(-3, 3), z: rand(-3, 3) }, true);
+  }
+  for (const z of [-7, 0, 7]) emitSplash(x + rand(-2, 1), z, 1.5);
+  celebrate(x, WATER_Y + 1, 0, 1.3);
+}
+function setCurrent(v) { cfg.physics.current = v; waterMat.uniforms.uFlow.value = v; }
 
 // Water forces: buoyancy, drag, current; splashes on entry
 function applyWater(body, buoy, halfH, dt, track) {
@@ -1974,7 +2175,8 @@ function applyLook() {
   renderer.toneMappingExposure = L.exposure;
   bloom.strength = L.bloomStrength; bloom.radius = L.bloomRadius; bloom.threshold = L.bloomThreshold;
   grade.uniforms.uVignette.value = L.vignette; grade.uniforms.uSat.value = L.saturation;
-  gtao.enabled = L.ao; gtao.blendIntensity = L.aoIntensity;
+  gtao.enabled = L.ao && quality.P.ao; gtao.blendIntensity = L.aoIntensity;
+  bloom.enabled = quality.P.bloom;
   renderer.shadowMap.enabled = sun.castShadow = L.shadows;
   if (sun.shadow.mapSize.x !== L.shadowRes) { sun.shadow.mapSize.set(L.shadowRes, L.shadowRes); sun.shadow.map?.dispose(); sun.shadow.map = null; }
   grade.uniforms.uContrast.value = L.contrast;
@@ -2001,6 +2203,7 @@ buildWoodAssets();
 buildTruckGeo();
 buildVegetation();
 buildMountains();
+booted = true; // setQuality may rebuild from here on
 createWorld();
 const sphere = (x, y, z, r) => new THREE.Sphere(new THREE.Vector3(x, y, z), r);
 yardPool = new LogPool(1900, halfLogGeo, HALF, sphere(4, -2, 0, 24));      // saw exit + bin
@@ -2275,6 +2478,7 @@ function startRecording() {
 // ───────────────────────── main loop ─────────────────────────
 let last = performance.now();
 function frame(now) {
+  if (now - last < 1000 / state.maxFps - 2) { requestAnimationFrame(frame); return; } // frame cap
   const rdt = Math.min((now - last) / 1000, 1 / 20);
   last = now;
   state.fps = lerp(state.fps, 1 / Math.max(rdt, 1e-3), 0.05);
@@ -2306,6 +2510,7 @@ function tick(dt) {
     }
     if (shotType === 'bridge' || (GAME && bridge.trucks.length)) bridge.update(dt);
     updateSpans(dt);
+    if (GAME) updateCity(dt);
     state.acc += dt;
     let steps = 0;
     // at most 2 physics steps per frame: on a slow machine the sim slows a bit instead of snowballing
@@ -2351,6 +2556,7 @@ requestAnimationFrame(frame);
 
 // debug: advance the simulation by `sec` seconds at a fixed step, then draw one frame
 function advance(sec) { for (let i = 0; i < sec * 60; i++) { direct(); tick(1 / 60); } direct(); render(performance.now()); }
-window.__creative = { cfg, state, camera, controls, scene, jumpTo, shotStart, activeShots, advance, sound, soundsReady, trucks, cranes, renderer, pools: () => ({ yardPool, loadPool, riverPool }), production,
+window.__creative = { get QUALITY() { return quality.name; }, get LOW() { return quality.name === 'low'; }, QUALITY_KEY, setQuality, cfg, state, camera, controls, scene, jumpTo, shotStart, activeShots, advance, sound, soundsReady, trucks, cranes, renderer, pools: () => ({ yardPool, loadPool, riverPool }), production,
   GAME, hooks, bridge, saw, moneyTiles, moneyMesh, sfx, resetWorld, setActiveLanes, setActiveCranes, laneOn, craneOn, YARD_Y, LANE_X, BRIDGE_X, SAW_X, GATE_X, SPLIT_X, HALF, LANE_Z, CRANE_X, BAYS, BIN, celebrate, flashMaterial, setCraneGrade, drawBelt,
-  beltMat, bladeMat, M, setBridgeBuilt, bridgeState, SPAN_N, setWoodPalette, preloadWood, rakeLogs, setSawGrade, FULL };
+  beltMat, bladeMat, M, setBridgeBuilt, bridgeState, SPAN_N, setWoodPalette, preloadWood, rakeLogs, setSawGrade, FULL,
+  city, CITY_STAGES, setCityBuilt, setCityActive, setEvening, refreshAO: () => gtao.refresh(), WATER_Y, RAFT, raft, setRaftActive, setBargeFill, raftLaunch, setJam, clearJam, setCurrent };
