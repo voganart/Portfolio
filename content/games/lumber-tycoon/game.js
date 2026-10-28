@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 
 window.LUMBER_GAME = true;
-await import('./main.js');
+await import('./main.js' + new URL(import.meta.url).search); // same ?v=<build> as game.js
 const C = window.__creative;
 const { cfg, camera, controls, trucks, moneyTiles, moneyMesh, hooks, sfx } = C;
 

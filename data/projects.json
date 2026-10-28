@@ -10,8 +10,8 @@
       "ru": "Играбельная демка на Three.js по мотивам рекламного креатива. Запусти лесопилку станция за станцией, прокачивай краны, пилы, конвейер и породы дерева, грузи грузовики и почини мост, чтобы колонна доехала до города. Физика брёвен на Rapier, бункер можно разгребать пальцем, работает на компьютере и телефоне.",
       "en": "A playable Three.js demo based on ad creative. Start the sawmill station by station, upgrade cranes, saws, the conveyor and wood species, load the trucks and repair the bridge so the convoy reaches the city. Log physics on Rapier, you can rake the bin with your finger, works on desktop and mobile."
     },
-    "mediaFile": "lumber_tycoon_game.jpg",
-    "link": "content/games/lumber-tycoon/game.html",
+    "mediaFile": "lumber_tycoon_title.jpg",
+    "link": "content/games/lumber-tycoon/game.html?v=202610281120",
     "tags": [
       "Game Development",
       "Three.js",

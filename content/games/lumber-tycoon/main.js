@@ -11,9 +11,9 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import GUI from 'three/addons/libs/lil-gui.module.min.js';
 import RAPIER from 'rapier';
-import { DEFAULTS } from './config.js';
-import { Sound, SOUND_FILES } from './audio.js';
-import * as A from './assets.js';
+// the game page loads its modules with ?v=<build> (see game.html), passed on here so a new upload is never served from cache
+const V = new URL(import.meta.url).search;
+const [{ DEFAULTS }, { Sound, SOUND_FILES }, A] = await Promise.all([import('./config.js' + V), import('./audio.js' + V), import('./assets.js' + V)]);
 
 const { rand, clamp, lerp, mulberry32, hash3 } = A;
 
