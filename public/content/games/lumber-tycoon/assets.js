@@ -218,8 +218,8 @@ export function makeFacadeTexture(floorsH = 3.2) {
 }
 
 // ───────────── logs ─────────────
-export function makeRawLogGeo(R, L, seed) {
-  const g = new THREE.CylinderGeometry(R, R, L, 44, 14);
+export function makeRawLogGeo(R, L, seed, lo = false) {
+  const g = new THREE.CylinderGeometry(R, R, L, lo ? 24 : 44, lo ? 8 : 14); // lo: phones
   const knots = [0, 1, 2].map((i) => [hash3(seed, i, 1) * Math.PI * 2, (hash3(seed, i, 2) - 0.5) * L * 0.8]);
   displace(g, (v) => {
     const r = Math.hypot(v.x, v.z);
