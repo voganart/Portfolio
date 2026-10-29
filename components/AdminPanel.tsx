@@ -31,13 +31,14 @@ const AdminPanel: React.FC = () => {
   const [publishing, setPublishing] = useState(false);
   const [undoing, setUndoing] = useState(false);
   const [uploadingId, setUploadingId] = useState<number | null>(null);
-  const [translatingId, setTranslatingId] = useState<number | null>(null);
+  const [translating, setTranslating] = useState<{ id: number; target: 'en' | 'es' } | null>(null);
   const [gitStatus, setGitStatus] = useState<GitStatus | null>(null);
   const [message, setMessage] = useState('');
 
   const basePath = import.meta.env.BASE_URL || '/';
   const selectedProject = projects.find((project) => project.id === selectedId) || null;
   const tags = useMemo(() => getUniqueTags(projects), [projects]);
+  const featuredCount = projects.filter((project) => project.featured).length;
   const visibleProjects = useMemo(() => filterProjects(projects, query, selectedTag), [projects, query, selectedTag]);
   const duplicateTitle = Boolean(selectedProject && projects.some((project) => project.id !== selectedProject.id && project.title.ru.trim() && project.title.ru.trim().toLocaleLowerCase() === selectedProject.title.ru.trim().toLocaleLowerCase()));
 
@@ -93,6 +94,15 @@ const AdminPanel: React.FC = () => {
     setDirty(true);
   };
 
+  const toggleFeatured = (id: number) => {
+    const project = projects.find((item) => item.id === id);
+    if (!project) return;
+    updateProject(id, (item) => ({ ...item, featured: !item.featured }));
+    setMessage(project.featured
+      ? `«${project.title.ru}» убран из избранного. Сохраните изменения.`
+      : `«${project.title.ru}» добавлен в избранное на главной. Сохраните изменения.`);
+  };
+
   const selectProject = (id: number) => {
     setSelectedId(id);
     if (window.matchMedia('(max-width: 1023px)').matches) {
@@ -105,7 +115,8 @@ const AdminPanel: React.FC = () => {
     updateProject(selectedProject.id, (project) => {
       if (field === 'tags') return { ...project, tags: value as string[] };
       if (field === 'mediaFile') return { ...project, mediaFile: value as string };
-      const [group, language] = field.split('.') as ['title' | 'description', 'ru' | 'en'];
+      if (field === 'link') return { ...project, link: (value as string).trim() || undefined };
+      const [group, language] = field.split('.') as ['title' | 'description', 'ru' | 'en' | 'es'];
       return { ...project, [group]: { ...project[group], [language]: value as string } };
     });
   };
@@ -227,23 +238,24 @@ const AdminPanel: React.FC = () => {
     }
   };
 
-  const translateDescription = async () => {
+  // перевод описания с RU на EN или ES (ES — испанский, необязательное поле)
+  const translateDescription = async (target: 'en' | 'es') => {
     if (!selectedProject?.description.ru.trim()) {
       setMessage('Сначала заполните описание на русском.');
       return;
     }
     const projectId = selectedProject.id;
-    setTranslatingId(projectId);
+    setTranslating({ id: projectId, target });
     try {
-      const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(selectedProject.description.ru)}&langpair=ru|en`);
+      const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(selectedProject.description.ru)}&langpair=ru|${target}`);
       const data = await response.json();
       if (!response.ok || !data.responseData?.translatedText) throw new Error('сервис не вернул перевод');
-      updateProject(projectId, (project) => ({ ...project, description: { ...project.description, en: data.responseData.translatedText } }));
+      updateProject(projectId, (project) => ({ ...project, description: { ...project.description, [target]: data.responseData.translatedText } }));
       setMessage('Перевод добавлен. Проверьте текст перед сохранением.');
     } catch (error) {
       setMessage(`Ошибка перевода: ${error instanceof Error ? error.message : 'сервис недоступен'}`);
     } finally {
-      setTranslatingId(null);
+      setTranslating(null);
     }
   };
 
@@ -293,8 +305,8 @@ const AdminPanel: React.FC = () => {
         <AdminToolbar projectCount={projects.length} dirty={dirty} saving={saving} publishing={publishing} undoing={undoing} ahead={gitStatus?.ahead || 0} message={message} onBack={goToSite} onSave={() => { void saveProjects(); }} onPublish={() => { void publishProjects(); }} onUndo={() => { void undoCommits(); }} />
         <ThemePicker value={theme.preset} onChange={changeTheme} />
         <main className="mt-5 grid gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
-          <ProjectList projects={visibleProjects} selectedId={selectedId} basePath={basePath} query={query} tag={selectedTag} tags={tags} onQueryChange={setQuery} onTagChange={setSelectedTag} onSelect={selectProject} onAdd={addProject} onReorder={reorderProjects} />
-          <ProjectEditor key={selectedProject?.id || 'empty'} project={selectedProject} basePath={basePath} uploading={uploadingId === selectedProject?.id} translating={translatingId === selectedProject?.id} duplicateTitle={duplicateTitle} onChange={handleFieldChange} onUpload={uploadMedia} onTranslate={() => { void translateDescription(); }} onDelete={deleteProject} />
+          <ProjectList projects={visibleProjects} selectedId={selectedId} basePath={basePath} query={query} tag={selectedTag} tags={tags} featuredCount={featuredCount} onQueryChange={setQuery} onTagChange={setSelectedTag} onSelect={selectProject} onToggleFeatured={toggleFeatured} onAdd={addProject} onReorder={reorderProjects} />
+          <ProjectEditor key={selectedProject?.id || 'empty'} project={selectedProject} basePath={basePath} uploading={uploadingId === selectedProject?.id} translatingTarget={translating && translating.id === selectedProject?.id ? translating.target : null} duplicateTitle={duplicateTitle} onChange={handleFieldChange} onUpload={uploadMedia} onTranslate={(target) => { void translateDescription(target); }} onToggleFeatured={() => selectedProject && toggleFeatured(selectedProject.id)} onDelete={deleteProject} />
         </main>
       </div>
     </div>

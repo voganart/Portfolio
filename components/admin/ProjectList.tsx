@@ -3,6 +3,7 @@ import { DndContext, PointerSensor, closestCenter, useSensor, useSensors, type D
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Project } from '../../types';
+import { FEATURED_FILTER } from '../../utils/projects';
 
 interface SortableRowProps {
   project: Project;
@@ -10,9 +11,10 @@ interface SortableRowProps {
   basePath: string;
   disabled: boolean;
   onSelect: () => void;
+  onToggleFeatured: () => void;
 }
 
-const SortableRow: React.FC<SortableRowProps> = ({ project, active, basePath, disabled, onSelect }) => {
+const SortableRow: React.FC<SortableRowProps> = ({ project, active, basePath, disabled, onSelect, onToggleFeatured }) => {
   const sortable = useSortable({ id: project.id, disabled });
   const mediaUrl = `${basePath}content/${project.mediaFile}`;
   const posterUrl = `${basePath}content/posters/${project.mediaFile.replace(/\.[^.]+$/, '.jpg')}`;
@@ -37,6 +39,7 @@ const SortableRow: React.FC<SortableRowProps> = ({ project, active, basePath, di
           <p className="mt-1 truncate text-xs text-slate-400">{project.tags.join(' · ') || 'Без тегов'}</p>
         </div>
       </button>
+      <button onClick={onToggleFeatured} className={`shrink-0 rounded-lg px-2 py-3 text-lg leading-none transition ${project.featured ? 'text-amber-300 hover:bg-amber-400/10' : 'text-slate-600 hover:bg-slate-700 hover:text-amber-200'}`} title={project.featured ? 'Убрать из избранного' : 'Показывать в избранном на главной'} aria-label={project.featured ? `Убрать ${project.title.ru} из избранного` : `Добавить ${project.title.ru} в избранное`} aria-pressed={Boolean(project.featured)}>{project.featured ? '★' : '☆'}</button>
     </div>
   );
 };
@@ -48,14 +51,16 @@ interface ProjectListProps {
   query: string;
   tag: string | null;
   tags: string[];
+  featuredCount: number;
   onQueryChange: (value: string) => void;
   onTagChange: (value: string | null) => void;
   onSelect: (id: number) => void;
+  onToggleFeatured: (id: number) => void;
   onAdd: () => void;
   onReorder: (event: DragEndEvent) => void;
 }
 
-const ProjectList: React.FC<ProjectListProps> = ({ projects, selectedId, basePath, query, tag, tags, onQueryChange, onTagChange, onSelect, onAdd, onReorder }) => {
+const ProjectList: React.FC<ProjectListProps> = ({ projects, selectedId, basePath, query, tag, tags, featuredCount, onQueryChange, onTagChange, onSelect, onToggleFeatured, onAdd, onReorder }) => {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
   const sortingDisabled = Boolean(query.trim() || tag);
 
@@ -67,16 +72,17 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, selectedId, basePat
       </div>
       <select value={tag || ''} onChange={(event) => onTagChange(event.target.value || null)} className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-slate-300 outline-none focus:border-teal-500">
         <option value="">Все теги</option>
+        <option value={FEATURED_FILTER}>★ Только избранное ({featuredCount})</option>
         {tags.map((item) => <option key={item} value={item}>{item}</option>)}
       </select>
       <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
-        <span>Найдено: {projects.length}</span>
+        <span>Найдено: {projects.length} · ★ {featuredCount}</span>
         {sortingDisabled && <span>Сортировка временно выключена</span>}
       </div>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onReorder}>
         <SortableContext items={projects.map((project) => project.id)} strategy={verticalListSortingStrategy}>
           <div className="mt-3 max-h-[50vh] space-y-2 overflow-y-auto pr-1 lg:max-h-[calc(100vh-18.5rem)]">
-            {projects.map((project) => <SortableRow key={project.id} project={project} active={selectedId === project.id} basePath={basePath} disabled={sortingDisabled} onSelect={() => onSelect(project.id)} />)}
+            {projects.map((project) => <SortableRow key={project.id} project={project} active={selectedId === project.id} basePath={basePath} disabled={sortingDisabled} onSelect={() => onSelect(project.id)} onToggleFeatured={() => onToggleFeatured(project.id)} />)}
             {!projects.length && <p className="rounded-xl border border-dashed border-slate-700 p-8 text-center text-sm text-slate-500">Ничего не найдено</p>}
           </div>
         </SortableContext>

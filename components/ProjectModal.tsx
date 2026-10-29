@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import type { Project } from '../types';
 import { useTranslations } from '../hooks/useTranslations';
+import { localizedText, projectLinkUrl } from '../utils/projects';
 
 interface ProjectModalProps {
   project: Project;
@@ -18,7 +19,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   onSelectProject,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { language } = useTranslations();
+  const { t, language } = useTranslations();
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -55,8 +56,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
     }
   };
 
-  const title = project.title[language];
-  const description = project.description[language];
+  const title = localizedText(project.title, language);
+  const description = localizedText(project.description, language);
   const basePath = import.meta.env.BASE_URL || '/';
   const mediaPath = `${basePath}content/${project.mediaFile}`;
   const isVideo = ['.mp4', '.webm', '.ogg'].some(ext =>
@@ -79,7 +80,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         <button
           onClick={onClose}
           className="absolute right-1 top-0 z-50 rounded-full bg-black/60 p-2 text-gray-300 transition-colors hover:bg-slate-700 hover:text-white sm:-right-2 sm:-top-12"
-          aria-label="Close"
+          aria-label={t.modal.close}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -101,7 +102,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           </button>
 
           {/* Контент */}
-          <div className="relative flex max-h-[88vh] w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-gray-900 shadow-2xl">
+          <div className="relative flex max-h-[88vh] w-full flex-col overflow-hidden theme-line rounded-2xl border bg-[color:var(--site-bg)] shadow-2xl">
             <div className="flex-1 bg-black flex items-center justify-center relative overflow-hidden">
                {isVideo ? (
                 <video
@@ -124,21 +125,22 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             </div>
 
             {/* Информация внизу */}
-            <div className="border-t border-gray-700 bg-gray-800 p-5 sm:p-6">
+            <div className="theme-line theme-surface border-t p-5 sm:p-6">
               <div className="flex justify-between items-start">
                 <div>
-                   <h3 className="text-2xl font-bold text-white">{title}</h3>
+                   <h3 className="font-display text-2xl text-white">{title}</h3>
                    <div className="mt-2 flex flex-wrap gap-2">
                     {project.tags.map(tag => (
-                      <span key={tag} className="theme-accent-soft theme-accent-border rounded border px-2 py-0.5 text-xs">
+                      <span key={tag} className="font-ui-mono theme-line rounded-md border px-2 py-0.5 text-xs text-slate-400">
                         {tag}
                       </span>
                     ))}
                    </div>
                 </div>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-gray-300 sm:text-base">{description}</p>
-              <p className="mt-4 text-xs font-bold uppercase tracking-widest text-slate-500">{index + 1} / {projects.length}</p>
+              <p className="mt-4 max-w-[70ch] text-sm leading-relaxed text-slate-300 sm:text-base">{description}</p>
+              {project.link && <a href={projectLinkUrl(project)} className="play-glow theme-accent-bg mt-5 inline-block rounded-full px-8 py-3 text-lg font-black transition hover:scale-105">{t.portfolio.play}</a>}
+              <p className="font-ui-mono mt-4 text-xs text-slate-500">{String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</p>
             </div>
           </div>
 
@@ -163,7 +165,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
              disabled={index === 0}
              className="px-4 py-2 bg-gray-800 rounded-lg text-white disabled:opacity-30"
            >
-             Prev
+             {t.modal.prev}
            </button>
            <span className="text-gray-400 self-center">{index + 1} / {projects.length}</span>
            <button 
@@ -171,7 +173,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
              disabled={index === projects.length - 1}
              className="px-4 py-2 bg-gray-800 rounded-lg text-white disabled:opacity-30"
            >
-             Next
+             {t.modal.next}
            </button>
         </div>
 
@@ -183,6 +185,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         }
         .animate-fade-in {
           animation: fade-in 0.2s ease-out;
+        }
+        @keyframes play-glow {
+          from { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35); }
+          to { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0), 0 0 28px currentColor; }
+        }
+        .play-glow {
+          animation: play-glow 1.1s ease-out infinite;
         }
       `}</style>
     </div>

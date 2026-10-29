@@ -1,9 +1,12 @@
 export default {
   "header": {
+    "hint": "drag to orbit · click for the next animation",
+    "cta2": "Get in touch",
     "name": "Vladimir Grigorov",
     "title": "Game Animator & Technical Artist",
     "intro": "I create 2D/3D animation, game VFX, and interactive prototypes — from Spine and After Effects to Unity, Godot, and PixiJS.",
-    "button": "View Works"
+    "button": "View Works",
+    "eyebrow": "Game animation · Technical art · Prototypes"
   },
   "nav": {
     "work": "Work",
@@ -12,6 +15,7 @@ export default {
     "contact": "Contact"
   },
   "about": {
+    "eyebrow": "10+ years in mobile games",
     "title": "About Me",
     "text": "I have over 10 years of experience in mobile games as a 2D/3D generalist. I do character animation, environment design, UI, VFX, modeling, and texturing. My main tools are Blender, Photoshop, Unity, and Godot. I also make game prototypes and develop game mechanics. I have experience working as an Art Lead, giving feedback and mentoring artists. I am used to working closely with programmers and game designers. Currently based in Argentina. In my free time, I do 3D printing, coding, web development, integrate AI into workflows, and learn Spanish.",
     "skillsTitle": "Key Skills",
@@ -36,10 +40,65 @@ export default {
     "all": "All",
     "allFilters": "All Filters",
     "projectsCount": "projects",
-    "empty": "There are no projects in this category yet."
+    "empty": "There are no projects in this category yet.",
+    "eyebrow": "Selected work",
+    "play": "▶ Play"
   },
   "contact": {
+    "eyebrow": "Open to projects",
     "title": "Contact Me",
-    "subtitle": "Open to new projects and interesting opportunities."
+    "subtitle": "Open to new projects and interesting opportunities.",
+    "rights": "All rights reserved.",
+    "tooltips": {
+      "linkedin": "Open LinkedIn",
+      "telegram": "Message on Telegram",
+      "email": "Send email",
+      "github": "Open GitHub",
+      "sketchfab": "Open Sketchfab"
+    }
+  },
+  "showreel": {
+    "title": "Animation Showreel"
+  },
+  "modal": {
+    "close": "Close",
+    "prev": "Prev",
+    "next": "Next"
+  },
+  "themeSwitcher": {
+    "label": "Color theme"
+  },
+  "languageSwitcher": {
+    "label": "Language"
+  },
+  "game": {
+    "play": "Play",
+    "playLabel": "Mini-game: arena",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen",
+    "back": "Back to viewport",
+    "loading": "loading arena…",
+    "error": "game failed to load",
+    "round": "Round 1",
+    "wave": "Wave {n}",
+    "waveCounter": "Wave {n}/{total}",
+    "hp": "Health",
+    "boss": "Mini-boss · Gogo Runt",
+    "victory": "Victory!",
+    "victorySub": "Round 1 cleared — the chest is yours",
+    "gameOver": "Game over",
+    "gameOverSub": "The monsters win this time",
+    "restart": "Restart",
+    "resume": "Click to play",
+    "slamHint": "attack in the air — slam",
+    "controls": {
+      "jumpShort": "jump",
+      "evade": "dodge",
+      "move": "move",
+      "attack": "attack",
+      "jump": "double jump",
+      "roll": "roll · air dash in the air",
+      "dash": "dash"
+    }
   }
 }

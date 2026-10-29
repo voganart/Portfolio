@@ -27,6 +27,26 @@ export interface SiteTheme {
 
 export const DEFAULT_THEME: SiteTheme = { preset: 'midnight-violet' };
 
+// Выбор посетителя хранится в браузере и перекрывает тему по умолчанию из админки
+const VISITOR_THEME_KEY = 'vg-site-theme';
+
+export const readVisitorTheme = (): ThemePresetId | null => {
+  try {
+    const saved = window.localStorage.getItem(VISITOR_THEME_KEY);
+    return THEME_PRESETS.some((item) => item.id === saved) ? saved as ThemePresetId : null;
+  } catch {
+    return null;
+  }
+};
+
+export const saveVisitorTheme = (preset: ThemePresetId) => {
+  try {
+    window.localStorage.setItem(VISITOR_THEME_KEY, preset);
+  } catch {
+    // хранилище недоступно (приватный режим) — тема просто не запомнится
+  }
+};
+
 export const normalizeTheme = (value: unknown): SiteTheme => {
   const preset = typeof value === 'object' && value !== null && 'preset' in value
     ? (value as { preset?: unknown }).preset

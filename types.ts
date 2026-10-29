@@ -15,17 +15,20 @@ export type Tag =
   | 'Game Development'
   | 'Animator';
 
+// es необязателен: если пусто, на сайте показывается en
+export interface LocalizedText {
+  ru: string;
+  en: string;
+  es?: string;
+}
+
 export interface Project {
   id: number;
   order: number; // <-- Добавили это поле для сортировки
-  title: {
-    ru: string;
-    en: string;
-  };
-  description: {
-    ru: string;
-    en: string;
-  };
+  title: LocalizedText;
+  description: LocalizedText;
   mediaFile: string;
   tags: string[];
+  featured?: boolean; // показывать во вкладке «Избранное» на главной
+  link?: string; // страница, которая открывается по клику вместо просмотра (например, браузерная игра), путь от корня сайта
 }

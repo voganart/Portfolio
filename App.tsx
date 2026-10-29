@@ -8,11 +8,12 @@ import Showreel from './components/Showreel';
 import AdminPanel from './components/AdminPanel'; // Импортируем админку
 import type { Project } from './types';
 import SiteNav from './components/SiteNav';
-import { DEFAULT_THEME, normalizeTheme, type SiteTheme } from './utils/themes';
+import { DEFAULT_THEME, normalizeTheme, readVisitorTheme, saveVisitorTheme, type SiteTheme, type ThemePresetId } from './utils/themes';
 
 const App: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [theme, setTheme] = useState<SiteTheme>(DEFAULT_THEME);
+  const [visitorTheme, setVisitorTheme] = useState<ThemePresetId | null>(readVisitorTheme);
   const [loading, setLoading] = useState(true);
   
   // Состояние: находимся ли мы на странице админки
@@ -78,6 +79,12 @@ const App: React.FC = () => {
     return <AdminPanel />;
   }
 
+  const activeTheme = visitorTheme ?? theme.preset;
+  const changeVisitorTheme = (preset: ThemePresetId) => {
+    setVisitorTheme(preset);
+    saveVisitorTheme(preset);
+  };
+
   const showreelProject = projects.find(p => p.id === 3);
 
   if (loading) {
@@ -86,10 +93,10 @@ const App: React.FC = () => {
 
   return (
     <LanguageProvider>
-      <div data-theme={theme.preset} className="site-shell min-h-screen text-gray-200">
-        <SiteNav />
+      <div data-theme={activeTheme} className="site-shell min-h-screen text-gray-200">
+        <SiteNav theme={activeTheme} onThemeChange={changeVisitorTheme} />
         <Header />
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <main>
           <Portfolio projects={projects} />
           <Showreel project={showreelProject} />
           <About />

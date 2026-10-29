@@ -2,7 +2,11 @@
 
 :root {
   color-scheme: dark;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Шрифты: плотный дисплейный для заголовков, Golos для текста, моно для «таймкодов» */
+  --font-display: "Dela Gothic One", "Arial Black", system-ui, sans-serif;
+  --font-body: "Golos Text", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  font-family: var(--font-body);
   background: #020617;
 }
 
@@ -29,6 +33,8 @@ body {
   --site-accent-text: #5eead4;
   --site-secondary: #a855f7;
   --site-secondary-soft: rgba(168, 85, 247, 0.15);
+  --site-key: #fbbf24;
+  --site-line: rgba(232, 228, 255, 0.09);
 }
 
 [data-theme="deep-ocean"] {
@@ -42,6 +48,7 @@ body {
   --site-accent-text: #67e8f9;
   --site-secondary: #3b82f6;
   --site-secondary-soft: rgba(59, 130, 246, 0.16);
+  --site-key: #fde68a;
 }
 
 [data-theme="ember-night"] {
@@ -55,11 +62,25 @@ body {
   --site-accent-text: #fbbf24;
   --site-secondary: #f43f5e;
   --site-secondary-soft: rgba(244, 63, 94, 0.15);
+  --site-key: #fef3c7;
 }
 
 .site-shell {
-  background: linear-gradient(135deg, var(--site-bg-deep), var(--site-bg-glow), var(--site-bg-deep));
+  background-color: var(--site-bg);
+  background-image: radial-gradient(ellipse 70% 55% at 80% 0%, color-mix(in srgb, var(--site-bg-glow) 75%, transparent), transparent 70%), linear-gradient(180deg, var(--site-bg), var(--site-bg-deep));
+  transition: background-color 0.4s;
 }
+
+/* Типографика и мелкие элементы «монтажки» */
+.font-display { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
+.font-ui-mono { font-family: var(--font-mono); }
+.eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--site-accent-text); }
+.theme-line { border-color: var(--site-line); }
+.theme-key-text { color: var(--site-key); }
+.keyframe { display: inline-block; width: 0.6rem; height: 0.6rem; background: var(--site-key); transform: rotate(45deg); }
+.skill-lane { background: repeating-linear-gradient(90deg, var(--site-line) 0 1px, transparent 1px 10%); }
+.skill-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--site-accent) 12%, transparent), color-mix(in srgb, var(--site-accent) 45%, transparent)); }
+h1, h2, h3 { text-wrap: balance; }
 
 .theme-nav { background-color: color-mix(in srgb, var(--site-bg) 82%, transparent); }
 .theme-surface { background-color: var(--site-surface); }
@@ -86,7 +107,7 @@ select {
 }
 
 :focus-visible {
-  outline: 2px solid #2dd4bf;
+  outline: 2px solid var(--site-accent, #2dd4bf);
   outline-offset: 3px;
 }
 
