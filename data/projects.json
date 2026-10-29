@@ -4,11 +4,13 @@
     "order": 1,
     "title": {
       "ru": "Lumber Tycoon — браузерная 3D-игра",
-      "en": "Lumber Tycoon — browser 3D game"
+      "en": "Lumber Tycoon — browser 3D game",
+      "es": "Lumber Tycoon — juego 3D para navegador"
     },
     "description": {
       "ru": "Играбельная демка на Three.js по мотивам рекламного креатива. Запусти лесопилку станция за станцией, прокачивай краны, пилы, конвейер и породы дерева, грузи грузовики и почини мост, чтобы колонна доехала до города. Физика брёвен на Rapier, бункер можно разгребать пальцем, работает на компьютере и телефоне.",
-      "en": "A playable Three.js demo based on ad creative. Start the sawmill station by station, upgrade cranes, saws, the conveyor and wood species, load the trucks and repair the bridge so the convoy reaches the city. Log physics on Rapier, you can rake the bin with your finger, works on desktop and mobile."
+      "en": "A playable Three.js demo based on ad creative. Start the sawmill station by station, upgrade cranes, saws, the conveyor and wood species, load the trucks and repair the bridge so the convoy reaches the city. Log physics on Rapier, you can rake the bin with your finger, works on desktop and mobile.",
+      "es": "Demo jugable en Three.js inspirada en un creativo publicitario. Poné en marcha el aserradero estación por estación, mejorá las grúas, las sierras, la cinta transportadora y los tipos de madera, cargá los camiones y arreglá el puente para que el convoy llegue a la ciudad. Física de troncos con Rapier, la tolva se puede revolver con el dedo y funciona en compu y en celular."
     },
     "mediaFile": "lumber_tycoon_logo.jpg",
     "link": "content/games/lumber-tycoon/game.html?v=202610291438",
@@ -25,11 +27,13 @@
     "order": 2,
     "title": {
       "ru": "Креатив для соц-сетей",
-      "en": "Creatives for social media"
+      "en": "Creatives for social media",
+      "es": "Creativos para redes sociales"
     },
     "description": {
       "ru": "Сценарий креатива где игрок выбирает не правильный вариант (смотреть со звуком!)",
-      "en": "Creative scenario where the player chooses the wrong option (watch with sound!)"
+      "en": "Creative scenario where the player chooses the wrong option (watch with sound!)",
+      "es": "Guion de un creativo donde el jugador elige la opción equivocada (¡miralo con sonido!)"
     },
     "mediaFile": "Kioko_creative_v2_1080x1350.mp4",
     "tags": [
@@ -45,11 +49,13 @@
     "order": 3,
     "title": {
       "ru": "Анимация лисенка-мага в спайне ",
-      "en": "Spine Magic Fox Animation"
+      "en": "Spine Magic Fox Animation",
+      "es": "Animación de zorrito mago en Spine"
     },
     "description": {
       "ru": "Анимация лисенка-мага в спайне ",
-      "en": "Spine Magic Fox Animation"
+      "en": "Spine Magic Fox Animation",
+      "es": "Animación de un zorrito mago en Spine"
     },
     "mediaFile": "fox_Idle_Showcase_20261027_143130.mp4",
     "tags": [
@@ -64,11 +70,13 @@
     "order": 4,
     "title": {
       "ru": "Анимация персонажа для слот-игры",
-      "en": "Slot Game Character Animation"
+      "en": "Slot Game Character Animation",
+      "es": "Animación de personaje para slot"
     },
     "description": {
       "ru": "Разработка и полировка анимаций персонажа: Idle, Anticipation, Spin, Win, Big Win и Lose. Доработка рига, вторичной анимации ног и платья, мимики и взгляда. Создание анимаций бабочек, нимба и эффектов посоха. Улучшение динамики, плавности и визуальной выразительности игровых реакций.",
-      "en": "Development and polishing of character animations: Idle, Anticipation, Spin, Win, Big Win and Lose. Refinement of rig, secondary animation of legs and dress, facial expressions and gaze. Creating animations of butterflies, halo and staff effects. Improving the dynamics, smoothness and visual expressiveness of game reactions."
+      "en": "Development and polishing of character animations: Idle, Anticipation, Spin, Win, Big Win and Lose. Refinement of rig, secondary animation of legs and dress, facial expressions and gaze. Creating animations of butterflies, halo and staff effects. Improving the dynamics, smoothness and visual expressiveness of game reactions.",
+      "es": "Desarrollo y pulido de las animaciones del personaje: Idle, Anticipation, Spin, Win, Big Win y Lose. Ajuste del rig, animación secundaria de piernas y vestido, expresiones faciales y mirada. Animaciones de mariposas, aureola y efectos del báculo. Mejora de la dinámica, la fluidez y la expresividad visual de las reacciones del juego."
     },
     "mediaFile": "goddess_showreel_20261029_170858.mp4",
     "tags": [
@@ -84,11 +92,13 @@
     "order": 5,
     "title": {
       "ru": "Анимация персонажа в Spine",
-      "en": "Character animation in Spine"
+      "en": "Character animation in Spine",
+      "es": "Animación de personaje en Spine"
     },
     "description": {
       "ru": "Анимация персонажа в Spine, читающего книгу и ухмыляющегося",
-      "en": "Animation of a character in Spine reading a book and smirking"
+      "en": "Animation of a character in Spine reading a book and smirking",
+      "es": "Animación en Spine de un personaje que lee un libro y sonríe con picardía"
     },
     "mediaFile": "character_idle_read_v3_20261023_094643.mp4",
     "tags": [
@@ -99,15 +109,38 @@
     "featured": true
   },
   {
-    "id": 2,
+    "id": 55,
     "order": 6,
     "title": {
+      "ru": "Анимация черепахи шамана",
+      "en": "Shaman Turtle Animation",
+      "es": "Animación de tortuga chamán"
+    },
+    "description": {
+      "ru": "Анимация черепахи шамана",
+      "en": "Shaman Turtle Animation",
+      "es": "Animación de una tortuga chamán"
+    },
+    "mediaFile": "turtle_reel_walk-idle-attack_20261029_154133.mp4",
+    "tags": [
+      "2D Spine",
+      "Animation",
+      "Character"
+    ],
+    "featured": true
+  },
+  {
+    "id": 2,
+    "order": 7,
+    "title": {
       "ru": "Animation showreel 2",
-      "en": "Animation showreel 2"
+      "en": "Animation showreel 2",
+      "es": "Animation showreel 2"
     },
     "description": {
       "ru": "Showreel по анимации",
-      "en": "Animation showreel"
+      "en": "Animation showreel",
+      "es": "Showreel de animación"
     },
     "mediaFile": "Animation_showreel_2019.mp4",
     "tags": [
@@ -119,14 +152,16 @@
   },
   {
     "id": 3,
-    "order": 7,
+    "order": 8,
     "title": {
       "ru": "Animation showreel 1",
-      "en": "Animation showreel 1"
+      "en": "Animation showreel 1",
+      "es": "Animation showreel 1"
     },
     "description": {
       "ru": "Showreel анимации",
-      "en": "Animation showreel"
+      "en": "Animation showreel",
+      "es": "Showreel de animación"
     },
     "mediaFile": "Animation_showreel_2021.mp4",
     "tags": [
@@ -139,34 +174,17 @@
     "featured": true
   },
   {
-    "id": 55,
-    "order": 8,
-    "title": {
-      "ru": "Анимация черепахи шамана",
-      "en": "Shaman Turtle Animation"
-    },
-    "description": {
-      "ru": "Анимация черепахи шамана",
-      "en": "Shaman Turtle Animation"
-    },
-    "mediaFile": "turtle_reel_walk-idle-attack_20261029_154133.mp4",
-    "tags": [
-      "2D Spine",
-      "Animation",
-      "Character"
-    ],
-    "featured": true
-  },
-  {
     "id": 1,
     "order": 9,
     "title": {
       "ru": "2D Анимация Альпаки",
-      "en": "Alpaca 2D Animation"
+      "en": "Alpaca 2D Animation",
+      "es": "Animación 2D de alpaca"
     },
     "description": {
       "ru": "2D анимация в Spine.",
-      "en": "2D animation in Spine."
+      "en": "2D animation in Spine.",
+      "es": "Animación 2D en Spine."
     },
     "mediaFile": "Alpaca_2danimation_spine.mp4",
     "tags": [
@@ -180,11 +198,13 @@
     "order": 10,
     "title": {
       "ru": "Превью слот игры",
-      "en": "Slot game preview"
+      "en": "Slot game preview",
+      "es": "Preview de juego de slot"
     },
     "description": {
       "ru": "Превью слот игры на PixiJS, морозная тематика",
-      "en": "Preview of the slot game on PixiJS, frosty theme"
+      "en": "Preview of the slot game on PixiJS, frosty theme",
+      "es": "Preview de un juego de slot en PixiJS, temática invernal"
     },
     "mediaFile": "arctic-boost-preview-2026-07-29T11-22-00-698Z_EDIT.webm",
     "tags": [
@@ -202,11 +222,13 @@
     "order": 11,
     "title": {
       "ru": "Превью слот игры",
-      "en": "Slot game preview"
+      "en": "Slot game preview",
+      "es": "Preview de juego de slot"
     },
     "description": {
       "ru": "Превью слот игры на PixiJS, тематика роз",
-      "en": "Preview of the game slot on PixiJS, roses theme"
+      "en": "Preview of the game slot on PixiJS, roses theme",
+      "es": "Preview de un juego de slot en PixiJS, temática de rosas"
     },
     "mediaFile": "4_ENCHANTED_ROSES_Game_preview_EDIT.webm",
     "tags": [
@@ -224,11 +246,13 @@
     "order": 12,
     "title": {
       "ru": "Превью слот игры",
-      "en": "Slot game preview"
+      "en": "Slot game preview",
+      "es": "Preview de juego de slot"
     },
     "description": {
       "ru": "Превью слот игры на PixiJS",
-      "en": "PixiJS Slot Game Preview"
+      "en": "PixiJS Slot Game Preview",
+      "es": "Preview de un juego de slot en PixiJS"
     },
     "mediaFile": "rbxm-preview-1786118651676_(1).webm",
     "tags": [
@@ -246,11 +270,13 @@
     "order": 13,
     "title": {
       "ru": "Пугала в замке",
-      "en": "Castle Scarecrows Jump"
+      "en": "Castle Scarecrows Jump",
+      "es": "Espantapájaros en el castillo"
     },
     "description": {
       "ru": "2D анимация пугал в Spine.",
-      "en": "2D scarecrow animation in Spine."
+      "en": "2D scarecrow animation in Spine.",
+      "es": "Animación 2D de espantapájaros en Spine."
     },
     "mediaFile": "Castle_scarecrows_jumps_2danimation_spine.mp4",
     "tags": [
@@ -265,11 +291,13 @@
     "order": 14,
     "title": {
       "ru": "Чистка мусора",
-      "en": "Cleaning Trash"
+      "en": "Cleaning Trash",
+      "es": "Limpieza de basura"
     },
     "description": {
       "ru": "2D анимация мусора в Spine.",
-      "en": "Trash animation in Spine."
+      "en": "Trash animation in Spine.",
+      "es": "Animación 2D de basura en Spine."
     },
     "mediaFile": "cleaning_trash_2danimation_spine.mp4",
     "tags": [
@@ -284,11 +312,13 @@
     "order": 15,
     "title": {
       "ru": "Ходьба персонажа",
-      "en": "Crouch Walk"
+      "en": "Crouch Walk",
+      "es": "Caminata agachada"
     },
     "description": {
       "ru": "Анимация ходьбы персонажа в Blender.",
-      "en": "Character crouch walk animation in Blender."
+      "en": "Character crouch walk animation in Blender.",
+      "es": "Animación de caminata agachada de un personaje en Blender."
     },
     "mediaFile": "crouch_walk.mp4",
     "tags": [
@@ -302,11 +332,13 @@
     "order": 16,
     "title": {
       "ru": "Анимация деления холодильников",
-      "en": "Friges split animation"
+      "en": "Friges split animation",
+      "es": "Animación de heladeras que se dividen"
     },
     "description": {
       "ru": "2D эффекты в Spine.",
-      "en": "2D VFX in Spine."
+      "en": "2D VFX in Spine.",
+      "es": "Efectos 2D en Spine."
     },
     "mediaFile": "friges_split_vfx_2danimation_spine.mp4",
     "tags": [
@@ -320,11 +352,13 @@
     "order": 17,
     "title": {
       "ru": "Иконка кота",
-      "en": "Cat Icon"
+      "en": "Cat Icon",
+      "es": "Ícono de gato"
     },
     "description": {
       "ru": "2D анимация для казуальной игры в Spine.",
-      "en": "2D animation for casual game in Spine."
+      "en": "2D animation for casual game in Spine.",
+      "es": "Animación 2D en Spine para un juego casual."
     },
     "mediaFile": "icon_cat_match3_2danimation_spine.mp4",
     "tags": [
@@ -339,11 +373,13 @@
     "order": 18,
     "title": {
       "ru": "Девушка открывает дверь",
-      "en": "Woman Tries to Open Door"
+      "en": "Woman Tries to Open Door",
+      "es": "Mujer intenta abrir una puerta"
     },
     "description": {
       "ru": "Анимация девушки в Blender и двери в Spine.",
-      "en": "Woman animation in Blender and a door in Spine."
+      "en": "Woman animation in Blender and a door in Spine.",
+      "es": "Animación de la mujer en Blender y de la puerta en Spine."
     },
     "mediaFile": "woman_try_open_door.mp4",
     "tags": [
@@ -359,11 +395,13 @@
     "order": 19,
     "title": {
       "ru": "Атака лучника",
-      "en": "Archer Attack"
+      "en": "Archer Attack",
+      "es": "Ataque de arquero"
     },
     "description": {
       "ru": "Анимация атаки лучника в Blender.",
-      "en": "Archer attack animation in Blender."
+      "en": "Archer attack animation in Blender.",
+      "es": "Animación de ataque de un arquero en Blender."
     },
     "mediaFile": "Archer_attack.mp4",
     "tags": [
@@ -377,11 +415,13 @@
     "order": 20,
     "title": {
       "ru": "Чел флексит",
-      "en": "Man Flexes"
+      "en": "Man Flexes",
+      "es": "Tipo sacando músculo"
     },
     "description": {
       "ru": "Анимация персонажа в Blender.",
-      "en": "Character animation in Blender."
+      "en": "Character animation in Blender.",
+      "es": "Animación de personaje en Blender."
     },
     "mediaFile": "Man_flexes.mp4",
     "tags": [
@@ -396,11 +436,13 @@
     "order": 21,
     "title": {
       "ru": "Чел бьет молотком",
-      "en": "Man Hits Hammer"
+      "en": "Man Hits Hammer",
+      "es": "Tipo golpea con un martillo"
     },
     "description": {
       "ru": "Анимация атаки молотком в Blender.",
-      "en": "Hammer attack animation in Blender."
+      "en": "Hammer attack animation in Blender.",
+      "es": "Animación de ataque con martillo en Blender."
     },
     "mediaFile": "Man_hits_hammer.mp4",
     "tags": [
@@ -414,11 +456,13 @@
     "order": 22,
     "title": {
       "ru": "Чел бьет кнутом",
-      "en": "Man Hits Whip"
+      "en": "Man Hits Whip",
+      "es": "Tipo golpea con un látigo"
     },
     "description": {
       "ru": "Анимация удара кнутом в Blender.",
-      "en": "Whip attack animation in Blender."
+      "en": "Whip attack animation in Blender.",
+      "es": "Animación de latigazo en Blender."
     },
     "mediaFile": "Man_hits_whip.mp4",
     "tags": [
@@ -433,11 +477,13 @@
     "order": 23,
     "title": {
       "ru": "Чел вращается с двумя клинками",
-      "en": "Man spins with two blades"
+      "en": "Man spins with two blades",
+      "es": "Tipo gira con dos espadas"
     },
     "description": {
       "ru": "Анимация вращения с мечами в Blender.",
-      "en": "Spin dualblade animation in Blender."
+      "en": "Spin dualblade animation in Blender.",
+      "es": "Animación de giro con dos espadas en Blender."
     },
     "mediaFile": "Man_spin_dualblade.mp4",
     "tags": [
@@ -452,11 +498,13 @@
     "order": 24,
     "title": {
       "ru": "Чел с двухручным мечом",
-      "en": "Man Two-Handed Sword Attack"
+      "en": "Man Two-Handed Sword Attack",
+      "es": "Ataque con espada a dos manos"
     },
     "description": {
       "ru": "Анимация атаки двухручным мечом в Blender.",
-      "en": "Two-handed sword attack in Blender."
+      "en": "Two-handed sword attack in Blender.",
+      "es": "Animación de ataque con espada a dos manos en Blender."
     },
     "mediaFile": "Man_twohanded_sword_attack.mp4",
     "tags": [
@@ -471,11 +519,13 @@
     "order": 25,
     "title": {
       "ru": "Женщина крутит посохом",
-      "en": "Woman twirls a staff"
+      "en": "Woman twirls a staff",
+      "es": "Mujer hace girar un báculo"
     },
     "description": {
       "ru": "Анимация волшебного посоха в Blender.",
-      "en": "Woman twirling staff animation in Blender."
+      "en": "Woman twirling staff animation in Blender.",
+      "es": "Animación de un báculo mágico en Blender."
     },
     "mediaFile": "Woman_twirls_staff.mp4",
     "tags": [
@@ -489,11 +539,13 @@
     "order": 26,
     "title": {
       "ru": "Ракета Match3",
-      "en": "Match3 rocket"
+      "en": "Match3 rocket",
+      "es": "Cohete Match3"
     },
     "description": {
       "ru": "2D анимация для казуальной игры Match3 в Spine.",
-      "en": "2D animation for casual Match3 game in Spine."
+      "en": "2D animation for casual Match3 game in Spine.",
+      "es": "Animación 2D en Spine para un juego casual Match3."
     },
     "mediaFile": "match3_rocket_2danimation_spine.mp4",
     "tags": [
@@ -508,11 +560,13 @@
     "order": 27,
     "title": {
       "ru": "Эффекты Match3",
-      "en": "Match3 VFX"
+      "en": "Match3 VFX",
+      "es": "VFX Match3"
     },
     "description": {
       "ru": "2D VFX анимация для казуальной игры.",
-      "en": "2D VFX animation for casual game in Spine."
+      "en": "2D VFX animation for casual game in Spine.",
+      "es": "Animación de VFX 2D para un juego casual."
     },
     "mediaFile": "match3_vfx_2danimation_spine.mp4",
     "tags": [
@@ -526,11 +580,13 @@
     "order": 28,
     "title": {
       "ru": "Совы",
-      "en": "Owls"
+      "en": "Owls",
+      "es": "Búhos"
     },
     "description": {
       "ru": "2D анимация сов в Spine для игры.",
-      "en": "Owls animation in Spine for casual game."
+      "en": "Owls animation in Spine for casual game.",
+      "es": "Animación 2D de búhos en Spine para un juego."
     },
     "mediaFile": "Owls_fixed.mp4",
     "tags": [
@@ -544,11 +600,13 @@
     "order": 29,
     "title": {
       "ru": "Анимация мальчика",
-      "en": "Boy animation"
+      "en": "Boy animation",
+      "es": "Animación de un chico"
     },
     "description": {
       "ru": "Анимация мальчик фотографирует бабочку в Blender.",
-      "en": "Animation of a boy photographing a butterfly in Blender."
+      "en": "Animation of a boy photographing a butterfly in Blender.",
+      "es": "Animación en Blender de un chico que le saca una foto a una mariposa."
     },
     "mediaFile": "Phill_point_interest.mp4",
     "tags": [
@@ -562,11 +620,13 @@
     "order": 30,
     "title": {
       "ru": "Волшебная палочка",
-      "en": "Magic wand wave"
+      "en": "Magic wand wave",
+      "es": "Varita mágica"
     },
     "description": {
       "ru": "Анимация взмаха волшебной палочки в Blender.",
-      "en": "Magic wand waving animation in Blender."
+      "en": "Magic wand waving animation in Blender.",
+      "es": "Animación del movimiento de una varita mágica en Blender."
     },
     "mediaFile": "Piter_wand_wave.mp4",
     "tags": [
@@ -581,11 +641,13 @@
     "order": 31,
     "title": {
       "ru": "Пет-проект про морских свинок",
-      "en": "A pet project about guinea pigs"
+      "en": "A pet project about guinea pigs",
+      "es": "Proyecto personal sobre cuises"
     },
     "description": {
       "ru": "Личный проект для практики Unity (морские свинки).",
-      "en": "Unity learning project: guinea pigs."
+      "en": "Unity learning project: guinea pigs.",
+      "es": "Proyecto personal para practicar Unity (cuises)."
     },
     "mediaFile": "guinea_pig_game.mp4",
     "tags": [
@@ -601,11 +663,13 @@
     "order": 32,
     "title": {
       "ru": "Прототип гиперкэж игры",
-      "en": "Hyper-casual prototype"
+      "en": "Hyper-casual prototype",
+      "es": "Prototipo hipercasual"
     },
     "description": {
       "ru": "Разработка прототипа игры, в котором игроки управляют пылесосом для уборки разбросанных предметов. Простая механика, приятные тактильные ощущения и «невероятно увлекательный» игровой процесс.",
-      "en": "Development of a prototype game in which players control a vacuum cleaner to clean scattered items. Simple mechanics, pleasant tactile sensations and “incredibly exciting” gameplay."
+      "en": "Development of a prototype game in which players control a vacuum cleaner to clean scattered items. Simple mechanics, pleasant tactile sensations and “incredibly exciting” gameplay.",
+      "es": "Desarrollo de un prototipo de juego en el que los jugadores manejan una aspiradora para limpiar objetos desparramados. Mecánica simple, una sensación táctil agradable y un gameplay «increíblemente adictivo»."
     },
     "mediaFile": "0001-0500.mp4",
     "tags": [
@@ -621,11 +685,13 @@
     "order": 33,
     "title": {
       "ru": "Смена дня и ночи в Godot 4",
-      "en": "Day night cycle in Godot 4"
+      "en": "Day night cycle in Godot 4",
+      "es": "Ciclo día/noche en Godot 4"
     },
     "description": {
       "ru": "Простая смена дня и ночи с помощью градиента",
-      "en": "Easy day/night transition with gradient"
+      "en": "Easy day/night transition with gradient",
+      "es": "Transición simple entre día y noche con un gradiente"
     },
     "mediaFile": "Day_night_cycle.mp4",
     "tags": [
@@ -641,11 +707,13 @@
     "order": 34,
     "title": {
       "ru": "Демо игры Godot",
-      "en": "Godot Demo"
+      "en": "Godot Demo",
+      "es": "Demo de juego en Godot"
     },
     "description": {
       "ru": "Прототип игры на Godot. Создан тестовый уровень и реализована демонстрация умений главного героя, включая базовые механики передвижения и боя.",
-      "en": "Game prototype in Godot. Test level created with a showcase of the main character abilities, including core movement and combat mechanics."
+      "en": "Game prototype in Godot. Test level created with a showcase of the main character abilities, including core movement and combat mechanics.",
+      "es": "Prototipo de juego en Godot. Armé un nivel de prueba con una demostración de las habilidades del protagonista, incluidas las mecánicas básicas de movimiento y combate."
     },
     "mediaFile": "Desktop_2026.05.04_-_11.49.22.02_EDIT_EDIT.mp4",
     "tags": [
@@ -661,11 +729,13 @@
     "order": 35,
     "title": {
       "ru": "Личный проект для практики Godot",
-      "en": "Personal project for practicing Godot"
+      "en": "Personal project for practicing Godot",
+      "es": "Proyecto personal para practicar Godot"
     },
     "description": {
       "ru": "Godot проект для практики (экшен-платформер).",
-      "en": "Godot project, for practice (action platformer)."
+      "en": "Godot project, for practice (action platformer).",
+      "es": "Proyecto en Godot para practicar (plataformero de acción)."
     },
     "mediaFile": "punch_boy_game.mp4",
     "tags": [
@@ -682,11 +752,13 @@
     "order": 36,
     "title": {
       "ru": "Персонаж Godot",
-      "en": "Godot character"
+      "en": "Godot character",
+      "es": "Personaje en Godot"
     },
     "description": {
       "ru": "Сборка и настройка игрового персонажа в Godot с компонентной архитектурой. Реализованы state machine, способности (abilities), зоны взаимодействия и параметры анимации.",
-      "en": "Character setup and configuration in Godot with component-based architecture. Implemented state machine, abilities, interaction zones and animation parameters."
+      "en": "Character setup and configuration in Godot with component-based architecture. Implemented state machine, abilities, interaction zones and animation parameters.",
+      "es": "Armado y configuración de un personaje jugable en Godot con arquitectura basada en componentes. Incluye state machine, habilidades (abilities), zonas de interacción y parámetros de animación."
     },
     "mediaFile": "Ð¡Ð½Ð¸Ð¼Ð¾Ðº_ÑÐºÑÐ°Ð½Ð°_2026-05-04_113838.png",
     "tags": [
@@ -702,11 +774,13 @@
     "order": 37,
     "title": {
       "ru": "Личный проект для практики Godot",
-      "en": "Personal project for practicing Godot"
+      "en": "Personal project for practicing Godot",
+      "es": "Proyecto personal para practicar Godot"
     },
     "description": {
       "ru": "Контроллер персонажа для Godot проекта.",
-      "en": "Character controller for Punch Boy Godot project."
+      "en": "Character controller for Punch Boy Godot project.",
+      "es": "Controlador de personaje para el proyecto Punch Boy en Godot."
     },
     "mediaFile": "punch_boy_game_char_contr.mp4",
     "tags": [
@@ -723,11 +797,13 @@
     "order": 38,
     "title": {
       "ru": "Punch Boy Debug",
-      "en": "Punch Boy Debug"
+      "en": "Punch Boy Debug",
+      "es": "Punch Boy Debug"
     },
     "description": {
       "ru": "Отладка проекта Punch Boy.",
-      "en": "Debugging Punch Boy project."
+      "en": "Debugging Punch Boy project.",
+      "es": "Depuración del proyecto Punch Boy."
     },
     "mediaFile": "punch_boy_game_debug.mp4",
     "tags": [
@@ -744,11 +820,13 @@
     "order": 39,
     "title": {
       "ru": "Мультяшная анимация",
-      "en": "Cartoon animation"
+      "en": "Cartoon animation",
+      "es": "Animación cartoon"
     },
     "description": {
       "ru": "Прикольная анимация в стиле Том и Джерри в Blender.",
-      "en": "A funny Tom and Jerry-style animation in Blender."
+      "en": "A funny Tom and Jerry-style animation in Blender.",
+      "es": "Una animación divertida al estilo Tom y Jerry en Blender."
     },
     "mediaFile": "tom_jerry.mp4",
     "tags": [
@@ -762,11 +840,13 @@
     "order": 40,
     "title": {
       "ru": "UI анимация",
-      "en": "UI Animation"
+      "en": "UI Animation",
+      "es": "Animación de UI"
     },
     "description": {
       "ru": "Анимация интерфейса в Unity.",
-      "en": "UI animation in Unity."
+      "en": "UI animation in Unity.",
+      "es": "Animación de interfaz en Unity."
     },
     "mediaFile": "UI_anim_2danimation_unity.mp4",
     "tags": [
@@ -781,11 +861,13 @@
     "order": 41,
     "title": {
       "ru": "Анимация UI оффера",
-      "en": "Animation UI offer"
+      "en": "Animation UI offer",
+      "es": "Animación de oferta en UI"
     },
     "description": {
       "ru": "Анимация UI оффера",
-      "en": "Animation UI offer"
+      "en": "Animation UI offer",
+      "es": "Animación de una ventana de oferta en la UI"
     },
     "mediaFile": "Movie_046.mp4",
     "tags": [
@@ -800,11 +882,13 @@
     "order": 42,
     "title": {
       "ru": "UI анимация игрового окна",
-      "en": "Game Window UI Animation"
+      "en": "Game Window UI Animation",
+      "es": "Animación de UI de ventana de juego"
     },
     "description": {
       "ru": "UI анимация игрового окна",
-      "en": "Game Window UI Animation"
+      "en": "Game Window UI Animation",
+      "es": "Animación de UI de una ventana de juego"
     },
     "mediaFile": "Movie_086.mp4",
     "tags": [
@@ -818,11 +902,13 @@
     "order": 43,
     "title": {
       "ru": "Тест работы слоев в Unity Animator",
-      "en": "Unity Animator Layers Test"
+      "en": "Unity Animator Layers Test",
+      "es": "Prueba de capas en Unity Animator"
     },
     "description": {
       "ru": "Тест слоев анимации в Unity Animator.",
-      "en": "Testing animation layers in Unity Animator."
+      "en": "Testing animation layers in Unity Animator.",
+      "es": "Prueba de capas de animación en Unity Animator."
     },
     "mediaFile": "unity_anim_layers.mp4",
     "tags": [
@@ -836,11 +922,13 @@
     "order": 44,
     "title": {
       "ru": "Unity Cinemachine",
-      "en": "Unity Cinemachine Setup"
+      "en": "Unity Cinemachine Setup",
+      "es": "Unity Cinemachine"
     },
     "description": {
       "ru": "Настройка Cinemachine в Unity.",
-      "en": "Cinemachine setup in Unity."
+      "en": "Cinemachine setup in Unity.",
+      "es": "Configuración de Cinemachine en Unity."
     },
     "mediaFile": "unity_cinemachine.mp4",
     "tags": [
@@ -854,11 +942,13 @@
     "order": 45,
     "title": {
       "ru": "Unity Low Poly VFX",
-      "en": "Unity Low Poly VFX"
+      "en": "Unity Low Poly VFX",
+      "es": "Unity Low Poly VFX"
     },
     "description": {
       "ru": "Лоу-поли VFX эффекты в Unity.",
-      "en": "Low poly VFX in Unity."
+      "en": "Low poly VFX in Unity.",
+      "es": "Efectos VFX low poly en Unity."
     },
     "mediaFile": "unity_lp_vfx.mp4",
     "tags": [
@@ -872,11 +962,13 @@
     "order": 46,
     "title": {
       "ru": "Анимация лиан айдл",
-      "en": "Vines Idle"
+      "en": "Vines Idle",
+      "es": "Lianas en idle"
     },
     "description": {
       "ru": "Анимация лиан в Spine.",
-      "en": "Idle animation of vines in Spine."
+      "en": "Idle animation of vines in Spine.",
+      "es": "Animación de lianas en Spine."
     },
     "mediaFile": "Vines_idle_2danimation_spine.mp4",
     "tags": [
@@ -890,11 +982,13 @@
     "order": 47,
     "title": {
       "ru": "Водопад",
-      "en": "Waterfall"
+      "en": "Waterfall",
+      "es": "Cascada"
     },
     "description": {
       "ru": "Анимация водопада в Spine.",
-      "en": "Waterfall animation in Spine."
+      "en": "Waterfall animation in Spine.",
+      "es": "Animación de una cascada en Spine."
     },
     "mediaFile": "waterfall_2danimation_spine.mp4",
     "tags": [
@@ -908,11 +1002,13 @@
     "order": 48,
     "title": {
       "ru": "Замок",
-      "en": "Castle"
+      "en": "Castle",
+      "es": "Castillo"
     },
     "description": {
       "ru": "3D рендер замка в Blender.",
-      "en": "3D render of the castle in Blender."
+      "en": "3D render of the castle in Blender.",
+      "es": "Render 3D de un castillo en Blender."
     },
     "mediaFile": "Castle_render.png",
     "tags": [
@@ -926,11 +1022,13 @@
     "order": 49,
     "title": {
       "ru": "Спальня замка",
-      "en": "Castle Bedroom"
+      "en": "Castle Bedroom",
+      "es": "Dormitorio del castillo"
     },
     "description": {
       "ru": "Интерьер спальни в замке, рендер в Blender.",
-      "en": "Castle bedroom interior render in Blender."
+      "en": "Castle bedroom interior render in Blender.",
+      "es": "Interior del dormitorio de un castillo, render en Blender."
     },
     "mediaFile": "Castle_bedroom_interior_render.png",
     "tags": [
@@ -944,11 +1042,13 @@
     "order": 50,
     "title": {
       "ru": "Двор замка",
-      "en": "Castle Courtyard"
+      "en": "Castle Courtyard",
+      "es": "Patio del castillo"
     },
     "description": {
       "ru": "Двор замка, рендер в Blender.",
-      "en": "Castle courtyard render in Blender."
+      "en": "Castle courtyard render in Blender.",
+      "es": "Patio de un castillo, render en Blender."
     },
     "mediaFile": "Castle_courtyard_render.png",
     "tags": [
@@ -962,11 +1062,13 @@
     "order": 51,
     "title": {
       "ru": "Столовая замка",
-      "en": "Castle Dining Room"
+      "en": "Castle Dining Room",
+      "es": "Comedor del castillo"
     },
     "description": {
       "ru": "Интерьер столовой в замке, рендер в Blender.",
-      "en": "Castle dining room interior render in Blender."
+      "en": "Castle dining room interior render in Blender.",
+      "es": "Interior del comedor de un castillo, render en Blender."
     },
     "mediaFile": "Castle_diningroom_interior_render.png",
     "tags": [
@@ -980,11 +1082,13 @@
     "order": 52,
     "title": {
       "ru": "Гостиная замка",
-      "en": "Castle Living Room"
+      "en": "Castle Living Room",
+      "es": "Living del castillo"
     },
     "description": {
       "ru": "Интерьер гостиной в замке, рендер в Blender.",
-      "en": "Castle living room interior render in Blender."
+      "en": "Castle living room interior render in Blender.",
+      "es": "Interior del living de un castillo, render en Blender."
     },
     "mediaFile": "Castle_livingroom_render.png",
     "tags": [
@@ -998,11 +1102,13 @@
     "order": 53,
     "title": {
       "ru": "Кот-мальчик",
-      "en": "Cat Boy"
+      "en": "Cat Boy",
+      "es": "Chico gato"
     },
     "description": {
       "ru": "3D рендер персонажа кота в Blender.",
-      "en": "3D render of a cat character in Blender."
+      "en": "3D render of a cat character in Blender.",
+      "es": "Render 3D de un personaje gato en Blender."
     },
     "mediaFile": "cat_boy_render.PNG",
     "tags": [
@@ -1016,11 +1122,13 @@
     "order": 54,
     "title": {
       "ru": "Консоль",
-      "en": "Game Console"
+      "en": "Game Console",
+      "es": "Consola"
     },
     "description": {
       "ru": "Моделинг, текстурирование консоли в Blender.",
-      "en": "Modeling and texturing of the console in Blender."
+      "en": "Modeling and texturing of the console in Blender.",
+      "es": "Modelado y texturizado de una consola en Blender."
     },
     "mediaFile": "gameConsole_render_texturing.png",
     "tags": [
@@ -1034,11 +1142,13 @@
     "order": 55,
     "title": {
       "ru": "Полка с хламом",
-      "en": "A shelf with junk"
+      "en": "A shelf with junk",
+      "es": "Estante con cachivaches"
     },
     "description": {
       "ru": "Моделинг, текстурирование полки с хламом в Blender.",
-      "en": "Modeling and texturing a shelf with junk in Blender."
+      "en": "Modeling and texturing a shelf with junk in Blender.",
+      "es": "Modelado y texturizado de un estante con cachivaches en Blender."
     },
     "mediaFile": "Reck&Knife_render_texturing.png",
     "tags": [
@@ -1052,11 +1162,13 @@
     "order": 56,
     "title": {
       "ru": "Ванная комната",
-      "en": "Shower room"
+      "en": "Shower room",
+      "es": "Baño"
     },
     "description": {
       "ru": "Моделинг, текстурирование ванной комнаты в Blender.",
-      "en": "Modeling and texturing a shower room in Blender."
+      "en": "Modeling and texturing a shower room in Blender.",
+      "es": "Modelado y texturizado de un baño en Blender."
     },
     "mediaFile": "ShowerRoom_render_texturing.png",
     "tags": [
