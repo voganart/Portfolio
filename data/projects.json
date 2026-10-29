@@ -1,26 +1,7 @@
 [
   {
-    "id": 56,
-    "order": 1,
-    "title": {
-      "ru": "Анимация персонажа для слот-игры",
-      "en": "Slot Game Character Animation"
-    },
-    "description": {
-      "ru": "Разработка и полировка анимаций персонажа: Idle, Anticipation, Spin, Win, Big Win и Lose. Доработка рига, вторичной анимации ног и платья, мимики и взгляда. Создание анимаций бабочек, нимба и эффектов посоха. Улучшение динамики, плавности и визуальной выразительности игровых реакций.",
-      "en": "Development and polishing of character animations: Idle, Anticipation, Spin, Win, Big Win and Lose. Refinement of rig, secondary animation of legs and dress, facial expressions and gaze. Creating animations of butterflies, halo and staff effects. Improving the dynamics, smoothness and visual expressiveness of game reactions."
-    },
-    "mediaFile": "goddess_showreel_20261029_170858.mp4",
-    "tags": [
-      "2D Animation",
-      "Spine",
-      "Animation",
-      "Character"
-    ]
-  },
-  {
     "id": 54,
-    "order": 2,
+    "order": 1,
     "title": {
       "ru": "Lumber Tycoon — браузерная 3D-игра",
       "en": "Lumber Tycoon — browser 3D game"
@@ -41,7 +22,7 @@
   },
   {
     "id": 53,
-    "order": 3,
+    "order": 2,
     "title": {
       "ru": "Креатив для соц-сетей",
       "en": "Creatives for social media"
@@ -61,7 +42,7 @@
   },
   {
     "id": 52,
-    "order": 4,
+    "order": 3,
     "title": {
       "ru": "Анимация лисенка-мага в спайне ",
       "en": "Spine Magic Fox Animation"
@@ -74,6 +55,26 @@
     "tags": [
       "2D Animation",
       "Spine",
+      "Character"
+    ],
+    "featured": true
+  },
+  {
+    "id": 56,
+    "order": 4,
+    "title": {
+      "ru": "Анимация персонажа для слот-игры",
+      "en": "Slot Game Character Animation"
+    },
+    "description": {
+      "ru": "Разработка и полировка анимаций персонажа: Idle, Anticipation, Spin, Win, Big Win и Lose. Доработка рига, вторичной анимации ног и платья, мимики и взгляда. Создание анимаций бабочек, нимба и эффектов посоха. Улучшение динамики, плавности и визуальной выразительности игровых реакций.",
+      "en": "Development and polishing of character animations: Idle, Anticipation, Spin, Win, Big Win and Lose. Refinement of rig, secondary animation of legs and dress, facial expressions and gaze. Creating animations of butterflies, halo and staff effects. Improving the dynamics, smoothness and visual expressiveness of game reactions."
+    },
+    "mediaFile": "goddess_showreel_20261029_170858.mp4",
+    "tags": [
+      "2D Animation",
+      "Spine",
+      "Animation",
       "Character"
     ],
     "featured": true
