@@ -38,7 +38,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, big = false, onClick
   return (
     <article className={`theme-surface theme-line theme-card-hover group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border shadow-xl shadow-black/20 transition duration-300 hover:-translate-y-1 ${big ? 'md:col-span-2 md:row-span-2' : ''}`}>
       <button onClick={onClick} onMouseEnter={playPreview} onMouseLeave={stopPreview} className="flex w-full flex-1 flex-col text-left" aria-label={`${title}: ${description}`}>
-        <div className={`relative w-full overflow-hidden bg-black ${big ? 'aspect-[16/10] md:aspect-auto md:min-h-72 md:flex-1' : 'aspect-[16/10]'}`}>
+        {/* превью всегда 16:10, как сами обложки — иначе крупная карточка обрезает края; лишнюю высоту забирает текст */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
           {isVideo ? (
             <div className="relative h-full w-full">
               <video ref={videoRef} src={`${mediaPath}#t=0.1`} className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" muted loop playsInline preload="metadata" />
@@ -48,7 +49,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, big = false, onClick
             <img src={mediaPath} alt={title} className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" loading="lazy" />
           )}
         </div>
-        <div className={big ? 'p-6' : 'p-5'}>
+        <div className={big ? 'flex-1 p-6' : 'p-5'}>
           <h3 className={big ? 'font-display text-2xl text-white sm:text-3xl' : 'text-lg font-bold text-white'}>{title}</h3>
           <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-slate-400">{description}</p>
           <div className="mt-4 flex flex-wrap gap-1.5">
