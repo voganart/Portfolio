@@ -13,7 +13,7 @@
       "es": "Demo jugable en Three.js inspirada en un creativo publicitario. Poné en marcha el aserradero estación por estación, mejorá las grúas, las sierras, la cinta transportadora y los tipos de madera, cargá los camiones y arreglá el puente para que el convoy llegue a la ciudad. Física de troncos con Rapier, la tolva se puede revolver con el dedo y funciona en compu y en celular."
     },
     "mediaFile": "lumber_tycoon_logo.jpg",
-    "link": "content/games/lumber-tycoon/game.html?v=202610291438",
+    "link": "content/games/lumber-tycoon/game.html?v=202611041200",
     "tags": [
       "Game Development",
       "Three.js",
